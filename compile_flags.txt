@@ -1,0 +1,6 @@
+-Iincludes
+-Ilibft
+-Ilibmath
+-Wall
+-Wextra
+-Werror
