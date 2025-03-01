@@ -5,12 +5,14 @@ INCLUDE = ./includes
 CFLAGS = -Werror -Wextra -Wall -I$(LIBFT_INCLUDE) -Ilibmath -I$(INCLUDE) -fsanitize=address
 
 
-SRCS = minirt.c parser.c
+SRCS = minirt.c parser/parser.c parser/parser_utils.c parser/parser_predicates.c parser/parser_error.c debug.c
 
 OBJS_DIR = .objects/
 OBJS = $(SRCS:%.c=$(OBJS_DIR)%.o)
-HEADER_FILES = minirt.h            \
-			   parser.h
+HEADER_FILES = minirt.h         \
+			   parser.h			\
+			   scene.h			\
+			   debug.h
 
 HEADERS = $(HEADER_FILES:%=$(INCLUDE)/%)
 LIBFT = libft/libft.a
@@ -18,7 +20,7 @@ LIBFT = libft/libft.a
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS_DIR) $(OBJS)
-	$(CC)  $(CFLAGS) $(LIBFT) $(OBJS) -o $(NAME) -Ilibft -Llibft -lft -lmath -lm
+	$(CC)  $(CFLAGS) $(LIBFT) $(OBJS) -o $(NAME) -Ilibft -Llibft -lft -lm
 
 $(OBJS_DIR):
 	mkdir -p $(OBJS_DIR)
