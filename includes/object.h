@@ -44,11 +44,13 @@ struct s_object
 			t_vec3		orientation;
 		} plane;
 		struct {
-			t_vec3		orientaiton;
+			t_vec3		orientation;
 			double		radius;
 			double		height;
 		} cylinder;
 	};
 };
+
+t_object	*object_create(enum e_object type);
 
 #endif

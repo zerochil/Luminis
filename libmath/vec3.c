@@ -1,4 +1,4 @@
-#include "vec3.h"
+#include "libmath.h"
 
 t_vec3	vec3_add(t_vec3 a, t_vec3 b)
 {
@@ -70,16 +70,6 @@ t_vec3	vec3_mul_scalar(t_vec3 a, double b)
 	return (result);
 }
 
-t_vec3	vec3_div_scalar(t_vec3 a, double b)
-{
-	t_vec3	result;
-
-	result.x = a.x / b; // division by zero is not handled
-	result.y = a.y / b;
-	result.z = a.z / b;
-	return (result);
-}
-
 double	vec3_dot(t_vec3 a, t_vec3 b)
 {
 	return (a.x * b.x + a.y * b.y + a.z * b.z);
@@ -92,6 +82,16 @@ t_vec3	vec3_cross(t_vec3 a, t_vec3 b)
 	result.x = a.y * b.z - a.z * b.y;
 	result.y = a.z * b.x - a.x * b.z;
 	result.z = a.x * b.y - a.y * b.x;
+	return (result);
+}
+
+t_vec3	vec3_div_scalar(t_vec3 a, double b)
+{
+	t_vec3	result;
+
+	result.x = a.x / b; // division by zero is not handled
+	result.y = a.y / b;
+	result.z = a.z / b;
 	return (result);
 }
 
@@ -108,7 +108,17 @@ t_vec3	vec3_normalize(t_vec3 a)
 	return (vec3_div_scalar(a, length));
 }
 
+t_vec3  vec3_negate(t_vec3 a)
+{
+	t_vec3 result;
+
+	result.x = -a.x;
+	result.y = -a.y;
+	result.z = -a.z;
+	return (result);
+}
+
 bool vec3_compare(t_vec3 a, t_vec3 b)
 {
-	return (a.x == b.x && a.y == b.y && a.z == b.z);
+	return (float_eq(a.x, b.x) && float_eq(a.y, b.y) && float_eq(a.z, b.z));
 }

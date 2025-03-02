@@ -4,6 +4,13 @@
 #include <scene.h>
 #include <mlx.h>
 
+enum
+{
+	WIDTH = 480,
+	HEIGHT = 360,
+	ASPECT_RATIO = WIDTH / HEIGHT,
+};
+
 typedef struct s_image
 {
 	void	*ptr;

@@ -65,7 +65,7 @@ t_intersect object_intersection(enum e_object type)
 	return (NULL);
 }
 
-t_object	*object_new(enum e_object type)
+t_object	*object_create(enum e_object type)
 {
 	t_object	*object;
 

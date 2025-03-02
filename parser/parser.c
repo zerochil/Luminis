@@ -26,17 +26,19 @@ bool	parse_line_camera(t_scene *scene, char **infos)
 		return (parser_error("Camera origin must be a vec3"));
 	if (parse_vec3(&scene->camera.forward, infos[2]) == false)
 		return (parser_error("Camera direction must be a vec3"));
-	if (is_normalized(scene->camera.forward) == false)
-		return (parser_error("Camera direction must be normalized"));
 	if (parse_float(&scene->camera.fov, infos[3]) == false)
 		return (parser_error("Camera fov must be a float"));
 	if (in_interval(scene->camera.fov, 0, 180) == false)
 		return (parser_error("Camera fov must be between 0 and 180"));
+	if (is_normalized(scene->camera.forward) == false)
+		return (parser_error("Camera direction must be normalized"));
 	if (vec3_compare(scene->camera.forward, (t_vec3){0, 0, 0}))
 		scene->camera.forward = (t_vec3){0, 0, -1};
 	if (vec3_compare(scene->camera.forward, (t_vec3){0, 1, 0}))
 		scene->camera.up = (t_vec3){0, 0, -1};
-	scene->camera.right = vec3_cross(scene->camera.forward, (t_vec3){0, 1, 0});
+	else
+		scene->camera.up = (t_vec3){0, 1, 0};
+	scene->camera.right = vec3_cross(scene->camera.forward, scene->camera.up);
 	scene->camera.right = vec3_normalize(scene->camera.right);
 	scene->camera.up = vec3_cross(scene->camera.right, scene->camera.forward);
 	scene->camera.up = vec3_normalize(scene->camera.up);
@@ -69,8 +71,7 @@ bool	parse_line_sphere(t_scene *scene, char **infos)
 
 	if (ft_strarr_len(infos) != 4)
 		return (parser_error("Sphere must have 3 arguments"));
-	object = track_malloc(sizeof(t_object));
-	object->type = SPHERE;
+	object = object_create(SPHERE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Sphere origin must be a vec3"));
 	if (parse_float(&object->sphere.radius, infos[2]) == false)
@@ -90,8 +91,7 @@ bool	parse_line_plane(t_scene *scene, char **infos)
 
 	if (ft_strarr_len(infos) != 4)
 		return (parser_error("Plane must have 3 arguments"));
-	object = track_malloc(sizeof(t_object));
-	object->type = PLANE;
+	object = object_create(PLANE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Plane origin must be a vec3"));
 	if (parse_vec3(&object->plane.orientation, infos[2]) == false)
@@ -110,11 +110,10 @@ bool	parse_line_cylinder(t_scene *scene, char **infos)
 
 	if (ft_strarr_len(infos) != 6)
 		return (parser_error("Cylinder must have 5 arguments"));
-	object = track_malloc(sizeof(t_object));
-	object->type = CYLINDER;
+	object = object_create(CYLINDER);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Cylinder origin must be a vec3"));
-	if (parse_vec3(&object->cylinder.orientaiton, infos[2]) == false)
+	if (parse_vec3(&object->cylinder.orientation, infos[2]) == false)
 		return (parser_error("Cylinder orientation must be a vec3"));
 	if (parse_float(&object->cylinder.radius, infos[3]) == false)
 		return (parser_error("Cylinder radius must be a float"));
@@ -126,7 +125,7 @@ bool	parse_line_cylinder(t_scene *scene, char **infos)
 		return (parser_error("Cylinder radius must be positive"));
 	if (in_interval(object->cylinder.height, 0, INFINITY) == false)
 		return (parser_error("Cylinder height must be positive"));
-	if (is_normalized(object->cylinder.orientaiton) == false)
+	if (is_normalized(object->cylinder.orientation) == false)
 		return (parser_error("Cylinder orientation must be normalized"));
 	object->cylinder.radius /= 2;
 	array_push(scene->objects, object);

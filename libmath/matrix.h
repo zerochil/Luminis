@@ -5,11 +5,13 @@
 
 typedef struct s_matrix {
 	double data[16];
-} matrix;
+} t_matrix;
 
-matrix matrix_identity();
-matrix matrix_translate(double x, double y, double z);
-matrix matrix_multiply(matrix a, matrix b);
+t_matrix matrix_identity();
+t_matrix matrix_translate(t_vec3 v);
+t_matrix matrix_multiply(t_matrix a, t_matrix b);
+t_matrix matrix_rotate(t_vec3 u, t_vec3 v, t_vec3 w);
+t_vec3   matrix_mult_vec3(t_matrix a, t_vec3 b);
 
 
 #endif

@@ -5,11 +5,11 @@ CFLAGS = -Wall -Wextra -Werror
 
 OBJECTS_DIR = .objects/
 
-SRCS = libmath.c vec3.c
+SRCS = libmath.c vec3.c matrix.c
 
 OBJS = $(addprefix $(OBJECTS_DIR), $(SRCS:.c=.o))
 
-HEADERS = libmath.h vec3.h 
+HEADERS = libmath.h vec3.h matrix.h
 
 NAME = libmath.a
 
