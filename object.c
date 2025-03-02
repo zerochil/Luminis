@@ -2,9 +2,25 @@
 
 bool		intersect_plane(t_object *object, t_ray *ray, t_hit *hit)
 {
-	(void)hit;
-	(void)ray;
-	(void)object;
+	double t;
+	double denominator;
+	t_vec3 normal;
+	t_vec3 position;
+
+	normal = object->plane.normal;
+	denominator = vec3_dot(normal, ray->direction);
+	if (float_eq(denominator, 0))
+		return (false);
+	position = vec3_sub(object->origin, ray->origin);
+	t = vec3_dot(position, normal) / denominator;
+	if (t > 0) // should be t >= 0
+	{
+		hit->distance = fabs(t);
+		hit->normal = normal;
+		hit->object = object;
+		hit->point = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, t));
+		return (true);
+	}
 	return (false);
 }
 
@@ -32,8 +48,10 @@ bool		intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
 	delta = b * b - 4 * c;
 	if (delta < 0)
 		return (false);
-	t1 = (-b - sqrt(delta)) / 2;
-	t2 = (-b + sqrt(delta)) / 2;
+	t1 = (-b - sqrt(delta)) / 2.0;
+	t2 = (-b + sqrt(delta)) / 2.0;
+	if (t1 < 0 && t2 < 0)
+		return (false);
 	if (t1 < 0 && t2 < 0)
 		return (false);
 	if (t1 < 0)
@@ -42,9 +60,12 @@ bool		intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
 		hit->distance = t1;
 	else
 		hit->distance = fmin(t1, t2);
+	if (hit->distance < 0)
+		return (false);
 	position = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, hit->distance));
 	hit->normal = vec3_normalize(vec3_sub(position, object->origin));
 	hit->object = object;
+	hit->point = position;
 	return (true);
 }
 

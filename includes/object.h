@@ -41,7 +41,7 @@ struct s_object
 			double		radius;
 		} sphere;
 		struct {
-			t_vec3		orientation;
+			t_vec3		normal;
 		} plane;
 		struct {
 			t_vec3		orientation;

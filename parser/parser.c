@@ -34,7 +34,7 @@ bool	parse_line_camera(t_scene *scene, char **infos)
 		return (parser_error("Camera direction must be normalized"));
 	if (vec3_compare(scene->camera.forward, (t_vec3){0, 0, 0}))
 		scene->camera.forward = (t_vec3){0, 0, -1};
-	if (vec3_compare(scene->camera.forward, (t_vec3){0, 1, 0}))
+	if (float_eq(fabs(scene->camera.forward.y), 1.0))
 		scene->camera.up = (t_vec3){0, 0, -1};
 	else
 		scene->camera.up = (t_vec3){0, 1, 0};
@@ -94,12 +94,12 @@ bool	parse_line_plane(t_scene *scene, char **infos)
 	object = object_create(PLANE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Plane origin must be a vec3"));
-	if (parse_vec3(&object->plane.orientation, infos[2]) == false)
-		return (parser_error("Plane orientation must be a vec3"));
+	if (parse_vec3(&object->plane.normal, infos[2]) == false)
+		return (parser_error("Plane normal must be a vec3"));
 	if (parse_color(&object->color, infos[3]) == false)
 		return (parser_error("Plane color must be a color"));
-	if (is_normalized(object->plane.orientation) == false)
-		return (parser_error("Plane orientation must be normalized"));
+	if (is_normalized(object->plane.normal) == false)
+		return (parser_error("Plane normal must be normalized"));
 	array_push(scene->objects, object);
 	return (true);
 }

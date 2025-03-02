@@ -33,10 +33,11 @@ t_matrix camera_matrix(t_camera camera)
 	translation.x = vec3_dot(camera.right, negated);
 	translation.y = vec3_dot(camera.up, negated);
 	translation.z = vec3_dot(camera.forward, negated);
-	matrix = matrix_translate(translation);
-	matrix = matrix_multiply(matrix, matrix_rotate(camera.right, camera.up, camera.forward));
+	matrix = matrix_rotate(camera.right, camera.up, camera.forward);
+	matrix = matrix_multiply(matrix, matrix_translate(translation));
 	return (matrix);
 }
+
 
 t_hit find_intersection(t_scene *scene, t_ray *ray)
 {
@@ -102,17 +103,14 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 	color.r += tmp.r * ambient.r * scene->ambient.intensity;
 	color.g += tmp.g * ambient.g * scene->ambient.intensity;
 	color.b += tmp.b * ambient.b * scene->ambient.intensity;
-	if (color.r > 1)
-	{
-		printf("color.r: %f\n", color.r);
-	}
 	color_clamp(&color);
 	return (color_mul_scalar(color, 255));
 }
 
 void raytrace(t_scene *scene, t_image *image)
 {
-	t_matrix view_matrix = camera_matrix(scene->camera);
+	/*t_matrix view_matrix = camera_matrix(scene->camera);*/
+	/*t_matrix view_matrix = camera_matrix_inverse(scene->camera);*/
 	double aspect_ratio = (double)WIDTH / HEIGHT;
 	double scale = tan(scene->camera.fov / 2);
 
@@ -124,8 +122,11 @@ void raytrace(t_scene *scene, t_image *image)
 			double y_ndc = (y + 0.5) / HEIGHT;
 			double x_screen = (2 * x_ndc - 1) * aspect_ratio * scale;
 			double y_screen = (1 - 2 * y_ndc) * scale;
-			t_vec3 direction = matrix_mult_vec3(view_matrix, (t_vec3){x_screen, y_screen, -1});
-			t_ray ray = {scene->camera.origin, vec3_normalize(direction)};
+			/*t_vec3 direction = matrix_mult_vec3(view_matrix, (t_vec3){x_screen, y_screen, -1});*/
+			t_vec3 camera_ray = vec3_add(scene->camera.forward, vec3_add(vec3_mul_scalar(scene->camera.right, x_screen), vec3_mul_scalar(scene->camera.up, y_screen)));
+			/*t_vec3 direction = matrix_mult_vec3(view_matrix, camera_ray);*/
+
+			t_ray ray = {scene->camera.origin, vec3_normalize(camera_ray)};
 			t_hit hit = find_intersection(scene, &ray);
 			if (hit.object)
 			{

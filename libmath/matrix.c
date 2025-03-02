@@ -70,3 +70,17 @@ t_vec3   matrix_mult_vec3(t_matrix a, t_vec3 b)
 	result.z = a.data[8] * b.x + a.data[9] * b.y + a.data[10] * b.z + a.data[11];
 	return (result);
 }
+
+t_matrix matrix_transpose(t_matrix m)
+{
+	t_matrix result;
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			result.data[i * 4 + j] = m.data[j * 4 + i];
+		}
+	}
+	return (result);
+}

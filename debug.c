@@ -43,7 +43,7 @@ void	print_scene(t_scene *scene)
 				break;
 			case PLANE:
 				printf("\ttype: PLANE\n");
-				print_vec3(object->plane.orientation, "orientation");
+				print_vec3(object->plane.normal, "orientation");
 				break;
 			case CYLINDER:
 				printf("\ttype: CYLINDER\n");
