@@ -73,7 +73,7 @@ bool parse_vec3(t_vec3 *vec, char *str)
 	return (true);
 }
 
-static bool parse_color_channel(unsigned char *value, char *str)
+static bool parse_color_channel(float *value, char *str)
 {
 	int result;
 
@@ -109,6 +109,5 @@ bool parse_color(t_color *color, char *str)
 		return (false);
 	if (parse_color_channel(&color->b, channels[2]) == false)
 		return (false);
-	color->a = 0;
 	return (true);
 }

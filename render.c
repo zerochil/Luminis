@@ -48,6 +48,7 @@ t_hit find_intersection(t_scene *scene, t_ray *ray)
 
 	objects = scene->objects;
 	hit.object = NULL;
+	hit.distance = INFINITY;
 	i = 0;
 	while (i < objects->size)
 	{
@@ -67,10 +68,46 @@ void put_pixel(t_image *image, int x, int y, t_color color)
 	int i;
 
 	i = (y * image->line_len) + (x * (image->bpp / 8));
-	image->addr[i] = color.r;
+	image->addr[i] = color.b;
 	image->addr[i + 1] = color.g;
-	image->addr[i + 2] = color.b;
+	image->addr[i + 2] = color.r;
 	image->addr[i + 3] = 0x00;
+}
+
+t_color calculate_lighting(t_scene *scene, t_hit hit)
+{
+	t_color color = {0, 0, 0};
+	t_array *lights = scene->lights;
+	t_light *light;
+	t_vec3 light_direction;
+	double diffuse_intensity;
+	t_color light_color;
+
+	t_color tmp = color_mul_scalar(hit.object->color, 1.0/255.0);
+	for (size_t i = 0; i < lights->size; i++)
+	{
+		light = array_get(lights, i);
+		light_direction = vec3_normalize(vec3_sub(light->origin, hit.point));
+		diffuse_intensity = fmax(vec3_dot(hit.normal, light_direction), 0);
+		if (diffuse_intensity > 0)
+		{
+			light_color = color_mul_scalar(light->color, 1.0/255.0);
+			light_color = color_mul_scalar(light_color, light->intensity);
+			color.r += tmp.r * light_color.r * diffuse_intensity;
+			color.g += tmp.g * light_color.g * diffuse_intensity;
+			color.b += tmp.b * light_color.b * diffuse_intensity;
+		}
+	}
+	t_color ambient = color_mul_scalar(scene->ambient.color, 1.0/255.0);
+	color.r += tmp.r * ambient.r * scene->ambient.intensity;
+	color.g += tmp.g * ambient.g * scene->ambient.intensity;
+	color.b += tmp.b * ambient.b * scene->ambient.intensity;
+	if (color.r > 1)
+	{
+		printf("color.r: %f\n", color.r);
+	}
+	color_clamp(&color);
+	return (color_mul_scalar(color, 255));
 }
 
 void raytrace(t_scene *scene, t_image *image)
@@ -91,9 +128,15 @@ void raytrace(t_scene *scene, t_image *image)
 			t_ray ray = {scene->camera.origin, vec3_normalize(direction)};
 			t_hit hit = find_intersection(scene, &ray);
 			if (hit.object)
-				put_pixel(image, x, y, hit.object->color);
+			{
+				// Calculate lighting by iterating over all lights and summing their contributions
+				t_color color = calculate_lighting(scene, hit);
+				put_pixel(image, x, y, color);
+			}
 			else
-	   			put_pixel(image, x, y, (t_color){255, 255, 255, 0});
+			{
+				put_pixel(image, x, y, (t_color){18, 18, 18});
+			}
 		}
 	}
 }

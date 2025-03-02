@@ -7,7 +7,7 @@ void print_vec3(t_vec3 vec, char *name)
 
 void print_color(t_color color)
 {
-	printf("\tcolor {%d, %d, %d, %d}\n", color.r, color.g, color.b, color.a);
+	printf("\tcolor {%f, %f, %f}\n", color.r, color.g, color.b);
 }
 
 void	print_scene(t_scene *scene)
@@ -47,7 +47,7 @@ void	print_scene(t_scene *scene)
 				break;
 			case CYLINDER:
 				printf("\ttype: CYLINDER\n");
-				print_vec3(object->cylinder.orientaiton, "orientation");
+				print_vec3(object->cylinder.orientation, "orientation");
 				printf("\tradius: %.2f\n", object->cylinder.radius);
 				printf("\theight: %.2f\n", object->cylinder.height);
 				break;

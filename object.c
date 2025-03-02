@@ -18,21 +18,14 @@ bool		intersect_cylinder(t_object *object, t_ray *ray, t_hit *hit)
 
 bool		intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
 {
-	int b;
-	int c;
-	int delta;
-	int t1;
-	int t2;
+	float b;
+	float c;
+	float delta;
+	float t1;
+	float t2;
 	t_vec3 position;
 	t_vec3 direction;
 
-	/*b = 2 * (ray->direction.x * (ray->origin.x - object->origin.x) +*/
-	/*		ray->direction.y * (ray->origin.y - object->origin.y) +*/
-	/*		ray->direction.z * (ray->origin.z - object->origin.z));*/
-	/*c = (ray->origin.x - object->origin.x) * (ray->origin.x - object->origin.x) +*/
-	/*	(ray->origin.y - object->origin.y) * (ray->origin.y - object->origin.y) +*/
-	/*	(ray->origin.z - object->origin.z) * (ray->origin.z - object->origin.z) -*/
-	/*	object->sphere.radius * object->sphere.radius;*/
 	direction = vec3_sub(ray->origin, object->origin);
 	b = 2 * vec3_dot(ray->direction, direction);
 	c = vec3_dot(direction, direction) - object->sphere.radius * object->sphere.radius;
@@ -48,9 +41,10 @@ bool		intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
 	else if (t2 < 0)
 		hit->distance = t1;
 	else
-		hit->distance = min(t1, t2);
+		hit->distance = fmin(t1, t2);
 	position = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, hit->distance));
 	hit->normal = vec3_normalize(vec3_sub(position, object->origin));
+	hit->object = object;
 	return (true);
 }
 
