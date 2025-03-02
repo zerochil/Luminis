@@ -18,7 +18,7 @@ void	print_scene(t_scene *scene)
 	printf("\n");
 	printf("Camera:\n");
 	print_vec3(scene->camera.origin, "origin");
-	print_vec3(scene->camera.direction, "direction");
+	print_vec3(scene->camera.forward, "forward");
 	print_vec3(scene->camera.up, "up");
 	print_vec3(scene->camera.right, "right");
 	printf("\tfov: %.2f\n", scene->camera.fov);
@@ -32,7 +32,8 @@ void	print_scene(t_scene *scene)
 	}
 	for (size_t i = 0; i < scene->objects->size; i++)
 	{
-		t_object *object = scene->objects->data[i];
+		t_object *object;
+		object = scene->objects->data[i];
 		printf("Object %zu:\n", i);
 		switch (object->type)
 		{

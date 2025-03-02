@@ -1,26 +1,25 @@
 NAME = minirt
 CC = cc
-LIBFT_INCLUDE = ./libft
 INCLUDE = ./includes
-CFLAGS = -Werror -Wextra -Wall -I$(LIBFT_INCLUDE) -Ilibmath -I$(INCLUDE) -fsanitize=address
+CFLAGS = -Werror -Wextra -Wall -Llibmath -Ilibmath -Ilibft -Llibft -I$(INCLUDE) -fsanitize=address
 
-
-SRCS = minirt.c parser/parser.c parser/parser_utils.c parser/parser_predicates.c parser/parser_error.c debug.c
+SRCS = minirt.c parser/parser.c parser/parser_utils.c parser/parser_predicates.c parser/parser_error.c debug.c object.c render.c
 
 OBJS_DIR = .objects/
 OBJS = $(SRCS:%.c=$(OBJS_DIR)%.o)
 HEADER_FILES = minirt.h         \
 			   parser.h			\
 			   scene.h			\
-			   debug.h
+			   debug.h			\
+			   object.h			
 
 HEADERS = $(HEADER_FILES:%=$(INCLUDE)/%)
-LIBFT = libft/libft.a
+LIBRARIES = libft/libft.a libmath/libmath.a
 
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(OBJS_DIR) $(OBJS)
-	$(CC)  $(CFLAGS) $(LIBFT) $(OBJS) -o $(NAME) -Ilibft -Llibft -lft -lm
+$(NAME): $(LIBRARIES) $(OBJS)
+	$(CC)  $(CFLAGS) $(LIBRARIES) $(OBJS) -o $(NAME) -lmath -lft -lm -lmlx -L/usr/lib -lmlx -lXext -lX11 -lz
 
 $(OBJS_DIR):
 	mkdir -p $(OBJS_DIR)
@@ -29,7 +28,10 @@ $(OBJS_DIR)%.o: %.c $(HEADERS)
 	@mkdir -p $(dir $@)
 	$(CC)  $(CFLAGS) -c $< -o $@ 
 
-$(LIBFT): FORCE
+libmath/libmath.a: FORCE
+	@make -C libmath --no-print-directory
+
+libft/libft.a: FORCE
 	@make -C libft --no-print-directory
 
 FORCE:

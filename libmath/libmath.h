@@ -2,12 +2,11 @@
 #define LIBMATH_H
 
 #include <math.h>
+#include "vec3.h"
 
-typedef struct s_vec3
-{
-	double	x;
-	double	y;
-	double	z;
-}	t_vec3;
+
+double	min(double a, double b);
+double	max(double a, double b);
+
 
 #endif 

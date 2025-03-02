@@ -18,25 +18,28 @@ bool	parse_line_ambient(t_scene *scene, char **infos)
 
 bool	parse_line_camera(t_scene *scene, char **infos)
 {
-	t_vec3	tmp;
-
 	if (ft_strarr_len(infos) != 4)
 		return (parser_error("Camera must have 3 arguments"));
 	if (scene->camera.is_declared)
 		return (parser_error("Camera already declared"));
 	if (parse_vec3(&scene->camera.origin, infos[1]) == false)
 		return (parser_error("Camera origin must be a vec3"));
-	if (parse_vec3(&tmp, infos[2]) == false)
+	if (parse_vec3(&scene->camera.forward, infos[2]) == false)
 		return (parser_error("Camera direction must be a vec3"));
-	if (is_normalized(tmp) == false)
+	if (is_normalized(scene->camera.forward) == false)
 		return (parser_error("Camera direction must be normalized"));
-	scene->camera.right = (t_vec3){tmp.x, 0, 0};
-	scene->camera.up = (t_vec3){0, tmp.y, 0};
-	scene->camera.direction = (t_vec3){0, 0, tmp.z};
 	if (parse_float(&scene->camera.fov, infos[3]) == false)
 		return (parser_error("Camera fov must be a float"));
 	if (in_interval(scene->camera.fov, 0, 180) == false)
 		return (parser_error("Camera fov must be between 0 and 180"));
+	if (vec3_compare(scene->camera.forward, (t_vec3){0, 0, 0}))
+		scene->camera.forward = (t_vec3){0, 0, -1};
+	if (vec3_compare(scene->camera.forward, (t_vec3){0, 1, 0}))
+		scene->camera.up = (t_vec3){0, 0, -1};
+	scene->camera.right = vec3_cross(scene->camera.forward, (t_vec3){0, 1, 0});
+	scene->camera.right = vec3_normalize(scene->camera.right);
+	scene->camera.up = vec3_cross(scene->camera.right, scene->camera.forward);
+	scene->camera.up = vec3_normalize(scene->camera.up);
 	scene->camera.is_declared = true;
 	return (true);
 }
@@ -85,8 +88,6 @@ bool	parse_line_plane(t_scene *scene, char **infos)
 {
 	t_object	*object;
 
-	for (int i = 0; infos[i]; i++)
-		printf("infos[%d]: %s\n", i, infos[i]);
 	if (ft_strarr_len(infos) != 4)
 		return (parser_error("Plane must have 3 arguments"));
 	object = track_malloc(sizeof(t_object));

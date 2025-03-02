@@ -3,41 +3,8 @@
 
 # include <libft.h>
 # include <libmath.h>
-
-typedef struct s_color
-{
-	unsigned char	r;
-	unsigned char	g;
-	unsigned char	b;
-	unsigned char	a;
-} t_color;
-
-enum e_object
-{
-	SPHERE = 0,
-	PLANE,
-	CYLINDER
-};
-
-typedef struct s_object
-{
-	t_color		color;
-	enum e_object	type;
-	t_vec3		origin;
-	union {
-		struct {
-			double		radius;
-		} sphere;
-		struct {
-			t_vec3		orientation;
-		} plane;
-		struct {
-			t_vec3		orientaiton;
-			double		radius;
-			double		height;
-		} cylinder;
-	};
-} t_object;
+# include <color.h>
+# include <object.h>
 
 typedef struct s_light
 {
@@ -56,7 +23,7 @@ typedef struct s_ambient
 typedef struct s_camera
 {
 	t_vec3		origin;
-	t_vec3		direction;
+	t_vec3		forward;
 	t_vec3		up;
 	t_vec3		right;
 	double		fov;
