@@ -107,10 +107,35 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 	return (color_mul_scalar(color, 255));
 }
 
+bool is_shadowed(t_scene *scene, t_hit hit)
+{
+	for (size_t i = 0; i < scene->lights->size; i++)
+	{
+		t_light *light = array_get(scene->lights, i);
+		t_vec3 light_direction = vec3_normalize(vec3_sub(light->origin, hit.point));
+		t_ray shadow_ray;
+		shadow_ray.origin = vec3_add(hit.point, vec3_mul_scalar(hit.normal, EPSILON * 10000));
+		shadow_ray.direction = light_direction;
+		t_hit shadow_hit = find_intersection(scene, &shadow_ray);
+		double light_distance = vec3_length(vec3_sub(light->origin, hit.point));
+		if (shadow_hit.object && shadow_hit.distance < light_distance)
+			return (true);
+	}
+	return (false);
+}
+
+t_color ambient_color(t_scene *scene, t_hit hit)
+{
+	t_color color;
+	color = hit.object->color;
+	color = color_mul_scalar(color, 1.0/255.0);
+	color = color_mul_scalar(color, scene->ambient.intensity);
+	color_clamp(&color);
+	return (color_mul_scalar(color, 255));
+}
+
 void raytrace(t_scene *scene, t_image *image)
 {
-	/*t_matrix view_matrix = camera_matrix(scene->camera);*/
-	/*t_matrix view_matrix = camera_matrix_inverse(scene->camera);*/
 	double aspect_ratio = (double)WIDTH / HEIGHT;
 	double scale = tan(scene->camera.fov / 2);
 
@@ -122,17 +147,16 @@ void raytrace(t_scene *scene, t_image *image)
 			double y_ndc = (y + 0.5) / HEIGHT;
 			double x_screen = (2 * x_ndc - 1) * aspect_ratio * scale;
 			double y_screen = (1 - 2 * y_ndc) * scale;
-			/*t_vec3 direction = matrix_mult_vec3(view_matrix, (t_vec3){x_screen, y_screen, -1});*/
 			t_vec3 camera_ray = vec3_add(scene->camera.forward, vec3_add(vec3_mul_scalar(scene->camera.right, x_screen), vec3_mul_scalar(scene->camera.up, y_screen)));
-			/*t_vec3 direction = matrix_mult_vec3(view_matrix, camera_ray);*/
 
 			t_ray ray = {scene->camera.origin, vec3_normalize(camera_ray)};
 			t_hit hit = find_intersection(scene, &ray);
 			if (hit.object)
 			{
-				// Calculate lighting by iterating over all lights and summing their contributions
-				t_color color = calculate_lighting(scene, hit);
-				put_pixel(image, x, y, color);
+				if (is_shadowed(scene, hit))
+					put_pixel(image, x, y, ambient_color(scene, hit));
+				else
+					put_pixel(image, x, y, calculate_lighting(scene, hit));
 			}
 			else
 			{

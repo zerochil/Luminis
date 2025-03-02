@@ -15,7 +15,7 @@ bool		intersect_plane(t_object *object, t_ray *ray, t_hit *hit)
 	t = vec3_dot(position, normal) / denominator;
 	if (t > 0) // should be t >= 0
 	{
-		hit->distance = fabs(t);
+		hit->distance = t;
 		hit->normal = normal;
 		hit->object = object;
 		hit->point = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, t));
