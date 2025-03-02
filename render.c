@@ -75,6 +75,12 @@ void put_pixel(t_image *image, int x, int y, t_color color)
 	image->addr[i + 3] = 0x00;
 }
 
+bool is_shadowed(t_scene *scene, t_ray ray, double light_distance)
+{
+	t_hit hit = find_intersection(scene, &ray);
+	return (hit.object && hit.distance < light_distance);
+}
+
 t_color calculate_lighting(t_scene *scene, t_hit hit)
 {
 	t_color color = {0, 0, 0};
@@ -85,10 +91,18 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 	t_color light_color;
 
 	t_color tmp = color_mul_scalar(hit.object->color, 1.0/255.0);
+	t_color ambient = color_mul_scalar(scene->ambient.color, 1.0/255.0);
+	color.r += tmp.r * ambient.r * scene->ambient.intensity;
+	color.g += tmp.g * ambient.g * scene->ambient.intensity;
+	color.b += tmp.b * ambient.b * scene->ambient.intensity;
 	for (size_t i = 0; i < lights->size; i++)
 	{
+
 		light = array_get(lights, i);
 		light_direction = vec3_normalize(vec3_sub(light->origin, hit.point));
+		double light_distance = vec3_length(vec3_sub(light->origin, hit.point));
+		if (is_shadowed(scene, (t_ray){vec3_add(hit.point, hit.normal), light_direction}, light_distance))
+			continue;
 		diffuse_intensity = fmax(vec3_dot(hit.normal, light_direction), 0);
 		if (diffuse_intensity > 0)
 		{
@@ -98,39 +112,8 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 			color.g += tmp.g * light_color.g * diffuse_intensity;
 			color.b += tmp.b * light_color.b * diffuse_intensity;
 		}
+		color_clamp(&color);
 	}
-	t_color ambient = color_mul_scalar(scene->ambient.color, 1.0/255.0);
-	color.r += tmp.r * ambient.r * scene->ambient.intensity;
-	color.g += tmp.g * ambient.g * scene->ambient.intensity;
-	color.b += tmp.b * ambient.b * scene->ambient.intensity;
-	color_clamp(&color);
-	return (color_mul_scalar(color, 255));
-}
-
-bool is_shadowed(t_scene *scene, t_hit hit)
-{
-	for (size_t i = 0; i < scene->lights->size; i++)
-	{
-		t_light *light = array_get(scene->lights, i);
-		t_vec3 light_direction = vec3_normalize(vec3_sub(light->origin, hit.point));
-		t_ray shadow_ray;
-		shadow_ray.origin = vec3_add(hit.point, vec3_mul_scalar(hit.normal, EPSILON * 10000));
-		shadow_ray.direction = light_direction;
-		t_hit shadow_hit = find_intersection(scene, &shadow_ray);
-		double light_distance = vec3_length(vec3_sub(light->origin, hit.point));
-		if (shadow_hit.object && shadow_hit.distance < light_distance)
-			return (true);
-	}
-	return (false);
-}
-
-t_color ambient_color(t_scene *scene, t_hit hit)
-{
-	t_color color;
-	color = hit.object->color;
-	color = color_mul_scalar(color, 1.0/255.0);
-	color = color_mul_scalar(color, scene->ambient.intensity);
-	color_clamp(&color);
 	return (color_mul_scalar(color, 255));
 }
 
@@ -153,10 +136,7 @@ void raytrace(t_scene *scene, t_image *image)
 			t_hit hit = find_intersection(scene, &ray);
 			if (hit.object)
 			{
-				if (is_shadowed(scene, hit))
-					put_pixel(image, x, y, ambient_color(scene, hit));
-				else
-					put_pixel(image, x, y, calculate_lighting(scene, hit));
+				put_pixel(image, x, y, calculate_lighting(scene, hit));
 			}
 			else
 			{
