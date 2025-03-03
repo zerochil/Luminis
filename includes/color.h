@@ -11,7 +11,9 @@ typedef struct s_color
 } t_color;
 
 
-t_color color_mul_scalar(t_color color, float scalar);
 void color_clamp(t_color *color);
+void color_mul_scalar(t_color *color, float scalar);
+void color_add(t_color *color1, t_color *color2);
+void color_mul(t_color *color1, t_color *color2);
 
 #endif
