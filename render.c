@@ -75,41 +75,40 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 
 	t_color color = hit.object->color;
 	color_mul_scalar(&color, 1.0/255.0);
+	t_color ambient = scene->ambient.color;
+	color_mul_scalar(&ambient, 1.0/255.0);
+	color_mul_scalar(&ambient, scene->ambient.intensity);
+	total_light = ambient;
 	for (size_t i = 0; i < lights->size; i++)
 	{
 		light = array_get(lights, i);
 		t_vec3 light_dir = vec3_normalize(vec3_sub(light->origin, hit.point));
 		double light_dist = vec3_length(vec3_sub(light->origin, hit.point));
 		if (is_shadowed(scene, (t_ray){vec3_add(hit.point, vec3_mul_scalar(hit.normal, 0.1)), light_dir}, light_dist))
-		{
-			t_color light_color = light->color;
-			color_mul_scalar(&light_color, 1.0/255.0);
-			color_mul_scalar(&light_color, light->intensity * (1.0 / (1.0 + 0.01 * light_dist * light_dist)));
-			color_mul_scalar(&light_color, 0.01);
-			color_add(&total_light, &light_color);
 			continue;
-		}
 		double diffuse_intensity = fmax(vec3_dot(hit.normal, light_dir), 0);
 		if (diffuse_intensity > 0.0)
 		{
 			t_color light_color = light->color;
 			color_mul_scalar(&light_color, 1.0/255.0);
-			color_mul_scalar(&light_color, light->intensity * (1.0 / (1.0 + 0.0001 * light_dist * light_dist)));
+			double attenuation = 1.0 / (1.0 + 0.00005 * light_dist * light_dist);
+			color_mul_scalar(&light_color, light->intensity * attenuation);
 			color_mul_scalar(&light_color, diffuse_intensity);
 			t_vec3 reflect_dir = vec3_normalize(vec3_sub(vec3_mul_scalar(hit.normal, 2.0 * vec3_dot(hit.normal, light_dir)), light_dir));
 			t_vec3 view_dir = vec3_normalize(vec3_sub(scene->camera.origin, hit.point));
-			double specular = pow(fmax(vec3_dot(view_dir, reflect_dir), 0.0), 50.0);
-			color_mul_scalar(&light_color, 1.0 + 0.9 * specular);
 			color_add(&total_light, &light_color);
+
+			t_color specular_color = {1.0, 1.0, 1.0}; // white because we don't have a specular color, only metallic objects have specular color
+			color_mul_scalar(&specular_color, light->intensity * attenuation);
+			color_mul_scalar(&specular_color, pow(fmax(vec3_dot(view_dir, reflect_dir), 0.0), 50.0));
+			color_mul_scalar(&specular_color, 0.9);
+			color_add(&total_light, &specular_color);
+
 		}
 	}
 
-	t_color ambient = scene->ambient.color;
-	color_mul_scalar(&ambient, 1.0/255.0);
-	color_mul_scalar(&ambient, scene->ambient.intensity);
-	color_add(&total_light, &ambient);
-
 	color_mul(&color, &total_light);
+
 	color_clamp(&color);
 	color_mul_scalar(&color, 255.0);
 	return (color);
