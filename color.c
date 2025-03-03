@@ -27,3 +27,10 @@ void color_mul(t_color *color1, t_color *color2)
 	color1->g *= color2->g;
 	color1->b *= color2->b;
 }
+
+void color_blend(t_color *color1, t_color *color2, double color1_intensity, double color2_intensity)
+{
+	color_mul_scalar(color1, color1_intensity);
+	color_mul_scalar(color2, color2_intensity);
+	color_add(color1, color2);
+}
