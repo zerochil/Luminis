@@ -23,20 +23,6 @@ int	key_hook(int keycode, t_mlx *mlx)
 }
 
 
-t_matrix camera_matrix(t_camera camera)
-{
-	t_matrix matrix;
-	t_vec3 translation;
-	t_vec3 negated;
-
-	negated = vec3_negate(camera.origin);
-	translation.x = vec3_dot(camera.right, negated);
-	translation.y = vec3_dot(camera.up, negated);
-	translation.z = vec3_dot(camera.forward, negated);
-	matrix = matrix_rotate(camera.right, camera.up, camera.forward);
-	matrix = matrix_multiply(matrix, matrix_translate(translation));
-	return (matrix);
-}
 
 
 t_hit find_intersection(t_scene *scene, t_ray *ray)
@@ -83,7 +69,7 @@ bool is_shadowed(t_scene *scene, t_ray ray, double light_distance)
 
 t_color calculate_lighting(t_scene *scene, t_hit hit)
 {
-	t_color color = {0, 0, 0};
+	t_color color = {0.0, 0.0, 0.0};
 	t_array *lights = scene->lights;
 	t_light *light;
 	t_vec3 light_direction;
@@ -102,12 +88,19 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 		light_direction = vec3_normalize(vec3_sub(light->origin, hit.point));
 		double light_distance = vec3_length(vec3_sub(light->origin, hit.point));
 		if (is_shadowed(scene, (t_ray){vec3_add(hit.point, hit.normal), light_direction}, light_distance))
+		{
+			/*t_color shadow_ambient = color_mul_scalar(light_color, 0.001 * light->intensity);*/
+			/*color.r += tmp.r * shadow_ambient.r;*/
+			/*color.g += tmp.g * shadow_ambient.g;*/
+			/*color.b += tmp.b * shadow_ambient.b;*/
+			/*color_clamp(&color);*/
 			continue;
+		}
 		diffuse_intensity = fmax(vec3_dot(hit.normal, light_direction), 0);
 		if (diffuse_intensity > 0)
 		{
 			light_color = color_mul_scalar(light->color, 1.0/255.0);
-			light_color = color_mul_scalar(light_color, light->intensity);
+			light_color = color_mul_scalar(light_color, light->intensity * (1.0 / (1.0 + 0.001 * light_distance * light_distance)));
 			color.r += tmp.r * light_color.r * diffuse_intensity;
 			color.g += tmp.g * light_color.g * diffuse_intensity;
 			color.b += tmp.b * light_color.b * diffuse_intensity;
@@ -115,6 +108,21 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 		color_clamp(&color);
 	}
 	return (color_mul_scalar(color, 255));
+}
+
+t_matrix camera_matrix(t_camera camera)
+{
+	t_matrix matrix;
+	t_vec3 translation;
+	t_vec3 negated;
+
+	negated = vec3_negate(camera.origin);
+	translation.x = vec3_dot(camera.right, negated);
+	translation.y = vec3_dot(camera.up, negated);
+	translation.z = vec3_dot(camera.forward, negated);
+	matrix = matrix_rotate(camera.right, camera.up, camera.forward);
+	matrix = matrix_multiply(matrix, matrix_translate(translation));
+	return (matrix);
 }
 
 void raytrace(t_scene *scene, t_image *image)
