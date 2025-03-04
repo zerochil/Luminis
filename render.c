@@ -67,26 +67,27 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 		double light_dist = vec3_length(vec3_sub(light->origin, hit.point));
 		if (is_shadowed(scene, (t_ray){vec3_add(hit.point, vec3_mul_scalar(hit.normal, EPSILON * 1000)), light_dir}, light_dist))
 			continue;
-		double diffuse_intensity = fmax(vec3_dot(hit.normal, light_dir), 0);
+
+		double diffuse_intensity = fmax(vec3_dot(hit.normal, light_dir), 0.0);
+		double attenuation = 1.0 / (1.0 + 0.01 * light_dist + 0.001 * light_dist * light_dist);
 		if (diffuse_intensity > 0.0)
 		{
 			t_color light_color = light->color;
 			color_mul_scalar(&light_color, 1.0/255.0);
-			// double attenuation = 1.0 / (1.0 + 0.00005 * light_dist * light_dist);
-			// color_mul_scalar(&light_color, light->intensity * attenuation);
-			color_mul_scalar(&light_color, diffuse_intensity * 0.35);
+			/*double attenuation = 1.0 / (1.0 + light_dist * light_dist);*/
+
+			color_mul_scalar(&light_color, light->intensity * attenuation);
+			color_mul_scalar(&light_color, diffuse_intensity);
 			color_add(&total_light, &light_color);
-
-			
-			t_vec3 reflect_dir = vec3_reflect(vec3_negate(light_dir), hit.normal);
-			t_vec3 view_dir = vec3_normalize(vec3_sub(scene->camera.origin, hit.point));
-			t_color specular_color = {1.0, 1.0, 1.0}; // white because we don't have a specular color, only metallic objects have specular color
-			color_mul_scalar(&specular_color, light->intensity);// * attenuation);
-			color_mul_scalar(&specular_color, pow(fmax(vec3_dot(view_dir, reflect_dir), 0.0), 50.0));
-			color_mul_scalar(&specular_color, 0.7);
-			color_add(&total_light, &specular_color);
-
 		}
+
+		t_vec3 reflect_dir = vec3_reflect(vec3_negate(light_dir), hit.normal);
+		t_vec3 view_dir = vec3_normalize(vec3_sub(scene->camera.origin, hit.point)); // you can avoid some calculations by storing the normalized view direction in the hit struct
+		double specular_intensity = pow(fmax(vec3_dot(view_dir, reflect_dir), 0.0), 30.0);
+		t_color specular_color = {1.0, 1.0, 1.0}; // white because we don't have a specular color, only metallic objects have specular color
+		color_mul_scalar(&specular_color, light->intensity);
+		color_mul_scalar(&specular_color, specular_intensity * 0.5);
+		color_add(&total_light, &specular_color);
 	}
 
 	color_mul(&color, &total_light);
