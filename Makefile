@@ -3,7 +3,17 @@ CC = cc
 INCLUDE = ./includes
 CFLAGS = -Werror -Wextra -Wall -Llibmath -Ilibmath -Ilibft -Llibft -I$(INCLUDE) #-fsanitize=address
 
-SRCS = minirt.c parser/parser.c parser/parser_utils.c parser/parser_predicates.c parser/parser_error.c debug.c object.c render.c color.c
+SRCS = minirt.c \
+       parser/parser.c\
+	   parser/parser_utils.c\
+	   parser/parser_predicates.c\
+	   parser/parser_error.c\
+	   debug.c\
+	   object.c\
+	   render.c\
+	   handle_event.c\
+	   camera.c\
+	   color.c
 
 OBJS_DIR = .objects/
 OBJS = $(SRCS:%.c=$(OBJS_DIR)%.o)
@@ -11,6 +21,8 @@ HEADER_FILES = minirt.h         \
 			   parser.h			\
 			   scene.h			\
 			   debug.h			\
+			   camera.h         \
+			   handle_event.h   \
 			   object.h			
 
 HEADERS = $(HEADER_FILES:%=$(INCLUDE)/%)

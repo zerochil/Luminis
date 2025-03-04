@@ -5,6 +5,7 @@ compile_flags.txt
 .*.swp
 .*.swo
 vgcore.*
+.vscode
 
 # executable
 minirt
@@ -13,7 +14,7 @@ minirt
 *.d
 
 # Object files
-.objects
+*/.objects
 *.o
 *.ko
 *.obj

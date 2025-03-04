@@ -127,3 +127,18 @@ t_vec3 vec3_reflect(t_vec3 v, t_vec3 n)
 {
 	return (vec3_sub(v, vec3_mul_scalar(n, 2 * vec3_dot(v, n))));
 }
+void	vec3_rotateY(t_vec3 *vec, double angle)
+{
+	angle = angle * (M_PI / 180);
+	vec->x = vec->x * cos(angle) + vec->z * sin(angle);
+    vec->y = vec->y;
+    vec->z = -vec->x * sin(angle) + vec->z * cos(angle);
+}
+
+void	vec3_rotateX(t_vec3 *vec, double angle)
+{
+	angle = angle * (M_PI / 180);
+	vec->x = vec->x;
+    vec->y = vec->y * cos(angle) - vec->z * sin(angle);
+    vec->z = vec->y * sin(angle) + vec->z * cos(angle);
+}

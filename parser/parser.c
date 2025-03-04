@@ -30,6 +30,7 @@ bool	parse_line_camera(t_scene *scene, char **infos)
 		return (parser_error("Camera fov must be a float"));
 	if (in_interval(scene->camera.fov, 0, 180) == false)
 		return (parser_error("Camera fov must be between 0 and 180"));
+	scene->camera.forward = vec3_normalize(scene->camera.forward);
 	if (is_normalized(scene->camera.forward) == false)
 		return (parser_error("Camera direction must be normalized"));
 	if (vec3_compare(scene->camera.forward, (t_vec3){0, 0, 0}))
@@ -138,7 +139,7 @@ bool	parse_line(t_scene *scene, char *line)
 
 	infos = ft_split(line, ' ');
 	resource_track(infos, free_strings);
-	if (!infos || !infos[0])
+	if (!infos || !infos[0] || *infos[0] == '#')
 		return (true); // TODO, Should it return true or false? WHY?
 	if (ft_strcmp(infos[0], "A") == 0)
 		return (parse_line_ambient(scene, infos));
