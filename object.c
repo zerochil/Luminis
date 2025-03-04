@@ -16,7 +16,7 @@ bool		intersect_plane(t_object *object, t_ray *ray, t_hit *hit)
 	if (t > 0) // should be t >= 0
 	{
 		hit->distance = t;
-		hit->normal = normal;
+		hit->normal = (denominator > 0)? vec3_negate(normal): normal;
 		hit->object = object;
 		hit->point = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, t));
 		return (true);
@@ -64,6 +64,7 @@ bool		intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
 		return (false);
 	position = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, hit->distance));
 	hit->normal = vec3_normalize(vec3_sub(position, object->origin));
+	hit->normal = vec3_length(direction) > object->sphere.radius ? hit->normal: vec3_negate(hit->normal);
 	hit->object = object;
 	hit->point = position;
 	return (true);

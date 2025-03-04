@@ -61,7 +61,7 @@ t_vec3 matrix_transform(t_matrix m, t_vec3 v) {
 	return r;
 }
 
-t_vec3   matrix_mult_vec3(t_matrix a, t_vec3 b)
+t_vec3   matrix_mul_vec3(t_matrix a, t_vec3 b)
 {
 	t_vec3 result;
 
@@ -82,5 +82,19 @@ t_matrix matrix_transpose(t_matrix m)
 			result.data[i * 4 + j] = m.data[j * 4 + i];
 		}
 	}
+	return (result);
+}
+
+t_vec3	vec3_mul_matrix(t_vec3 v, t_matrix mat)
+{
+	t_vec3 result;
+	double *m;
+
+	m = mat.data;
+
+	result.x = v.x * m[0] + v.y * m[4] + v.z * m[8];
+	result.y = v.x * m[1] + v.y * m[5] + v.z * m[9];
+	result.z = v.x * m[2] + v.y * m[6] + v.z * m[10];
+	//*w = v.x * m[3] + v.y * m[7] + v.z * m[11] + 1;
 	return (result);
 }

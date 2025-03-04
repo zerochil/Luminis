@@ -122,3 +122,19 @@ bool vec3_compare(t_vec3 a, t_vec3 b)
 {
 	return (float_eq(a.x, b.x) && float_eq(a.y, b.y) && float_eq(a.z, b.z));
 }
+
+void	vec3_rotateY(t_vec3 *vec, double angle)
+{
+	angle = angle * (M_PI / 180);
+	vec->x = vec->x * cos(angle) + vec->z * sin(angle);
+    vec->y = vec->y;
+    vec->z = -vec->x * sin(angle) + vec->z * cos(angle);
+}
+
+void	vec3_rotateX(t_vec3 *vec, double angle)
+{
+	angle = angle * (M_PI / 180);
+	vec->x = vec->x;
+    vec->y = vec->y * cos(angle) - vec->z * sin(angle);
+    vec->z = vec->y * sin(angle) + vec->z * cos(angle);
+}
