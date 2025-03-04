@@ -5,6 +5,7 @@ compile_flags.txt
 .*.swp
 .*.swo
 vgcore.*
+.vscode
 
 # executable
 minirt

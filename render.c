@@ -6,23 +6,6 @@ void window_init(t_mlx *mlx)
 	mlx->win = mlx_new_window(mlx->ptr, 480, 360, "Luminis");
 }
 
-int	close_win(t_mlx *mlx)
-{
-	mlx_destroy_image(mlx->ptr, mlx->image.ptr);
-	mlx_destroy_window(mlx->ptr, mlx->win);
-	mlx_destroy_display(mlx->ptr);
-	free(mlx->ptr);
-	exit(0);
-}
-
-int	key_hook(int keycode, t_mlx *mlx)
-{
-	if (keycode == 65307)
-		close_win(mlx);
-	return (0);
-}
-
-
 
 
 t_hit find_intersection(t_scene *scene, t_ray *ray)
@@ -110,7 +93,7 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 	return (color_mul_scalar(color, 255));
 }
 
-t_matrix camera_matrix(t_camera camera)
+t_matrix _camera_matrix(t_camera camera)
 {
 	t_matrix matrix;
 	t_vec3 translation;
@@ -125,10 +108,60 @@ t_matrix camera_matrix(t_camera camera)
 	return (matrix);
 }
 
+t_matrix camera_matrix(t_camera camera)
+{
+	t_matrix matrix;
+
+	matrix = matrix_identity();
+
+	matrix.data[0] = camera.right.x;
+	matrix.data[1] = camera.up.x;
+	matrix.data[2] = -camera.forward.x;
+	matrix.data[3] = camera.origin.x;
+
+	matrix.data[4] = camera.right.y;
+	matrix.data[5] = camera.up.y;
+	matrix.data[6] = -camera.forward.y;
+	matrix.data[7] = camera.origin.y;
+	
+	matrix.data[8] = camera.right.z;
+	matrix.data[9] = camera.up.z;
+	matrix.data[10] = -camera.forward.z;
+	matrix.data[11] = camera.origin.z;
+	return (matrix);
+}
+
+t_vec3	vec3_mul_matrix(t_vec3 v, t_matrix mat)
+{
+	t_vec3 result;
+	double *m;
+
+	m = mat.data;
+
+	result.x = v.x * m[0] + v.y * m[4] + v.z * m[8];
+	result.y = v.x * m[1] + v.y * m[5] + v.z * m[9];
+	result.z = v.x * m[2] + v.y * m[6] + v.z * m[10];
+	//*w = v.x * m[3] + v.y * m[7] + v.z * m[11] + 1;
+	return (result);
+}
+
+void	print_matrix(t_matrix *matrix)
+{
+	printf("-------------------------------\n");
+	for(int y=0; y<4;y++)
+	{
+		for(int x=0; x<4; x++)
+			printf("% 3.3f ", matrix->data[y * 4 + x]);
+		printf("\n");
+	}
+	printf("-------------------------------\n");
+}
+
 void raytrace(t_scene *scene, t_image *image)
 {
 	double aspect_ratio = (double)WIDTH / HEIGHT;
-	double scale = tan(scene->camera.fov / 2);
+	double scale = tan((scene->camera.fov * M_PI / 180.0) / 2.0);
+	t_matrix view_matrix = camera_matrix(scene->camera);
 
 	for (int y = 0; y < HEIGHT; y++)
 	{
@@ -138,18 +171,14 @@ void raytrace(t_scene *scene, t_image *image)
 			double y_ndc = (y + 0.5) / HEIGHT;
 			double x_screen = (2 * x_ndc - 1) * aspect_ratio * scale;
 			double y_screen = (1 - 2 * y_ndc) * scale;
-			t_vec3 camera_ray = vec3_add(scene->camera.forward, vec3_add(vec3_mul_scalar(scene->camera.right, x_screen), vec3_mul_scalar(scene->camera.up, y_screen)));
+			t_vec3 camera_ray = vec3_mul_matrix((t_vec3){x_screen, y_screen, -1}, view_matrix);
 
 			t_ray ray = {scene->camera.origin, vec3_normalize(camera_ray)};
 			t_hit hit = find_intersection(scene, &ray);
 			if (hit.object)
-			{
 				put_pixel(image, x, y, calculate_lighting(scene, hit));
-			}
 			else
-			{
 				put_pixel(image, x, y, (t_color){18, 18, 18});
-			}
 		}
 	}
 }
@@ -159,18 +188,117 @@ void	render_image(t_mlx *mlx, t_scene *scene)
 	mlx->image.ptr = mlx_new_image(mlx->ptr, WIDTH, HEIGHT);
 	mlx->image.addr = mlx_get_data_addr(mlx->image.ptr, &mlx->image.bpp, &mlx->image.line_len, &mlx->image.endian);
 	raytrace(scene, &mlx->image);
-	printf("Rendering complete\n");
+	//printf("Rendering complete\n");
 	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->image.ptr, 0, 0);
 }
 
+typedef struct s_vars
+{
+	t_mlx *mlx;
+	t_scene *scene;
+}	t_vars;
+
+int	close_win(t_mlx *mlx)
+{
+	mlx_destroy_image(mlx->ptr, mlx->image.ptr);
+	mlx_destroy_window(mlx->ptr, mlx->win);
+	mlx_destroy_display(mlx->ptr);
+	free(mlx->ptr);
+	exit(0);
+}
+
+#define STEP -1
+#define ANGLE 1
+#define KEY_UP 65362
+#define KEY_DOWN 65364
+#define KEY_LEFT 65363
+#define KEY_RIGHT 65361
+
+void	vec3_rotateY(t_vec3 *vec, double angle)
+{
+	angle = angle * (M_PI / 180);
+	vec->x = vec->x * cos(angle) + vec->z * sin(angle);
+    vec->y = vec->y;
+    vec->z = -vec->x * sin(angle) + vec->z * cos(angle);
+}
+
+void	vec3_rotateX(t_vec3 *vec, double angle)
+{
+	angle = angle * (M_PI / 180);
+	vec->x = vec->x;
+    vec->y = vec->y * cos(angle) - vec->z * sin(angle);
+    vec->z = vec->y * sin(angle) + vec->z * cos(angle);
+}
+
+void	camera_rotate(t_camera *camera, void (*rotate)(t_vec3 *, double), double angle)
+{
+	rotate(&camera->forward, angle);
+	rotate(&camera->up, angle);
+	rotate(&camera->right, angle);
+}
+
+int	key_hook(int keycode, t_vars *vars)
+{
+	t_camera	*camera = &vars->scene->camera;
+	if (keycode == 65307)
+		close_win(vars->mlx);
+	if (keycode == 'a')
+		camera->origin.x += STEP;
+	if (keycode == 'd')
+		camera->origin.x -= STEP;
+	if (keycode == 'w')
+		camera->origin.y -= STEP;
+	if (keycode == 's')
+		camera->origin.y += STEP;
+	if (keycode == KEY_LEFT)
+		camera_rotate(camera, vec3_rotateY, ANGLE);
+	if (keycode == KEY_RIGHT)
+		camera_rotate(camera, vec3_rotateY, -ANGLE);
+	if (keycode == KEY_UP)
+		camera_rotate(camera, vec3_rotateX, -ANGLE);
+	if (keycode == KEY_DOWN)
+		camera_rotate(camera, vec3_rotateX, ANGLE);
+	return (0);
+}
+
+#define KEY_SCROLL_UP 4
+#define KEY_SCROLL_DOWN 5
+#define ON_MOUSEMOVE 6
+
+int	on_mouse_event(int keycode, int x, int y, t_vars *vars)
+{
+	t_camera	*camera = &vars->scene->camera;
+
+	(void)x;
+	(void)y;
+	if (keycode == KEY_SCROLL_UP)
+		camera->origin.z += STEP;
+	if (keycode == KEY_SCROLL_DOWN)
+		camera->origin.z -= STEP;
+	return (1);
+}
+
+int		render_next_frame(t_vars *vars)
+{
+	t_mlx *mlx = vars->mlx;
+	t_scene *scene = vars->scene;
+	render_image(mlx, scene);
+	return (1);
+}
+
+
 void	render_scene(t_scene *scene)
 {
+	t_vars	vars;
 	t_mlx		mlx;
 
 	window_init(&mlx);
+	vars.mlx = &mlx;
+	vars.scene = scene;
 	mlx_hook(mlx.win, 17, 0, close_win, &mlx);
-	mlx_key_hook(mlx.win, key_hook, &mlx);
-	render_image(&mlx, scene);
+	mlx_hook(mlx.win, 2, 1L << 0, key_hook, &vars);
+	mlx_mouse_hook(mlx.win, on_mouse_event, &vars);
+	mlx_loop_hook(mlx.ptr, render_next_frame, &vars);
 	mlx_loop(mlx.ptr);
 	close_win(&mlx);
 }
