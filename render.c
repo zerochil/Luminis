@@ -94,7 +94,7 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 			double attenuation = 1.0 / (1.0 + 0.00005 * light_dist * light_dist);
 			color_mul_scalar(&light_color, light->intensity * attenuation);
 			color_mul_scalar(&light_color, diffuse_intensity);
-			t_vec3 reflect_dir = vec3_normalize(vec3_sub(vec3_mul_scalar(hit.normal, 2.0 * vec3_dot(hit.normal, light_dir)), light_dir));
+			t_vec3 reflect_dir = vec3_reflect(vec3_negate(light_dir), hit.normal);
 			t_vec3 view_dir = vec3_normalize(vec3_sub(scene->camera.origin, hit.point));
 			color_add(&total_light, &light_color);
 

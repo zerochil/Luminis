@@ -122,3 +122,8 @@ bool vec3_compare(t_vec3 a, t_vec3 b)
 {
 	return (float_eq(a.x, b.x) && float_eq(a.y, b.y) && float_eq(a.z, b.z));
 }
+
+t_vec3 vec3_reflect(t_vec3 v, t_vec3 n)
+{
+	return (vec3_sub(v, vec3_mul_scalar(n, 2 * vec3_dot(v, n))));
+}

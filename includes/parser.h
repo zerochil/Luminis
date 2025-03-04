@@ -15,6 +15,6 @@ bool parse_color(t_color *color, char *str);
 
 
 bool is_normalized(t_vec3 vec);
-bool in_interval(float value, float min, float max);
+bool in_interval(double value, double min, double max);
 
 #endif

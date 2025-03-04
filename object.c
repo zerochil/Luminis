@@ -34,11 +34,11 @@ bool		intersect_cylinder(t_object *object, t_ray *ray, t_hit *hit)
 
 bool		intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
 {
-	float b;
-	float c;
-	float delta;
-	float t1;
-	float t2;
+	double b;
+	double c;
+	double delta;
+	double t1;
+	double t2;
 	t_vec3 position;
 	t_vec3 direction;
 
