@@ -12,4 +12,6 @@ typedef struct s_texture
 	int 	height;
 }	t_texture;
 
+bool load_texture(void *mlx, char *filename, t_texture *texture);
+
 #endif

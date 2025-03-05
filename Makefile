@@ -14,7 +14,8 @@ SRCS = minirt.c \
 	   handle_event.c\
 	   camera.c\
 	   color.c\
-	   mlx_image.c
+	   mlx_image.c\
+	   texture.c
 
 OBJS_DIR = .objects/
 OBJS = $(SRCS:%.c=$(OBJS_DIR)%.o)
@@ -25,7 +26,8 @@ HEADER_FILES = minirt.h         \
 			   camera.h         \
 			   handle_event.h   \
 			   object.h			\
-			   mlx_image.h
+			   mlx_image.h		\
+			   texture.h		
 
 HEADERS = $(HEADER_FILES:%=$(INCLUDE)/%)
 LIBRARIES = libft/libft.a libmath/libmath.a

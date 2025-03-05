@@ -1,11 +1,5 @@
 #include <render.h>
 
-void window_init(t_mlx *mlx)
-{
-	mlx->ptr = mlx_init();
-	mlx->win = mlx_new_window(mlx->ptr, WIDTH, HEIGHT, "Luminis");
-}
-
 t_hit find_intersection(t_scene *scene, t_ray *ray)
 {
 	t_hit closest_hit;
@@ -128,16 +122,13 @@ int		render_next_frame(t_mlx *mlx)
 	return (1);
 }
 
-void	render_scene(t_scene *scene)
+void	render_scene(t_mlx *mlx)
 {
-	t_mlx		mlx;
 
-	window_init(&mlx);
-	mlx.scene = scene;
-	mlx_hook(mlx.win, ON_DESTROY, 0, close_win, &mlx);
-	mlx_hook(mlx.win, ON_KEYDOWN, 1L << 0, on_key_event, &mlx);
-	mlx_mouse_hook(mlx.win, on_mouse_event, &mlx);
-	mlx_loop_hook(mlx.ptr, render_next_frame, &mlx);
-	mlx_loop(mlx.ptr);
-	close_win(&mlx);
+	mlx_hook(mlx->win, ON_DESTROY, 0, close_win, mlx);
+	mlx_hook(mlx->win, ON_KEYDOWN, 1L << 0, on_key_event, mlx);
+	mlx_mouse_hook(mlx->win, on_mouse_event, &mlx);
+	mlx_loop_hook(mlx->ptr, render_next_frame, &mlx);
+	mlx_loop(mlx->ptr);
+	close_win(mlx);
 }

@@ -13,7 +13,8 @@ bool load_texture(void *mlx, char *filename, t_texture *texture)
 {
 	t_image image;
 	size_t i;
-	size_t j;
+	size_t image_size;
+	int    *addr;
 
 	if (get_image(mlx, &image, filename) == false)
 		return (false);
@@ -21,12 +22,12 @@ bool load_texture(void *mlx, char *filename, t_texture *texture)
 	texture->height = image.height;
 	texture->ptr = track_malloc(sizeof(double) * image.width * image.height);
 	i = 0;
-	j = 0;
-	while (i < (size_t)image.width * image.height)
+	image_size = image.width * image.height;
+	addr = (int *)image.addr;
+	while (i < image_size)
 	{
-		texture->ptr[i] = rgba_to_normalized_double(*(int *)(image.addr + j));
+		texture->ptr[i] = rgba_to_normalized_double(addr[i]);
 		i++;
-		j += 4;
 	}
 	destroy_image(mlx, &image);
 	return (true);
