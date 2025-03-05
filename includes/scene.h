@@ -6,6 +6,7 @@
 # include <color.h>
 # include <object.h>
 # include <mlx_image.h>
+# include <texture.h>
 
 enum
 {
@@ -44,6 +45,7 @@ typedef struct s_scene
 	t_camera	camera;
 	t_array		*lights;
 	t_array		*objects;
+	t_texture	texture;
 }	t_scene;
 
 typedef struct s_mlx

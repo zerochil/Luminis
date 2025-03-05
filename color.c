@@ -27,3 +27,16 @@ void color_mul(t_color *color1, t_color *color2)
 	color1->g *= color2->g;
 	color1->b *= color2->b;
 }
+
+t_color color_new(double color)
+{
+	int r;
+	int g;
+	int b;
+
+	b = (int)color & 0xFF;
+	g = ((int)color >> 8) & 0xFF;
+	r = ((int)color >> 16) & 0xFF;
+
+	return ((t_color){r, g, b});
+}

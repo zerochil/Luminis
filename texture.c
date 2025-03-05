@@ -9,7 +9,7 @@ double rgba_to_normalized_double(int rgba)
 	return (color);
 }
 
-bool load_texture(void *mlx, char *filename, t_texture *texture)
+bool load_texture(void *mlx, char *filename, t_texture *texture, bool is_bump_texture)
 {
 	t_image image;
 	size_t i;
@@ -26,9 +26,28 @@ bool load_texture(void *mlx, char *filename, t_texture *texture)
 	addr = (int *)image.addr;
 	while (i < image_size)
 	{
-		texture->ptr[i] = rgba_to_normalized_double(addr[i]);
+		if (is_bump_texture)
+			texture->ptr[i] = rgba_to_normalized_double(addr[i]);
+		else
+			texture->ptr[i] = (double)addr[i];
 		i++;
 	}
 	destroy_image(mlx, &image);
 	return (true);
+}
+
+// 1 - v because the texture is flipped
+double get_texture_uv(t_texture *texture, double u, double v)
+{
+	int x = u * texture->width;
+	int y = (1 - v) * texture->height;
+	if (x < 0)
+		x = 0;
+	if (x >= texture->width)
+		x = texture->width - 1;
+	if (y < 0)
+		y = 0;
+	if (y >= texture->height)
+		y = texture->height - 1;
+	return (texture->ptr[y * texture->width + x]);
 }

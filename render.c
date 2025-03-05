@@ -31,6 +31,21 @@ bool is_shadowed(t_scene *scene, t_ray ray, double light_distance)
 	return (hit.object && hit.distance < light_distance);
 }
 
+typedef struct s_uv
+{
+	double u;
+	double v;
+}	t_uv;
+
+t_uv get_sphere_uv(t_hit hit)
+{
+	t_vec3 p = vec3_normalize(vec3_sub(hit.point, hit.object->origin));
+	double phi = atan2(p.z, p.x);
+	double theta = asin(p.y);
+	t_uv uv = {1 - (phi + M_PI) / (2 * M_PI), (theta + M_PI / 2) / M_PI};
+	return (uv);
+}
+
 t_color calculate_lighting(t_scene *scene, t_hit hit)
 {
 	t_color total_light = {0.0, 0.0, 0.0};
@@ -38,6 +53,12 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 	t_light *light;
 
 	t_color color = hit.object->color;
+	if (hit.object->type == SPHERE)
+	{
+		t_uv uv = get_sphere_uv(hit);
+		color = color_new(get_texture_uv(&scene->texture, uv.u, uv.v));
+	}
+	
 	color_mul_scalar(&color, 1.0/255.0);
 	t_color ambient = scene->ambient.color;
 	color_mul_scalar(&ambient, 1.0/255.0);
@@ -52,13 +73,13 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 			continue;
 
 		double diffuse_intensity = fmax(vec3_dot(hit.normal, light_dir), 0.0);
-		double attenuation = 1.0 / (1.0 + 0.01 * light_dist + 0.001 * light_dist * light_dist);
+		double attenuation = 1.0 / (1.0 + 0.01 * light_dist + 0.00001 * light_dist * light_dist);
 		if (diffuse_intensity > 0.0)
 		{
 			t_color light_color = light->color;
 			color_mul_scalar(&light_color, 1.0/255.0);
 
-			color_mul_scalar(&light_color, light->intensity * attenuation);
+			color_mul_scalar(&light_color, light->intensity * attenuation );
 			color_mul_scalar(&light_color, diffuse_intensity);
 			color_add(&total_light, &light_color);
 		}
@@ -67,7 +88,7 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 		t_vec3 view_dir = vec3_normalize(vec3_sub(scene->camera.origin, hit.point)); // you can avoid some calculations by storing the normalized view direction in the hit struct
 		double specular_intensity = pow(fmax(vec3_dot(view_dir, reflect_dir), 0.0), 30.0);
 		t_color specular_color = {1.0, 1.0, 1.0}; // white because we don't have a specular color, only metallic objects have specular color
-		color_mul_scalar(&specular_color, light->intensity);
+		color_mul_scalar(&specular_color, light->intensity * attenuation);
 		color_mul_scalar(&specular_color, specular_intensity * 0.5);
 		color_add(&total_light, &specular_color);
 	}
@@ -107,7 +128,11 @@ void raytrace(t_scene *scene, t_image *image)
 
 int	render_image(t_mlx *mlx)
 {
-	raytrace(&mlx->scene, &mlx->image);
+	static int frame;
+
+	if (frame++ % 10 == 0)
+		raytrace(&mlx->scene, &mlx->image);
+	frame++;
 	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->image.ptr, 0, 0);
 	return (1);
 }
