@@ -39,12 +39,25 @@ typedef struct s_uv
 
 t_uv get_sphere_uv(t_hit hit)
 {
-	t_vec3 p = vec3_normalize(vec3_sub(hit.point, hit.object->origin));
+	t_vec3 p = vec3_normalize(vec3_sub(hit.point, hit.object->origin));// why do we need to normalize the point?
 	double phi = atan2(p.z, p.x);
 	double theta = asin(p.y);
 	t_uv uv = {1 - (phi + M_PI) / (2 * M_PI), (theta + M_PI / 2) / M_PI};
 	return (uv);
 }
+
+/*t_vec3 get_sphere_position_from_uv(t_uv uv, double radius)*/
+/*{*/
+/*    double theta = 2 * M_PI * uv.u;  // Longitude*/
+/*    double phi = M_PI * uv.v;        // Latitude*/
+/**/
+/*    t_vec3 position;*/
+/*    position.x = radius * sin(phi) * cos(theta);*/
+/*    position.y = radius * sin(phi) * sin(theta);*/
+/*    position.z = radius * cos(phi);*/
+/**/
+/*    return position;*/
+/*}*/
 
 t_color calculate_lighting(t_scene *scene, t_hit hit)
 {
@@ -53,10 +66,28 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 	t_light *light;
 
 	t_color color = hit.object->color;
+	/*if (hit.object->type == SPHERE)*/
+	/*{*/
+	/*	t_uv uv = get_sphere_uv(hit);*/
+	/*	color = color_new(get_texture_uv(&scene->texture, uv.u, uv.v));*/
+	/*}*/
+
+
 	if (hit.object->type == SPHERE)
 	{
 		t_uv uv = get_sphere_uv(hit);
-		color = color_new(get_texture_uv(&scene->texture, uv.u, uv.v));
+
+		double coeff = .8;
+
+		t_vec3 tangent;
+		t_vec3 bitangent;
+
+		crate_orthonormal_basis(hit.normal, &tangent, &bitangent);
+		
+		double tex_val = get_texture_uv(&scene->texture, uv.u, uv.v);
+		t_vec3 perturbed_normal = vec3_lerp(tangent, bitangent, tex_val * coeff);
+		hit.normal = vec3_add(hit.normal, perturbed_normal);
+		hit.normal = vec3_normalize(hit.normal);
 	}
 	
 	color_mul_scalar(&color, 1.0/255.0);
