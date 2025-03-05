@@ -13,6 +13,5 @@ int main(int argc, char **argv)
 		return (ft_putstr_fd("Error: Failed to parse scene\n", 2), 1);
 	print_scene(&scene);
 
-	printf("Rendering scene...\n");
 	render_scene(&scene);
 }

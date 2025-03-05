@@ -1,4 +1,3 @@
-#include <mlx.h>
 #include <mlx_image.h>
 
 void	put_pixel(t_image *image, int x, int y, t_color color)
@@ -23,10 +22,13 @@ void   new_image(void *mlx_ptr, t_image *image, int width, int height)
 	image->addr = mlx_get_data_addr(image->ptr, &image->bpp, &image->line_len, &image->endian);
 }
 
-void  get_image(void *mlx_ptr, t_image *image, char *filename)
+bool  get_image(void *mlx_ptr, t_image *image, char *filename)
 {
 	image->ptr = mlx_xpm_file_to_image(mlx_ptr, filename, &image->width, &image->height);
+	if (image->ptr == NULL)
+		return (false);
 	image->addr = mlx_get_data_addr(image->ptr, &image->bpp, &image->line_len, &image->endian);
+	return (true);
 }
 
 void  destroy_image(void *mlx_ptr, t_image *image)

@@ -3,6 +3,8 @@
 
 #include <mlx.h>
 #include <color.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
 typedef struct s_image
 {
@@ -18,7 +20,7 @@ typedef struct s_image
 void	put_pixel(t_image *image, int x, int y, t_color color);
 void	put_image(void *mlx_ptr, void *win_ptr, t_image *image);
 void    new_image(void *mlx_ptr, t_image *image, int width, int height);
-void    get_image(void *mlx_ptr, t_image *image, char *filename);
+bool    get_image(void *mlx_ptr, t_image *image, char *filename);
 void    destroy_image(void *mlx_ptr, t_image *image);
 
 #endif
