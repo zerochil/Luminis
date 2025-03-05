@@ -4,7 +4,7 @@
 
 int	on_key_event(int keycode, t_mlx *mlx)
 {
-	t_camera	*camera = &mlx->scene->camera;
+	t_camera	*camera = &mlx->scene.camera;
 	if (keycode == KEY_ESC)
 		close_win(mlx);
 	if (keycode == 'a')
@@ -28,7 +28,7 @@ int	on_key_event(int keycode, t_mlx *mlx)
 
 int	on_mouse_event(int keycode, int x, int y, t_mlx *mlx)
 {
-	t_camera	*camera = &mlx->scene->camera;
+	t_camera	*camera = &mlx->scene.camera;
 	double aspect_ratio = (double)WIDTH / HEIGHT;
 	double scale = tan((camera->fov * M_PI / 180.0) / 2.0);
 	x = WIDTH / 2;

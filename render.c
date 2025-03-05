@@ -57,7 +57,6 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 		{
 			t_color light_color = light->color;
 			color_mul_scalar(&light_color, 1.0/255.0);
-			/*double attenuation = 1.0 / (1.0 + light_dist * light_dist);*/
 
 			color_mul_scalar(&light_color, light->intensity * attenuation);
 			color_mul_scalar(&light_color, diffuse_intensity);
@@ -106,29 +105,21 @@ void raytrace(t_scene *scene, t_image *image)
 	}
 }
 
-void	render_image(t_mlx *mlx, t_scene *scene)
+int	render_image(t_mlx *mlx)
 {
-	mlx->image.ptr = mlx_new_image(mlx->ptr, WIDTH, HEIGHT);
-	mlx->image.addr = mlx_get_data_addr(mlx->image.ptr, &mlx->image.bpp, &mlx->image.line_len, &mlx->image.endian);
-	raytrace(scene, &mlx->image);
+	raytrace(&mlx->scene, &mlx->image);
 	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->image.ptr, 0, 0);
-}
-
-int		render_next_frame(t_mlx *mlx)
-{
-	t_scene *scene = mlx->scene;
-
-	render_image(mlx, scene);
 	return (1);
 }
 
 void	render_scene(t_mlx *mlx)
 {
+	new_image(mlx->ptr, &mlx->image, WIDTH, HEIGHT);
 
 	mlx_hook(mlx->win, ON_DESTROY, 0, close_win, mlx);
 	mlx_hook(mlx->win, ON_KEYDOWN, 1L << 0, on_key_event, mlx);
-	mlx_mouse_hook(mlx->win, on_mouse_event, &mlx);
-	mlx_loop_hook(mlx->ptr, render_next_frame, &mlx);
+	mlx_mouse_hook(mlx->win, on_mouse_event, mlx);
+	mlx_loop_hook(mlx->ptr, render_image, mlx);
 	mlx_loop(mlx->ptr);
 	close_win(mlx);
 }

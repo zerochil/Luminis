@@ -50,7 +50,7 @@ typedef struct s_mlx
 {
 	void	*ptr;
 	void	*win;
-	t_scene *scene;
+	t_scene scene;
 	t_image	image;
 }	t_mlx;
 
