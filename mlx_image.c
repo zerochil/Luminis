@@ -1,0 +1,35 @@
+#include <mlx.h>
+#include <mlx_image.h>
+
+void	put_pixel(t_image *image, int x, int y, t_color color)
+{
+	int i;
+
+	i = (y * image->line_len) + (x * (image->bpp / 8));
+	image->addr[i] = color.b;
+	image->addr[i + 1] = color.g;
+	image->addr[i + 2] = color.r;
+	image->addr[i + 3] = 0x00;
+}
+
+void	put_image(void *mlx_ptr, void *win_ptr, t_image *image)
+{
+	mlx_put_image_to_window(mlx_ptr, win_ptr, image->ptr, 0, 0);
+}
+
+void   new_image(void *mlx_ptr, t_image *image, int width, int height)
+{
+	image->ptr = mlx_new_image(mlx_ptr, width, height);
+	image->addr = mlx_get_data_addr(image->ptr, &image->bpp, &image->line_len, &image->endian);
+}
+
+void  get_image(void *mlx_ptr, t_image *image, char *filename)
+{
+	image->ptr = mlx_xpm_file_to_image(mlx_ptr, filename, &image->width, &image->height);
+	image->addr = mlx_get_data_addr(image->ptr, &image->bpp, &image->line_len, &image->endian);
+}
+
+void  destroy_image(void *mlx_ptr, t_image *image)
+{
+	mlx_destroy_image(mlx_ptr, image->ptr);
+}

@@ -6,8 +6,6 @@
 #include <handle_event.h>
 #include <mlx.h>
 
-
-
 void render_scene(t_scene *scene);
 
 #endif

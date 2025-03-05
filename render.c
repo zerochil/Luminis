@@ -3,7 +3,7 @@
 void window_init(t_mlx *mlx)
 {
 	mlx->ptr = mlx_init();
-	mlx->win = mlx_new_window(mlx->ptr, 480, 360, "Luminis");
+	mlx->win = mlx_new_window(mlx->ptr, WIDTH, HEIGHT, "Luminis");
 }
 
 t_hit find_intersection(t_scene *scene, t_ray *ray)
@@ -29,17 +29,6 @@ t_hit find_intersection(t_scene *scene, t_ray *ray)
 		i++;
 	}
 	return (hit);
-}
-
-void put_pixel(t_image *image, int x, int y, t_color color)
-{
-	int i;
-
-	i = (y * image->line_len) + (x * (image->bpp / 8));
-	image->addr[i] = color.b;
-	image->addr[i + 1] = color.g;
-	image->addr[i + 2] = color.r;
-	image->addr[i + 3] = 0x00;
 }
 
 bool is_shadowed(t_scene *scene, t_ray ray, double light_distance)
@@ -128,7 +117,6 @@ void	render_image(t_mlx *mlx, t_scene *scene)
 	mlx->image.ptr = mlx_new_image(mlx->ptr, WIDTH, HEIGHT);
 	mlx->image.addr = mlx_get_data_addr(mlx->image.ptr, &mlx->image.bpp, &mlx->image.line_len, &mlx->image.endian);
 	raytrace(scene, &mlx->image);
-	//printf("Rendering complete\n");
 	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->image.ptr, 0, 0);
 }
 

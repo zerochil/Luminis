@@ -5,6 +5,7 @@
 # include <libmath.h>
 # include <color.h>
 # include <object.h>
+# include <mlx_image.h>
 
 enum
 {
@@ -44,15 +45,6 @@ typedef struct s_scene
 	t_array		*lights;
 	t_array		*objects;
 }	t_scene;
-
-typedef struct s_image
-{
-	void	*ptr;
-	char	*addr;
-	int		bpp;
-	int		line_len;
-	int		endian;
-}	t_image;
 
 typedef struct s_mlx
 {
