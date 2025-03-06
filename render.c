@@ -72,6 +72,26 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 		color = color_new(get_texture_uv(&scene->texture, uv.u, uv.v));
 	}
 
+	if (hit.object->type == PLANE)
+	{
+		double scale = 5;
+
+		t_vec3 u;
+		t_vec3 v;
+
+		create_orthonormal_basis(hit.normal, &u, &v);
+		double x = vec3_dot(hit.point, u);
+		double y = vec3_dot(hit.point, v);
+
+		int s = (int)floor(x / scale);
+		int t = (int)floor(y / scale);
+
+		if ((s + t) % 2 == 0)
+			color = (t_color){255, 255, 255};
+		else
+			color = (t_color){0, 0, 0};
+	}
+
 
 
 	if (hit.object->type == SPHERE)
