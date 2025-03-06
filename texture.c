@@ -39,8 +39,8 @@ bool load_texture(void *mlx, char *filename, t_texture *texture, bool is_bump_te
 // 1 - v because the texture is flipped
 double get_texture_uv(t_texture *texture, double u, double v)
 {
-	int x = (int)(u * texture->width);
-	int y = (int)((1 - v) * texture->height);
+	int x = (int)(u * texture->width) % texture->width;
+	int y = (int)((1 - v) * texture->height) % texture->height;
 	if (x < 0)
 		x = 0;
 	if (x >= texture->width)

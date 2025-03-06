@@ -77,15 +77,16 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 	{
 		t_uv uv = get_sphere_uv(hit);
 
-		double coeff = .8;
+		double coeff = .55;
 
 		t_vec3 tangent;
 		t_vec3 bitangent;
 
-		crate_orthonormal_basis(hit.normal, &tangent, &bitangent);
+		create_orthonormal_basis(hit.normal, &tangent, &bitangent);
 		
 		double tex_val = get_texture_uv(&scene->texture, uv.u, uv.v);
-		t_vec3 perturbed_normal = vec3_lerp(tangent, bitangent, tex_val * coeff);
+		t_vec3 perturbed_normal = vec3_add(hit.normal, vec3_mul_scalar(bitangent, (fabs(tex_val)) * coeff));
+		/*t_vec3 perturbed_normal = vec3_add(hit.normal, vec3_mul_scalar(vec3_add(tangent, bitangent), tex_val * coeff));*/
 		hit.normal = vec3_add(hit.normal, perturbed_normal);
 		hit.normal = vec3_normalize(hit.normal);
 	}
