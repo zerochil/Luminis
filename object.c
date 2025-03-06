@@ -27,7 +27,6 @@ bool		intersect_plane(t_object *object, t_ray *ray, t_hit *hit)
 bool	test(t_object *object, t_vec3 hit_point)
 {
     double height_proj = vec3_dot(vec3_sub(hit_point, object->origin), object->cylinder.orientation);
-	return true;
 	if (height_proj < 0 || height_proj > object->cylinder.height)
         return false;
 	return true;
@@ -114,6 +113,40 @@ bool		intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
 	return (true);
 }
 
+bool		intersect_cone(t_object *object, t_ray *ray, t_hit *hit)
+{
+	//(x−xc​)^2+(y−yc​)^2+(z−zc​)^2 − (1+k2)((x−xc​) * vx​+ (y−yc​) * vy​ + (z−zc​) * vz​)^2=0
+	double angle = object->cone.angle * (M_PI / 180);
+	double k = tan(angle);
+	double k2 = k * k;
+	t_vec3 d = ray->direction;
+	t_vec3 o = ray->origin;
+	double A = d.x * d.x + d.y * d.y - k2 * d.z * d.z;
+	double B = 2 * (o.x * d.x + o.y * d.y - k2 * o.z * d.z);
+	double C = o.x * o.x + o.y * o.y - k2 * o.z * o.z;
+
+	double delta = B * B - 4 * A * C;
+	if (delta < 0)
+		return (false);
+	double t1 = (-B - sqrt(delta)) / (2 * A);
+	double t2 = (-B + sqrt(delta)) / (2 * A);
+
+	if (t1 < 0 && t2 < 0)
+    return false;
+	double t;
+	if (t1 < 0) t = t2;
+	else if (t2 < 0) t = t1;
+	else t = fmin(t1, t2);
+	t_vec3 position = vec3_add(o, vec3_mul_scalar(d, t));
+	hit->normal = vec3_normalize((t_vec3){position.x, position.y, -k2 * position.z});
+	if (vec3_dot(hit->normal, d) > 0)
+		hit->normal = vec3_negate(hit->normal);
+	hit->distance = t;
+	hit->point = position;
+	hit->object = object;
+	return (true);
+}
+
 t_intersect object_intersection(enum e_object type)
 {
 	if (type == SPHERE)
@@ -122,6 +155,8 @@ t_intersect object_intersection(enum e_object type)
 		return (intersect_plane);
 	if (type == CYLINDER)
 		return (intersect_cylinder);
+	if (type == CONE)
+		return (intersect_cone);
 	return (NULL);
 }
 

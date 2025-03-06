@@ -141,6 +141,31 @@ bool	parse_line_cylinder(t_scene *scene, char **infos)
 	return (true);
 }
 
+bool	parse_line_cone(t_scene *scene, char **infos)
+{
+	t_object	*object;
+
+	if (ft_strarr_len(infos) != 5)
+		return (parser_error("Cone must have 4 arguments"));
+	object = object_create(CONE);
+	if (parse_vec3(&object->origin, infos[1]) == false)
+		return (parser_error("Cone origin must be a vec3"));
+	if (parse_vec3(&object->cone.orientation, infos[2]) == false)
+		return (parser_error("Cone orientation must be a vec3"));
+	if (parse_float(&object->cone.angle, infos[3]) == false)
+		return (parser_error("Cone opening angle must be a float"));
+	if (parse_color(&object->color, infos[4]) == false)
+		return (parser_error("Cone color must be a color"));
+	if (in_interval(object->cone.angle, 0, 90) == false)
+		return (parser_error("Cone opening angle must be in range [0, 90]"));
+	object->cone.orientation = vec3_normalize(object->cone.orientation);
+	if (is_normalized(object->cone.orientation) == false)
+		return (parser_error("Cone orientation must be normalized"));
+	object->cone.angle /= 2;
+	array_push(scene->objects, object);
+	return (true);
+}
+
 bool	parse_line(t_scene *scene, char *line)
 {
 	char	**infos;
@@ -161,6 +186,8 @@ bool	parse_line(t_scene *scene, char *line)
 		return (parse_line_plane(scene, infos));
 	if (ft_strcmp(infos[0], "cy") == 0)
 		return (parse_line_cylinder(scene, infos));
+	if (ft_strcmp(infos[0], "co") == 0)
+		return (parse_line_cone(scene, infos));
 	return (parser_error("Unknown identifier"));
 }
 

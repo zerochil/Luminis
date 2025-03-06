@@ -51,6 +51,11 @@ void	print_scene(t_scene *scene)
 				printf("\tradius: %.2f\n", object->cylinder.radius);
 				printf("\theight: %.2f\n", object->cylinder.height);
 				break;
+			case CONE:
+				printf("\ttype: CONE\n");
+				print_vec3(object->cone.orientation, "orientation");
+				printf("\thalf-angle: %.2f\n", object->cone.angle);
+				break;
 		}
 		print_color(object->color);
 		print_vec3(object->origin, "origin");

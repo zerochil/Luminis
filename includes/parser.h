@@ -3,6 +3,7 @@
 
 #include "scene.h"
 #include "libft.h"
+#include "debug.h"
 #include <stdbool.h>
 
 bool parser_error(char *error);

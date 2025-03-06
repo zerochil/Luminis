@@ -66,14 +66,14 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 	t_light *light;
 
 	t_color color = hit.object->color;
-	/*if (hit.object->type == SPHERE)*/
-	/*{*/
-	/*	t_uv uv = get_sphere_uv(hit);*/
-	/*	color = color_new(get_texture_uv(&scene->texture, uv.u, uv.v));*/
-	/*}*/
+	if (false && hit.object->type == SPHERE)
+	{
+		t_uv uv = get_sphere_uv(hit);
+		color = color_new(get_texture_uv(&scene->texture, uv.u, uv.v));
+	}
 
 
-	if (hit.object->type == SPHERE)
+	if (false && hit.object->type == SPHERE)
 	{
 		t_uv uv = get_sphere_uv(hit);
 
@@ -109,7 +109,7 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 		{
 			t_color light_color = light->color;
 			color_mul_scalar(&light_color, 1.0/255.0);
-			double attenuation = 1.0 / (1.0 + 0.0008 * light_dist * light_dist);
+			double attenuation = 1.0 / (1.0 + 0.00005 * light_dist * light_dist);
 			color_mul_scalar(&light_color, light->intensity * attenuation);
 			color_mul_scalar(&light_color, diffuse_intensity * 1);
 			color_add(&total_light, &light_color);
@@ -146,7 +146,6 @@ void raytrace(t_scene *scene, t_image *image)
 			double x_screen = (2 * x_ndc - 1) * aspect_ratio * scale;
 			double y_screen = (1 - 2 * y_ndc) * scale;
 			t_vec3 camera_ray = vec3_mul_matrix((t_vec3){x_screen, y_screen, -1}, view_matrix);
-
 			t_ray ray = {scene->camera.origin, vec3_normalize(camera_ray)};
 			t_hit hit = find_intersection(scene, &ray);
 			if (hit.object)

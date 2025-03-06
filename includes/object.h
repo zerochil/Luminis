@@ -9,7 +9,8 @@ enum e_object
 {
 	SPHERE = 0,
 	PLANE,
-	CYLINDER
+	CYLINDER,
+	CONE,
 };
 
 typedef struct s_object t_object;
@@ -48,6 +49,11 @@ struct s_object
 			double		radius;
 			double		height;
 		} cylinder;
+		struct
+		{
+			t_vec3	orientation;
+			double	angle;
+		}	cone;
 	};
 };
 

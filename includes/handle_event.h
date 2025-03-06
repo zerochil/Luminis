@@ -7,7 +7,7 @@
 # include <mlx.h>
 # include <camera.h>
 
-# define STEP -1
+# define STEP 1
 # define ANGLE 1
 
 # define KEY_ESC 65307

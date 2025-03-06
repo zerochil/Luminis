@@ -8,13 +8,17 @@ int	on_key_event(int keycode, t_mlx *mlx)
 	if (keycode == KEY_ESC)
 		close_win(mlx);
 	if (keycode == 'a')
-		camera->origin.x += STEP;
+		camera_translate(camera, RIGHT, -STEP);
 	if (keycode == 'd')
-		camera->origin.x -= STEP;
+		camera_translate(camera, RIGHT, STEP);
 	if (keycode == 'w')
-		camera->origin.y -= STEP;
+		camera_translate(camera, FORWARD, STEP);
 	if (keycode == 's')
-		camera->origin.y += STEP;
+		camera_translate(camera, FORWARD, -STEP);
+	if (keycode == 'q')
+		camera_translate(camera, UP, STEP);
+	if (keycode == 'e')
+		camera_translate(camera, UP, -STEP);
 	if (keycode == KEY_LEFT)
 		camera_rotate(camera, vec3_rotateY, ANGLE);
 	if (keycode == KEY_RIGHT)
@@ -29,23 +33,13 @@ int	on_key_event(int keycode, t_mlx *mlx)
 int	on_mouse_event(int keycode, int x, int y, t_mlx *mlx)
 {
 	t_camera	*camera = &mlx->scene.camera;
-	double aspect_ratio = (double)WIDTH / HEIGHT;
-	double scale = tan((camera->fov * M_PI / 180.0) / 2.0);
-	x = WIDTH / 2;
-	y = HEIGHT / 2;
-	double x_ndc = (x + 0.5) / WIDTH;
-	double y_ndc = (y + 0.5) / HEIGHT;
-	double x_screen = (2 * x_ndc - 1) * aspect_ratio * scale;
-	double y_screen = (1 - 2 * y_ndc) * scale;
-	t_vec3		origin = camera->origin;
-	t_matrix view_matrix = camera_matrix(*camera);
-	t_vec3 direction = vec3_mul_matrix((t_vec3){x_screen, y_screen, -1}, view_matrix);
-	//printf("%f, %f, %f\n", direction.x, direction.y, direction.z);
 
+	(void)x;
+	(void)y;
 	if (keycode == KEY_SCROLL_UP)
-		camera->origin = vec3_add(origin, vec3_mul_scalar(direction, -STEP));
+		camera->fov = (camera->fov - 1 > 0) ? camera->fov - 1 : 0;
 	if (keycode == KEY_SCROLL_DOWN)
-		camera->origin = vec3_add(origin, vec3_mul_scalar(direction, STEP));
+		camera->fov = (camera->fov + 1 < 180) ? camera->fov + 1 : 180;
 	return (1);
 }
 

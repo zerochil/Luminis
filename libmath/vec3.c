@@ -129,20 +129,28 @@ t_vec3 vec3_reflect(t_vec3 v, t_vec3 n)
 }
 void	vec3_rotateY(t_vec3 *vec, double angle)
 {
+	double x;
+	double z;
+
 	angle = angle * (M_PI / 180);
-	vec->x = vec->x * cos(angle) + vec->z * sin(angle);
-    vec->y = vec->y;
-    vec->z = -vec->x * sin(angle) + vec->z * cos(angle);
+	x = vec->x;
+	z = vec->z;
+	vec->x = x * cos(angle) + z * sin(angle);
+    vec->z = -x * sin(angle) + z * cos(angle);
 }
 
 void	vec3_rotateX(t_vec3 *vec, double angle)
 {
-	angle = angle * (M_PI / 180);
-	vec->x = vec->x;
-    vec->y = vec->y * cos(angle) - vec->z * sin(angle);
-    vec->z = vec->y * sin(angle) + vec->z * cos(angle);
-}
+	double y;
+	double z;
 
+	angle = angle * (M_PI / 180);
+	y = vec->y;
+	z = vec->z;
+	
+    vec->y = y * cos(angle) - z * sin(angle);
+    vec->z = y * sin(angle) + z * cos(angle);
+}
 
 void create_orthonormal_basis(t_vec3 n, t_vec3 *b1, t_vec3 *b2) {
     if (n.z < -0.9999999) {
@@ -150,19 +158,11 @@ void create_orthonormal_basis(t_vec3 n, t_vec3 *b1, t_vec3 *b2) {
         *b2 = (t_vec3){0.0, 1.0, 0.0};
         return;
     }
-
     float a = 1.0 / (1.0 + n.z);
     float b = -n.x * n.y * a;
-
     *b1 = (t_vec3){1.0 - n.x * n.x * a, b, -n.x};
     *b2 = (t_vec3){b, 1.0 - n.y * n.y * a, -n.y};
-
-    if (n.z < 0) {
-        *b1 = (t_vec3){-b1->x, -b1->y, -b1->z};
-        *b2 = (t_vec3){-b2->x, -b2->y, -b2->z};
-    }
 }
-
 
 t_vec3 vec3_lerp(t_vec3 a, t_vec3 b, double t)
 {
