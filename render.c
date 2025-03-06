@@ -120,12 +120,17 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 			t_color specular_color = {1.0, 1.0, 1.0}; // white because we don't have a specular color, only metallic objects have specular color
 			color_mul_scalar(&specular_color, light->intensity * attenuation);
 			color_mul_scalar(&specular_color, pow(fmax(vec3_dot(view_dir, reflect_dir), 0.0), 50.0));
-			color_mul_scalar(&specular_color, 0.7);
+			color_mul_scalar(&specular_color, 0.9);
 			color_add(&total_light, &specular_color);
 
 		}
 	}
+	// printf("color: %f, %f, %f\n", color.r, color.g, color.b);
+	// printf("total light: %f, %f, %f\n", total_light.r, total_light.g, total_light.b);
+	//color_add_scalar(&total_light, 1.0);
 	color_mul(&color, &total_light);
+	// printf("result: %f, %f, %f\n", color.r, color.g, color.b);
+	//exit(1);
 	color_clamp(&color);
 	color_mul_scalar(&color, 255.0);
 	return (color);

@@ -120,10 +120,13 @@ bool		intersect_cone(t_object *object, t_ray *ray, t_hit *hit)
 	double k = tan(angle);
 	double k2 = k * k;
 	t_vec3 d = ray->direction;
-	t_vec3 o = ray->origin;
-	double A = d.x * d.x + d.y * d.y - k2 * d.z * d.z;
-	double B = 2 * (o.x * d.x + o.y * d.y - k2 * o.z * d.z);
-	double C = o.x * o.x + o.y * o.y - k2 * o.z * o.z;
+	double dv = vec3_dot(d, object->cone.orientation);
+	t_vec3 o = vec3_sub(ray->origin, object->origin);
+	double ov = vec3_dot(o, object->cone.orientation);
+
+    double A = vec3_dot(d, d) - (1 + k2) * (dv * dv);
+    double B = 2 * (vec3_dot(o, d) - (1 + k2) * (ov * dv));
+    double C = vec3_dot(o, o) - (1 + k2) * (ov * ov);
 
 	double delta = B * B - 4 * A * C;
 	if (delta < 0)
@@ -137,8 +140,11 @@ bool		intersect_cone(t_object *object, t_ray *ray, t_hit *hit)
 	if (t1 < 0) t = t2;
 	else if (t2 < 0) t = t1;
 	else t = fmin(t1, t2);
-	t_vec3 position = vec3_add(o, vec3_mul_scalar(d, t));
-	hit->normal = vec3_normalize((t_vec3){position.x, position.y, -k2 * position.z});
+	t_vec3 position = vec3_add(ray->origin, vec3_mul_scalar(d, t));
+	t_vec3 PC = vec3_sub(position, object->origin);
+	t_vec3 cone_axis_component = vec3_mul_scalar(object->cone.orientation, 
+		(1 + k2) * vec3_dot(object->cone.orientation, PC));
+	hit->normal = vec3_normalize(vec3_sub(PC, cone_axis_component));	
 	if (vec3_dot(hit->normal, d) > 0)
 		hit->normal = vec3_negate(hit->normal);
 	hit->distance = t;

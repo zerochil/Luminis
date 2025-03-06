@@ -7,6 +7,13 @@ void color_mul_scalar(t_color *color, double scalar)
 	color->b *= scalar;
 }
 
+void color_add_scalar(t_color *color, double scalar)
+{
+	color->r += scalar;
+	color->g += scalar;
+	color->b += scalar;
+}
+
 void color_add(t_color *color1, t_color *color2)
 {
 	color1->r += color2->r;
