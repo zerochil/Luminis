@@ -126,6 +126,7 @@ bool	parse_line_cylinder(t_scene *scene, char **infos)
 		return (parser_error("Cylinder radius must be positive"));
 	if (in_interval(object->cylinder.height, 0, INFINITY) == false)
 		return (parser_error("Cylinder height must be positive"));
+	object->cylinder.orientation = vec3_normalize(object->cylinder.orientation);
 	if (is_normalized(object->cylinder.orientation) == false)
 		return (parser_error("Cylinder orientation must be normalized"));
 	object->cylinder.radius /= 2;

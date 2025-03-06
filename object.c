@@ -16,7 +16,7 @@ bool		intersect_plane(t_object *object, t_ray *ray, t_hit *hit)
 	if (t > 0) // should be t >= 0
 	{
 		hit->distance = t;
-		hit->normal = (denominator > 0)? vec3_negate(normal): normal;
+		hit->normal = (denominator > 0) ? vec3_negate(normal): normal;
 		hit->object = object;
 		hit->point = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, t));
 		return (true);
@@ -24,13 +24,57 @@ bool		intersect_plane(t_object *object, t_ray *ray, t_hit *hit)
 	return (false);
 }
 
-bool		intersect_cylinder(t_object *object, t_ray *ray, t_hit *hit)
+bool	test(t_object *object, t_vec3 hit_point)
 {
-	(void)hit;
-	(void)ray;
-	(void)object;
-	return (false);
+    double height_proj = vec3_dot(vec3_sub(hit_point, object->origin), object->cylinder.orientation);
+	return true;
+	if (height_proj < 0 || height_proj > object->cylinder.height)
+        return false;
+	return true;
 }
+
+bool intersect_cylinder(t_object *object, t_ray *ray, t_hit *hit)
+{
+    t_vec3 V = object->cylinder.orientation;
+    t_vec3 CO = vec3_sub(ray->origin, object->origin);
+
+    t_vec3 D_perp = vec3_sub(ray->direction, vec3_mul_scalar(V, vec3_dot(ray->direction, V)));
+    t_vec3 CO_perp = vec3_sub(CO, vec3_mul_scalar(V, vec3_dot(CO, V)));
+
+    double A = vec3_dot(D_perp, D_perp);
+    double B = 2 * vec3_dot(CO_perp, D_perp);
+    double C = vec3_dot(CO_perp, CO_perp) - (object->cylinder.radius * object->cylinder.radius);
+
+    double discriminant = B * B - 4 * A * C;
+    if (discriminant < 0)
+        return false;
+
+    double t1 = (-B - sqrt(discriminant)) / (2 * A);
+    double t2 = (-B + sqrt(discriminant)) / (2 * A);
+	if (t1 < 0 && t2 < 0)
+		return false;
+	t_vec3 hit_point;
+	t_vec3 hit_point1 = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, t1));
+	t_vec3 hit_point2 = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, t2));
+	if (t1 < t2 && test(object, hit_point1))
+	{
+		hit_point = hit_point1;
+		hit->distance = t1;
+	}
+	else if (test(object, hit_point2))
+	{
+		hit->distance = t2;
+		hit_point = hit_point2;
+	}
+	else
+		return false;
+	double height_proj = vec3_dot(vec3_sub(hit_point, object->origin), object->cylinder.orientation);
+    hit->point = hit_point;
+    hit->normal = vec3_normalize(vec3_sub(hit_point, vec3_add(object->origin, vec3_mul_scalar(V, height_proj))));
+	hit->object = object;
+    return true;
+}
+
 
 bool		intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
 {
