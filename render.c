@@ -39,7 +39,7 @@ typedef struct s_uv
 
 t_uv get_sphere_uv(t_hit hit)
 {
-	t_vec3 p = vec3_normalize(vec3_sub(hit.point, hit.object->origin));// why do we need to normalize the point?
+	t_vec3 p = vec3_sub(hit.point, hit.object->origin);
 	double phi = atan2(p.z, p.x);
 	double theta = asin(p.y);
 	t_uv uv = {1 - (phi + M_PI) / (2 * M_PI), (theta + M_PI / 2) / M_PI};
@@ -73,7 +73,8 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 	}
 
 
-	if (false && hit.object->type == SPHERE)
+
+	if (hit.object->type == SPHERE)
 	{
 		t_uv uv = get_sphere_uv(hit);
 
@@ -95,6 +96,7 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 	t_color ambient = scene->ambient.color;
 	color_mul_scalar(&ambient, 1.0/255.0);
 	color_mul_scalar(&ambient, scene->ambient.intensity);
+	color_mul(&ambient, &color);
 	total_light = ambient;
 	for (size_t i = 0; i < lights->size; i++)
 	{
@@ -109,7 +111,9 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 		{
 			t_color light_color = light->color;
 			color_mul_scalar(&light_color, 1.0/255.0);
-			double attenuation = 1.0 / (1.0 + 0.00005 * light_dist * light_dist);
+			color_mul(&light_color, &color);
+			double attenuation = 1.0 / (1.0 + 0.0001 * light_dist * light_dist);
+			/*attenuation = 1;*/
 			color_mul_scalar(&light_color, light->intensity * attenuation);
 			color_mul_scalar(&light_color, diffuse_intensity * 1);
 			color_add(&total_light, &light_color);
@@ -125,12 +129,8 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 
 		}
 	}
-	// printf("color: %f, %f, %f\n", color.r, color.g, color.b);
-	// printf("total light: %f, %f, %f\n", total_light.r, total_light.g, total_light.b);
-	//color_add_scalar(&total_light, 1.0);
-	color_mul(&color, &total_light);
-	// printf("result: %f, %f, %f\n", color.r, color.g, color.b);
-	//exit(1);
+	/*color_mul(&color, &total_light);*/
+	color = total_light;
 	color_clamp(&color);
 	color_mul_scalar(&color, 255.0);
 	return (color);
