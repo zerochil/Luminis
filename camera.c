@@ -31,5 +31,4 @@ void	camera_rotate(t_camera *camera, void (*rotate)(t_vec3 *, double), double an
 	camera->up = vec3_normalize(camera->up);
 	rotate(&camera->right, angle);
 	camera->right = vec3_normalize(camera->right);
-
 }

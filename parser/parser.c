@@ -16,6 +16,20 @@ bool	parse_line_ambient(t_scene *scene, char **infos)
 	return (true);
 }
 
+
+void basis_from_forward(t_vec3 *forward, t_vec3 *right, t_vec3 *up)
+{
+	if (float_eq(fabs(forward->y), 1.0))
+		*up = (t_vec3){0, 0, -1};
+	else
+		*up = (t_vec3){0, 1, 0};
+
+	*right = vec3_cross(*forward, *up);
+	*right = vec3_normalize(*right);
+	*up = vec3_cross(*right, *forward);
+	*up = vec3_normalize(*up);
+}
+
 bool	parse_line_camera(t_scene *scene, char **infos)
 {
 	if (ft_strarr_len(infos) != 4)
@@ -35,14 +49,7 @@ bool	parse_line_camera(t_scene *scene, char **infos)
 		return (parser_error("Camera direction must be normalized"));
 	if (vec3_compare(scene->camera.forward, (t_vec3){0, 0, 0}))
 		scene->camera.forward = (t_vec3){0, 0, -1};
-	if (float_eq(fabs(scene->camera.forward.y), 1.0))
-		scene->camera.up = (t_vec3){0, 0, -1};
-	else
-		scene->camera.up = (t_vec3){0, 1, 0};
-	scene->camera.right = vec3_cross(scene->camera.forward, scene->camera.up);
-	scene->camera.right = vec3_normalize(scene->camera.right);
-	scene->camera.up = vec3_cross(scene->camera.right, scene->camera.forward);
-	scene->camera.up = vec3_normalize(scene->camera.up);
+	create_orthonormal_basis(scene->camera.forward, &scene->camera.right, &scene->camera.up);
 	scene->camera.is_declared = true;
 	return (true);
 }

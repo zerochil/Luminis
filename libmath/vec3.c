@@ -143,16 +143,26 @@ void	vec3_rotateX(t_vec3 *vec, double angle)
     vec->z = vec->y * sin(angle) + vec->z * cos(angle);
 }
 
-void create_orthonormal_basis(t_vec3 fixed, t_vec3 *b1, t_vec3 *b2)
-{
-	t_vec3 arbitrary;
 
-	arbitrary = (t_vec3){0, 0, 1};
-	if (float_eq(fabs(fixed.z), 1.0))
-		arbitrary = (t_vec3){1, 0, 0};
-	*b1 = vec3_normalize(vec3_cross(fixed, arbitrary));
-	*b2 = vec3_normalize(vec3_cross(fixed, *b1));
+void create_orthonormal_basis(t_vec3 n, t_vec3 *b1, t_vec3 *b2) {
+    if (n.z < -0.9999999) {
+        *b1 = (t_vec3){1.0, 0.0, 0.0};
+        *b2 = (t_vec3){0.0, 1.0, 0.0};
+        return;
+    }
+
+    float a = 1.0 / (1.0 + n.z);
+    float b = -n.x * n.y * a;
+
+    *b1 = (t_vec3){1.0 - n.x * n.x * a, b, -n.x};
+    *b2 = (t_vec3){b, 1.0 - n.y * n.y * a, -n.y};
+
+    if (n.z < 0) {
+        *b1 = (t_vec3){-b1->x, -b1->y, -b1->z};
+        *b2 = (t_vec3){-b2->x, -b2->y, -b2->z};
+    }
 }
+
 
 t_vec3 vec3_lerp(t_vec3 a, t_vec3 b, double t)
 {
