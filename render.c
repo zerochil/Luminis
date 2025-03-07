@@ -46,6 +46,24 @@ t_uv get_sphere_uv(t_hit hit)
 	return (uv);
 }
 
+t_uv get_cylinder_uv(t_hit hit)
+{
+	t_vec3 p;
+	t_vec3 p_local = vec3_sub(hit.point, hit.object->origin);
+	t_vec3 cx;
+	t_vec3 cy;
+	t_vec3 cz = hit.object->cylinder.orientation;
+	create_orthonormal_basis(cz, &cx, &cy);
+
+	p.x = vec3_dot(p_local, cx);
+	p.y = vec3_dot(p_local, cy);
+	p.z = vec3_dot(p_local, cz);
+
+	double v = p.z / hit.object->cylinder.height;
+	double u = (atan2(p.y, p.x) + M_PI) / (2 * M_PI);
+	return (t_uv){u, v};
+}
+
 /*t_vec3 get_sphere_position_from_uv(t_uv uv, double radius)*/
 /*{*/
 /*    double theta = 2 * M_PI * uv.u;  // Longitude*/
@@ -77,7 +95,7 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 		t_vec3 p = vec3_sub(hit.point, hit.object->origin);
 		double phi = acos(p.y/hit.object->sphere.radius);
 		double theta = atan2(p.z, p.x);
-		double scale = 100;
+		double scale = 20;
 
 		double i = floor(phi / (M_PI / scale));
 		double j = floor(theta / ( 2 * M_PI / scale));
@@ -108,6 +126,19 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 			color = (t_color){0, 0, 0};
 	}
 
+	if (hit.object->type == CYLINDER)
+	{
+		t_uv uv = get_cylinder_uv(hit);
+		
+		//color = color_new(get_texture_uv(&scene->texture, uv.u, uv.v));
+		double scale = 10;
+		int s = floor(uv.u * scale);
+		int t = floor(uv.v * scale);
+		if ((s + t) % 2 == 0)
+			color = (t_color){255, 255, 255};
+		else
+			color = (t_color){0, 0, 0};
+	}
 
 
 	if (false && hit.object->type == SPHERE)

@@ -28,7 +28,10 @@ int main(int argc, char **argv)
 	// This is a temporary solution
 	// The texture has to be inside the object
 	// It should be loaded in object creation while parsing the scene
-	if (load_texture(mlx.ptr, "textures/b1.xpm", &mlx.scene.texture, IS_BUMP_TEXTURE) == false)
+	char *path;
+	//path = "textures/world_map.xpm";
+	path = "textures/brick_wall.xpm";
+	if (load_texture(mlx.ptr, path, &mlx.scene.texture, IS_COLOR_TEXTURE) == false)
 		return (ft_putstr_fd("Error: Failed to load texture\n", 2), 1);
 
 	/*t_color color = color_new(mlx.scene.texture.ptr[0]);*/
