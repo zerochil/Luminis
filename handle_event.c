@@ -20,13 +20,17 @@ int	on_key_event(int keycode, t_mlx *mlx)
 	if (keycode == 'e')
 		camera_translate(camera, UP, -STEP);
 	if (keycode == KEY_LEFT)
-		camera_rotate(camera, vec3_rotateY, ANGLE);
+		camera_rotate(camera, camera->up, -ANGLE);
 	if (keycode == KEY_RIGHT)
-		camera_rotate(camera, vec3_rotateY, -ANGLE);
+		camera_rotate(camera, camera->up, ANGLE);
 	if (keycode == KEY_UP)
-		camera_rotate(camera, vec3_rotateX, -ANGLE);
+		camera_rotate(camera, camera->right, ANGLE);
 	if (keycode == KEY_DOWN)
-		camera_rotate(camera, vec3_rotateX, ANGLE);
+		camera_rotate(camera, camera->right, -ANGLE);
+	if (keycode == '[')
+		camera_rotate(camera, camera->forward, -ANGLE);
+	if (keycode == ']')
+		camera_rotate(camera, camera->forward, ANGLE);
 	return (0);
 }
 

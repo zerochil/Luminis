@@ -37,11 +37,29 @@ typedef struct s_uv
 	double v;
 }	t_uv;
 
-t_uv get_sphere_uv(t_hit hit)
+t_uv _get_sphere_uv(t_hit hit)
 {
 	t_vec3 p = vec3_sub(hit.point, hit.object->origin);
+	double r = hit.object->sphere.radius;
+	double phi = asin(p.z);
+	double theta = acos(p.x / (r * cos(phi)));
+	
+	// double phi = atan2(p.y, p.x);
+	// double theta = asin(p.z);
+	// t_uv uv = {1 - (phi + M_PI) / (2 * M_PI), (theta + M_PI / 2) / M_PI};
+
+	t_uv uv = {theta/(2 * M_PI), 0.5 + phi/M_PI};
+
+	return (uv);
+}
+
+
+t_uv get_sphere_uv(t_hit hit)
+{
+	//t_vec3 p = vec3_normalize(vec3_sub(hit.point, hit.object->origin));
+	t_vec3 p = vec3_sub(hit.point, hit.object->origin);
 	double phi = atan2(p.z, p.x);
-	double theta = asin(p.y);
+	double theta = asin(p.y/hit.object->sphere.radius);
 	t_uv uv = {1 - (phi + M_PI) / (2 * M_PI), (theta + M_PI / 2) / M_PI};
 	return (uv);
 }
@@ -84,7 +102,7 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 	t_light *light;
 
 	t_color color = hit.object->color;
-	if (false && hit.object->type == SPHERE)
+	if (hit.object->type == SPHERE)
 	{
 		t_uv uv = get_sphere_uv(hit);
 		color = color_new(get_texture_uv(&scene->texture, uv.u, uv.v));
@@ -106,7 +124,7 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 			color = (t_color){0, 0, 0};
 	}
 
-	if (hit.object->type == PLANE)
+	if (false && hit.object->type == PLANE)
 	{
 		double scale = 5;
 
@@ -130,14 +148,14 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 	{
 		t_uv uv = get_cylinder_uv(hit);
 		
-		//color = color_new(get_texture_uv(&scene->texture, uv.u, uv.v));
-		double scale = 10;
-		int s = floor(uv.u * scale);
-		int t = floor(uv.v * scale);
-		if ((s + t) % 2 == 0)
-			color = (t_color){255, 255, 255};
-		else
-			color = (t_color){0, 0, 0};
+		color = color_new(get_texture_uv(&scene->texture, uv.u, uv.v));
+		// double scale = 10;
+		// int s = floor(uv.u * scale);
+		// int t = floor(uv.v * scale);
+		// if ((s + t) % 2 == 0)
+		// 	color = (t_color){255, 255, 255};
+		// else
+		// 	color = (t_color){0, 0, 0};
 	}
 
 

@@ -106,8 +106,9 @@ bool	parse_line_plane(t_scene *scene, char **infos)
 		return (parser_error("Plane normal must be a vec3"));
 	if (parse_color(&object->color, infos[3]) == false)
 		return (parser_error("Plane color must be a color"));
-	if (is_normalized(object->plane.normal) == false)
-		return (parser_error("Plane normal must be normalized"));
+	object->plane.normal = vec3_normalize(object->plane.normal);
+	//if (is_normalized(object->plane.normal) == false)
+		//return (parser_error("Plane normal must be normalized"));
 	array_push(scene->objects, object);
 	return (true);
 }

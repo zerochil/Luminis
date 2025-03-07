@@ -13,7 +13,7 @@ enum
 };
 
 t_matrix camera_matrix(t_camera camera);
-void	camera_rotate(t_camera *camera, void (*rotate)(t_vec3 *, double), double angle);
-void camera_translate(t_camera *camera, int direction, double step);
+void	camera_rotate(t_camera *camera, t_vec3 axis, double angle);
+void	camera_translate(t_camera *camera, int direction, double step);
 
 #endif
