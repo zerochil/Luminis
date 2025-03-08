@@ -24,33 +24,6 @@ t_matrix camera_matrix(t_camera camera)
     return matrix;
 }
 
-void	rotate_dev(t_vec3 *vec, t_vec3 axis, double angle)
-{
-	angle = angle * (M_PI / 180);
-	double half_theta = sin(angle / 2);
-	double qx = axis.x * half_theta;
-	double qy = axis.y * half_theta;
-	double qz = axis.z * half_theta;
-	double qw = cos(angle / 2);
-
-	//p' = q * p * conj(q);
-	double x = (1 - 2 * qy * qy - 2 * qz * qz) * vec->x;
-	x += (2 * qx * qy - 2 * qw * qz) * vec->y;
-	x += (2 * qx * qz + 2 * qw * qy) * vec->z;
-
-	double y = (2 * qx * qy + 2 * qw * qz) * vec->x;
-	y += (1 - 2 * qx * qx - 2 * qz * qz) * vec->y;
-	y += (2 * qy * qz - 2 * qw * qx) * vec->z;
-
-	double z = (2 * qx * qz - 2 * qw * qy) * vec->x;
-	z += (2 * qy * qz + 2 * qw * qx) * vec->y;
-	z += (1 - 2 * qx * qx - 2 * qy * qy) * vec->z;
-
-	vec->x = x;
-	vec->y = y;
-	vec->z = z;
-}
-
 void	camera_rotate(t_camera *camera, t_vec3 axis, double angle)
 {
     rotate_dev(&camera->forward, axis, angle);

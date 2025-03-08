@@ -26,6 +26,7 @@ t_vec3	vec3_normalize(t_vec3 a);
 t_vec3  vec3_negate(t_vec3 a);
 void	vec3_rotateX(t_vec3 *vec, double angle);
 void	vec3_rotateY(t_vec3 *vec, double angle);
+void	rotate_dev(t_vec3 *vec, t_vec3 axis, double angle);
 t_vec3 vec3_reflect(t_vec3 v, t_vec3 n);
 t_vec3 vec3_lerp(t_vec3 a, t_vec3 b, double t);
 void create_orthonormal_basis(t_vec3 fixed, t_vec3 *b1, t_vec3 *b2);

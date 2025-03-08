@@ -227,6 +227,8 @@ void	apply_transformation(t_control control)
 	t_keybind	*keybind;
 	size_t i;
 
+	if (control.selected.type == NONE)
+		return ;
 	i = 0;
 	while (i < control.keybinds->size)
 	{

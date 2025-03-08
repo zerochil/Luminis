@@ -59,7 +59,7 @@ void update_height(t_keybind *keybind, t_entity *selected)
     if (selected->type != OBJECT || selected->object->type != CYLINDER)
         return ;
     object = selected->object;
-    object->cylinder.radius += keybind->dir_flag * HEIGHT_STEP;
+    object->cylinder.height += keybind->dir_flag * HEIGHT_STEP;
 }
 
 void update_angle(t_keybind *keybind, t_entity *selected)
@@ -91,6 +91,16 @@ void update_pos(t_keybind *keybind, t_entity *selected)
     pos->z += keybind->dir_flag * (keybind->property == Z_POS) * -POS_STEP;
 }
 
+void    object_rotate(t_object *object, t_vec3 axis, double angle)
+{
+    if (object->type == CYLINDER)
+        rotate_dev(&object->cylinder.orientation, axis, angle);
+    else if (object->type == PLANE)
+        rotate_dev(&object->plane.normal, axis, angle);
+    else if (object->type == CONE)
+        rotate_dev(&object->cone.orientation, axis, angle);
+}
+
 void update_rot(t_keybind *keybind, t_entity *selected)
 {
     t_camera *camera;
@@ -112,15 +122,15 @@ void update_rot(t_keybind *keybind, t_entity *selected)
             axis = camera->forward;
         camera_rotate(selected->camera, axis, angle);
     }
-    return ;
+    if (keybind->property == X_ROT)
+        axis = (t_vec3){1,0,0};
+    else if (keybind->property == Y_ROT)
+        axis = (t_vec3){0,1,0};
+    else
+        axis = (t_vec3){0,0,1};
     //TODO: flatten object definition so that we apply rotation directly on the normal.
     object = selected->object;
-    if (object->type == CYLINDER)
-        printf("TODO: rotate cylinder\n");
-    else if (object->type == PLANE)
-        printf("TODO: rotate plane\n");
-    else if (object->type == CONE)
-        printf("TODO: rotate cone\n");
+    object_rotate(object, axis, keybind->dir_flag * ANGLE_STEP);
 }
 
 t_array *keybinds_init(void)

@@ -97,16 +97,21 @@ int	on_key_release(int keycode, t_mlx *mlx)
 
 int	on_mouse_event(int keycode, int x, int y, t_mlx *mlx)
 {
-	t_camera	*camera = &mlx->scene.camera;
+	t_camera	*camera;
+	t_entity	entity;
 
-	(void)x;
-	(void)y;
+	camera = &mlx->scene.camera;
 	if (keycode == KEY_SCROLL_UP)
 		camera->fov = (camera->fov - 1 > 0) ? camera->fov - 1 : 0;
 	if (keycode == KEY_SCROLL_DOWN)
 		camera->fov = (camera->fov + 1 < 180) ? camera->fov + 1 : 180;
 	if (keycode == KEY_LEFT_CLICK)
-		mlx->control.selected = select_entity(&mlx->scene, OBJECT, x, y);
+	{
+		entity = select_entity(&mlx->scene, OBJECT, x, y);
+		if (entity.object == NULL)
+			entity.type = NONE;
+		mlx->control.selected = entity;
+	}
 	return (1);
 }
 

@@ -3,6 +3,7 @@
 
 # include <libft.h>
 # include <entity.h>
+# include <vec3.h>
 
 # define RADIUS_STEP 0.1
 # define HEIGHT_STEP 0.1
@@ -35,6 +36,7 @@ enum
 
 enum
 {
+	NONE,
 	LIGHT,
 	CAMERA,
 	OBJECT,

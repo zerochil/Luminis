@@ -152,6 +152,33 @@ void	vec3_rotateX(t_vec3 *vec, double angle)
     vec->z = y * sin(angle) + z * cos(angle);
 }
 
+void	rotate_dev(t_vec3 *vec, t_vec3 axis, double angle)
+{
+	angle = angle * (M_PI / 180);
+	double half_theta = sin(angle / 2);
+	double qx = axis.x * half_theta;
+	double qy = axis.y * half_theta;
+	double qz = axis.z * half_theta;
+	double qw = cos(angle / 2);
+
+	//p' = q * p * conj(q);
+	double x = (1 - 2 * qy * qy - 2 * qz * qz) * vec->x;
+	x += (2 * qx * qy - 2 * qw * qz) * vec->y;
+	x += (2 * qx * qz + 2 * qw * qy) * vec->z;
+
+	double y = (2 * qx * qy + 2 * qw * qz) * vec->x;
+	y += (1 - 2 * qx * qx - 2 * qz * qz) * vec->y;
+	y += (2 * qy * qz - 2 * qw * qx) * vec->z;
+
+	double z = (2 * qx * qz - 2 * qw * qy) * vec->x;
+	z += (2 * qy * qz + 2 * qw * qx) * vec->y;
+	z += (1 - 2 * qx * qx - 2 * qy * qy) * vec->z;
+
+	vec->x = x;
+	vec->y = y;
+	vec->z = z;
+}
+
 void create_orthonormal_basis(t_vec3 n, t_vec3 *b1, t_vec3 *b2) {
     if (n.z < -0.9999999) {
         *b1 = (t_vec3){1.0, 0.0, 0.0};
