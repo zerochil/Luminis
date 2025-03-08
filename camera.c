@@ -56,13 +56,6 @@ void	camera_rotate(t_camera *camera, t_vec3 axis, double angle)
     rotate_dev(&camera->forward, axis, angle);
     rotate_dev(&camera->up, axis, angle);
 	camera->right = vec3_normalize(vec3_cross(camera->forward, camera->up));
-	
-// 	rotate_dev(&camera->forward, axis, angle);
-// 	camera->forward = vec3_normalize(camera->forward);
-// 	rotate_dev(&camera->up, axis, angle);
-// 	camera->up = vec3_normalize(camera->up);
-// 	rotate_dev(&camera->right, axis, angle);
-// 	camera->right = vec3_normalize(camera->right);
 }
 
 void camera_translate(t_camera *camera, int direction, double step)

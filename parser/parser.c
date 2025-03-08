@@ -49,7 +49,9 @@ bool	parse_line_camera(t_scene *scene, char **infos)
 		return (parser_error("Camera direction must be normalized"));
 	if (vec3_compare(scene->camera.forward, (t_vec3){0, 0, 0}))
 		scene->camera.forward = (t_vec3){0, 0, -1};
-	create_orthonormal_basis(scene->camera.forward, &scene->camera.right, &scene->camera.up);
+	scene->camera.right = vec3_cross(scene->camera.forward, (t_vec3){0,1,0});
+	scene->camera.up = vec3_cross(scene->camera.right, scene->camera.forward);
+	// create_orthonormal_basis(scene->camera.forward, &scene->camera.right, &scene->camera.up);
 	scene->camera.is_declared = true;
 	return (true);
 }
