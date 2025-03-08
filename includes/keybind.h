@@ -15,6 +15,8 @@
 # define KEY_LEFT 65363
 # define KEY_RIGHT 65361
 
+# define KEY_LEFT_CLICK 1
+# define KEY_RIGHT_CLICK 2
 # define KEY_SCROLL_UP 4
 # define KEY_SCROLL_DOWN 5
 

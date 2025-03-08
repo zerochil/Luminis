@@ -112,6 +112,7 @@ void update_rot(t_keybind *keybind, t_entity *selected)
             axis = camera->forward;
         camera_rotate(selected->camera, axis, angle);
     }
+    return ;
     //TODO: flatten object definition so that we apply rotation directly on the normal.
     object = selected->object;
     if (object->type == CYLINDER)
@@ -119,7 +120,7 @@ void update_rot(t_keybind *keybind, t_entity *selected)
     else if (object->type == PLANE)
         printf("TODO: rotate plane\n");
     else if (object->type == CONE)
-        printf("TODO: rotate cone");
+        printf("TODO: rotate cone\n");
 }
 
 t_array *keybinds_init(void)
