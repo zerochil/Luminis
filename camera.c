@@ -61,9 +61,9 @@ void	camera_rotate(t_camera *camera, t_vec3 axis, double angle)
 void camera_translate(t_camera *camera, int direction, double step)
 {
 	t_vec3 dir;
-	if (direction == FORWARD)
+	if (direction == Z_POS)
 		dir = camera->forward;
-	else if (direction == UP)
+	else if (direction == Y_POS)
 		dir = camera->up;
 	else
 		dir = camera->right;

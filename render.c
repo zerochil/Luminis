@@ -246,10 +246,27 @@ void raytrace(t_scene *scene, t_image *image)
 	}
 }
 
+
+
+void	apply_transformation(t_control control)
+{
+	t_keybind	*keybind;
+	size_t i;
+
+	i = 0;
+	while (i < control.keybinds->size)
+	{
+		keybind = array_get(control.keybinds, i);
+		keybind->update(keybind, &control.selected);
+		i++;
+	}
+}
+
 int	render_image(t_mlx *mlx)
 {
 	static int frame;
 
+	apply_transformation(mlx->control);
 	if (frame++ % 10 == 0)
 		raytrace(&mlx->scene, &mlx->image);
 	frame++;
@@ -262,7 +279,8 @@ void	render_scene(t_mlx *mlx)
 	new_image(mlx->ptr, &mlx->image, WIDTH, HEIGHT);
 
 	mlx_hook(mlx->win, ON_DESTROY, 0, close_win, mlx);
-	mlx_hook(mlx->win, ON_KEYDOWN, 1L << 0, on_key_event, mlx);
+	mlx_hook(mlx->win, ON_KEY_PRESS, 1L << 0, on_key_press, mlx);
+	mlx_hook(mlx->win, ON_KEY_RELEASE, 1L << 1, on_key_release, mlx);
 	mlx_mouse_hook(mlx->win, on_mouse_event, mlx);
 	mlx_loop_hook(mlx->ptr, render_image, mlx);
 	mlx_loop(mlx->ptr);

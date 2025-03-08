@@ -1,9 +1,18 @@
 #include <minirt.h>
-
-
-
 #include <texture.h>
 
+
+t_control	control_init(t_scene *scene)
+{
+	t_control control;
+
+	control.selected.type = OBJECT;
+	control.selected.camera = NULL;
+	control.selected.light = NULL;
+	control.selected.object = scene->objects->data[0];
+	control.keybinds = keybinds_init();
+	return (control);
+}
 
 
 void window_init(t_mlx *mlx)
@@ -11,6 +20,7 @@ void window_init(t_mlx *mlx)
 	// TODO: check failure of both
 	mlx->ptr = mlx_init();
 	mlx->win = mlx_new_window(mlx->ptr, WIDTH, HEIGHT, "Luminis");
+	mlx->control = control_init(&mlx->scene);
 }
 
 int main(int argc, char **argv)
@@ -24,7 +34,6 @@ int main(int argc, char **argv)
 		return (ft_putstr_fd("Error: Failed to parse scene\n", 2), 1);
 
 	window_init(&mlx);
-
 	// This is a temporary solution
 	// The texture has to be inside the object
 	// It should be loaded in object creation while parsing the scene

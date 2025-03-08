@@ -1,36 +1,56 @@
 #include <handle_event.h>
 
-
-
-int	on_key_event(int keycode, t_mlx *mlx)
+int keybind_cmp(void *keybind_ptr, void *keycode_ptr)
 {
-	t_camera	*camera = &mlx->scene.camera;
+	t_keybind	*keybind;
+	int			*keycode;
+
+	keybind = keybind_ptr;
+	keycode = keycode_ptr;
+	return (*keycode == keybind->pos_key
+		|| *keycode == keybind->neg_key);
+}
+
+t_entity select_entity(t_scene *scene, int type)
+{
+	t_entity entity;
+
+	entity.type = type;
+	if (type == CAMERA)
+		entity.camera = &scene->camera;
+	if (type == LIGHT)
+		entity.light = scene->lights->data[0];
+	if (type == OBJECT)
+		entity.object = scene->objects->data[0];
+	return (entity);
+}
+
+int	on_key_press(int keycode, t_mlx *mlx)
+{
+	t_keybind	*keybind;
+
 	if (keycode == KEY_ESC)
 		close_win(mlx);
-	if (keycode == 'a')
-		camera_translate(camera, RIGHT, -STEP);
-	if (keycode == 'd')
-		camera_translate(camera, RIGHT, STEP);
-	if (keycode == 'w')
-		camera_translate(camera, FORWARD, STEP);
-	if (keycode == 's')
-		camera_translate(camera, FORWARD, -STEP);
-	if (keycode == 'q')
-		camera_translate(camera, UP, STEP);
-	if (keycode == 'e')
-		camera_translate(camera, UP, -STEP);
-	if (keycode == KEY_LEFT)
-		camera_rotate(camera, camera->up, -ANGLE);
-	if (keycode == KEY_RIGHT)
-		camera_rotate(camera, camera->up, ANGLE);
-	if (keycode == KEY_UP)
-		camera_rotate(camera, camera->right, ANGLE);
-	if (keycode == KEY_DOWN)
-		camera_rotate(camera, camera->right, -ANGLE);
-	if (keycode == '[')
-		camera_rotate(camera, camera->forward, -ANGLE);
-	if (keycode == ']')
-		camera_rotate(camera, camera->forward, ANGLE);
+	if (keycode == ' ')
+		mlx->control.selected = select_entity(&mlx->scene, CAMERA);
+	if (keycode == 'l')
+		mlx->control.selected = select_entity(&mlx->scene, LIGHT);
+	else
+	{
+		keybind = array_find(mlx->control.keybinds, &keycode, keybind_cmp);
+		if (keybind != NULL)
+			keybind_set_dir_flag(keybind, keycode);
+	}
+	return (0);
+}
+
+int	on_key_release(int keycode, t_mlx *mlx)
+{
+	t_keybind	*keybind;
+
+	keybind = array_find(mlx->control.keybinds, &keycode, keybind_cmp);
+	if (keybind != NULL)
+		keybind_reset_dir_flag(keybind, keycode);
 	return (0);
 }
 
