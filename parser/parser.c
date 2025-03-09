@@ -169,11 +169,11 @@ bool	parse_line_cone(t_scene *scene, char **infos)
 
 bool parse_material(t_scene *scene, char **infos)
 {
-	Material *material;
+	t_material *material;
 
 	if (ft_strarr_len(infos) != 6)
 		return (parser_error("Material must have 5 arguments"));
-	material = track_malloc(sizeof(Material));
+	material = track_malloc(sizeof(t_material));
 	if (parse_string(&material->name, infos[1]) == false)
 		return (parser_error("Material name must be composed of only characters"));
 	if (parse_color(&material->albedo, infos[2]) == false)

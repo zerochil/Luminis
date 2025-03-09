@@ -3,13 +3,14 @@
 
 # include "color.h"
 
-typedef struct
+typedef struct s_material
 {
 	char	*name;
 	t_color	albedo;
 	double	roughness;
 	double	ior;
 	double	metallic;
-}			Material;
+	double	f0;
+}			t_material;
 
 #endif
