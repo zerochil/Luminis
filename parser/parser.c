@@ -167,6 +167,33 @@ bool	parse_line_cone(t_scene *scene, char **infos)
 	return (true);
 }
 
+bool parse_material(t_scene *scene, char **infos)
+{
+	Material *material;
+
+	if (ft_strarr_len(infos) != 6)
+		return (parser_error("Material must have 5 arguments"));
+	material = track_malloc(sizeof(Material));
+	if (parse_string(&material->name, infos[1]) == false)
+		return (parser_error("Material name must be composed of only characters"));
+	if (parse_color(&material->albedo, infos[2]) == false)
+		return (parser_error("Material albedo must be a color"));
+	if (parse_float(&material->roughness, infos[3]) == false)
+		return (parser_error("Material roughness must be a float"));
+	if (parse_float(&material->ior, infos[4]) == false)
+		return (parser_error("Material ior must be a float"));
+	if (parse_float(&material->metallic, infos[5]) == false)
+		return (parser_error("Material metallic must be a float"));
+	if (in_interval(material->roughness, 0, 1) == false)
+		return (parser_error("Material roughness must be between 0 and 1"));
+	if (in_interval(material->ior, 0, INFINITY) == false)
+		return (parser_error("Material ior must be positive"));
+	if (in_interval(material->metallic, 0, 1) == false)
+		return (parser_error("Material metallic must be between 0 and 1"));
+	array_push(scene->materials, material);
+	return (true);
+}
+
 bool	parse_line(t_scene *scene, char *line)
 {
 	char	**infos;
@@ -189,6 +216,8 @@ bool	parse_line(t_scene *scene, char *line)
 		return (parse_line_cylinder(scene, infos));
 	if (ft_strcmp(infos[0], "co") == 0)
 		return (parse_line_cone(scene, infos));
+	if (ft_strcmp(infos[0], "m") == 0)
+		return (parse_material(scene, infos));
 	return (parser_error("Unknown identifier"));
 }
 
@@ -220,6 +249,7 @@ bool	parse_scene(t_scene *scene, char *filename)
 		return (parser_error("Failed to open file"));
 	scene->lights = array_create();
 	scene->objects = array_create();
+	scene->materials = array_create();
 	while (true)
 	{
 		line = get_next_line(fd);

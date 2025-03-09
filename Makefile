@@ -27,7 +27,8 @@ HEADER_FILES = minirt.h         \
 			   handle_event.h   \
 			   object.h			\
 			   mlx_image.h		\
-			   texture.h		
+			   texture.h		\
+			   material.h		
 
 HEADERS = $(HEADER_FILES:%=$(INCLUDE)/%)
 LIBRARIES = libft/libft.a libmath/libmath.a

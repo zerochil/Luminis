@@ -111,3 +111,17 @@ bool parse_color(t_color *color, char *str)
 		return (false);
 	return (true);
 }
+
+bool parse_string(char **dest, char *str)
+{
+	if (!str)
+		return (false);
+	while (*str)
+	{
+		if (ft_isalpha(*str) == false)
+			return (false);
+		str++;
+	}
+	*dest = str;
+	return (true);
+}
