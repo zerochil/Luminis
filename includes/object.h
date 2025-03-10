@@ -36,25 +36,11 @@ struct s_object
 	t_color		color;
 	enum e_object	type;
 	t_vec3		origin;
+	t_vec3		orientation;
+	double 		radius;
+	double		height;
+	double		angle;
 	t_intersect intersect;
-	union {
-		struct {
-			double		radius;
-		} sphere;
-		struct {
-			t_vec3		normal;
-		} plane;
-		struct {
-			t_vec3		orientation;
-			double		radius;
-			double		height;
-		} cylinder;
-		struct
-		{
-			t_vec3	orientation;
-			double	angle;
-		}	cone;
-	};
 };
 
 t_object	*object_create(enum e_object type);

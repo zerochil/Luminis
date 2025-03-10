@@ -7,7 +7,7 @@ bool		intersect_plane(t_object *object, t_ray *ray, t_hit *hit)
 	t_vec3 normal;
 	t_vec3 position;
 
-	normal = object->plane.normal;
+	normal = object->orientation;
 	denominator = vec3_dot(normal, ray->direction);
 	if (float_eq(denominator, 0))
 		return (false);
@@ -26,15 +26,15 @@ bool		intersect_plane(t_object *object, t_ray *ray, t_hit *hit)
 
 bool	test(t_object *object, t_vec3 hit_point)
 {
-    double height_proj = vec3_dot(vec3_sub(hit_point, object->origin), object->cylinder.orientation);
-	if (height_proj < 0 || height_proj > object->cylinder.height)
+    double height_proj = vec3_dot(vec3_sub(hit_point, object->origin), object->orientation);
+	if (height_proj < 0 || height_proj > object->height)
         return false;
 	return true;
 }
 
 bool intersect_cylinder(t_object *object, t_ray *ray, t_hit *hit)
 {
-    t_vec3 V = object->cylinder.orientation;
+    t_vec3 V = object->orientation;
     t_vec3 CO = vec3_sub(ray->origin, object->origin);
 
     t_vec3 D_perp = vec3_sub(ray->direction, vec3_mul_scalar(V, vec3_dot(ray->direction, V)));
@@ -42,7 +42,7 @@ bool intersect_cylinder(t_object *object, t_ray *ray, t_hit *hit)
 
     double A = vec3_dot(D_perp, D_perp);
     double B = 2 * vec3_dot(CO_perp, D_perp);
-    double C = vec3_dot(CO_perp, CO_perp) - (object->cylinder.radius * object->cylinder.radius);
+    double C = vec3_dot(CO_perp, CO_perp) - (object->radius * object->radius);
 
     double discriminant = B * B - 4 * A * C;
     if (discriminant < 0)
@@ -67,7 +67,7 @@ bool intersect_cylinder(t_object *object, t_ray *ray, t_hit *hit)
 	}
 	else
 		return false;
-	double height_proj = vec3_dot(vec3_sub(hit_point, object->origin), object->cylinder.orientation);
+	double height_proj = vec3_dot(vec3_sub(hit_point, object->origin), object->orientation);
     hit->point = hit_point;
     hit->normal = vec3_normalize(vec3_sub(hit_point, vec3_add(object->origin, vec3_mul_scalar(V, height_proj))));
 	hit->object = object;
@@ -87,7 +87,7 @@ bool		intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
 
 	direction = vec3_sub(ray->origin, object->origin);
 	b = 2 * vec3_dot(ray->direction, direction);
-	c = vec3_dot(direction, direction) - object->sphere.radius * object->sphere.radius;
+	c = vec3_dot(direction, direction) - object->radius * object->radius;
 	delta = b * b - 4 * c;
 	if (delta < 0)
 		return (false);
@@ -107,7 +107,7 @@ bool		intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
 		return (false);
 	position = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, hit->distance));
 	hit->normal = vec3_normalize(vec3_sub(position, object->origin));
-	hit->normal = vec3_length(direction) > object->sphere.radius ? hit->normal: vec3_negate(hit->normal);
+	hit->normal = vec3_length(direction) > object->radius ? hit->normal: vec3_negate(hit->normal);
 	hit->object = object;
 	hit->point = position;
 	return (true);
@@ -116,13 +116,13 @@ bool		intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
 bool		intersect_cone(t_object *object, t_ray *ray, t_hit *hit)
 {
 	//(x−xc​)^2+(y−yc​)^2+(z−zc​)^2 − (1+k2)((x−xc​) * vx​+ (y−yc​) * vy​ + (z−zc​) * vz​)^2=0
-	double angle = object->cone.angle * (M_PI / 180);
+	double angle = object->angle * (M_PI / 180);
 	double k = tan(angle);
 	double k2 = k * k;
 	t_vec3 d = ray->direction;
-	double dv = vec3_dot(d, object->cone.orientation);
+	double dv = vec3_dot(d, object->orientation);
 	t_vec3 o = vec3_sub(ray->origin, object->origin);
-	double ov = vec3_dot(o, object->cone.orientation);
+	double ov = vec3_dot(o, object->orientation);
 
     double A = vec3_dot(d, d) - (1 + k2) * (dv * dv);
     double B = 2 * (vec3_dot(o, d) - (1 + k2) * (ov * dv));
@@ -142,8 +142,8 @@ bool		intersect_cone(t_object *object, t_ray *ray, t_hit *hit)
 	else t = fmin(t1, t2);
 	t_vec3 position = vec3_add(ray->origin, vec3_mul_scalar(d, t));
 	t_vec3 PC = vec3_sub(position, object->origin);
-	t_vec3 cone_axis_component = vec3_mul_scalar(object->cone.orientation, 
-		(1 + k2) * vec3_dot(object->cone.orientation, PC));
+	t_vec3 cone_axis_component = vec3_mul_scalar(object->orientation, 
+		(1 + k2) * vec3_dot(object->orientation, PC));
 	hit->normal = vec3_normalize(vec3_sub(PC, cone_axis_component));	
 	if (vec3_dot(hit->normal, d) > 0)
 		hit->normal = vec3_negate(hit->normal);

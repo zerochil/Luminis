@@ -15,7 +15,7 @@ typedef struct s_uv
 t_uv _get_sphere_uv(t_hit hit)
 {
 	t_vec3 p = vec3_sub(hit.point, hit.object->origin);
-	double r = hit.object->sphere.radius;
+	double r = hit.object->radius;
 	double phi = asin(p.z);
 	double theta = acos(p.x / (r * cos(phi)));
 	
@@ -33,7 +33,7 @@ t_uv get_sphere_uv(t_hit hit)
 	//t_vec3 p = vec3_normalize(vec3_sub(hit.point, hit.object->origin));
 	t_vec3 p = vec3_sub(hit.point, hit.object->origin);
 	double phi = atan2(p.z, p.x);
-	double theta = asin(p.y/hit.object->sphere.radius);
+	double theta = asin(p.y/hit.object->radius);
 	t_uv uv = {1 - (phi + M_PI) / (2 * M_PI), (theta + M_PI / 2) / M_PI};
 	return (uv);
 }
@@ -44,14 +44,14 @@ t_uv get_cylinder_uv(t_hit hit)
 	t_vec3 p_local = vec3_sub(hit.point, hit.object->origin);
 	t_vec3 cx;
 	t_vec3 cy;
-	t_vec3 cz = hit.object->cylinder.orientation;
+	t_vec3 cz = hit.object->orientation;
 	create_orthonormal_basis(cz, &cx, &cy);
 
 	p.x = vec3_dot(p_local, cx);
 	p.y = vec3_dot(p_local, cy);
 	p.z = vec3_dot(p_local, cz);
 
-	double v = p.z / hit.object->cylinder.height;
+	double v = p.z / hit.object->height;
 	double u = (atan2(p.y, p.x) + M_PI) / (2 * M_PI);
 	return (t_uv){u, v};
 }
@@ -85,7 +85,7 @@ t_color calculate_lighting(t_scene *scene, t_hit hit)
 	if (false && hit.object->type == SPHERE)
 	{
 		t_vec3 p = vec3_sub(hit.point, hit.object->origin);
-		double phi = acos(p.y/hit.object->sphere.radius);
+		double phi = acos(p.y/hit.object->radius);
 		double theta = atan2(p.z, p.x);
 		double scale = 20;
 

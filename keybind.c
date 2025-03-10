@@ -45,9 +45,9 @@ void update_radius(t_keybind *keybind, t_entity *selected)
         return ;
     object = selected->object;
     if (object->type == SPHERE)
-        object->sphere.radius += keybind->dir_flag * RADIUS_STEP;
+        object->radius += keybind->dir_flag * RADIUS_STEP;
     else if (object->type == CYLINDER)
-        object->cylinder.radius += keybind->dir_flag * RADIUS_STEP;
+        object->radius += keybind->dir_flag * RADIUS_STEP;
 }
 
 void update_height(t_keybind *keybind, t_entity *selected)
@@ -59,7 +59,7 @@ void update_height(t_keybind *keybind, t_entity *selected)
     if (selected->type != OBJECT || selected->object->type != CYLINDER)
         return ;
     object = selected->object;
-    object->cylinder.height += keybind->dir_flag * HEIGHT_STEP;
+    object->height += keybind->dir_flag * HEIGHT_STEP;
 }
 
 void update_angle(t_keybind *keybind, t_entity *selected)
@@ -70,7 +70,7 @@ void update_angle(t_keybind *keybind, t_entity *selected)
     if (selected->type != OBJECT || selected->object->type != CONE)
         return ;
     object = selected->object;
-    object->cone.angle += keybind->dir_flag * ANGLE_STEP;
+    object->angle += keybind->dir_flag * ANGLE_STEP;
 }
 
 void update_pos(t_keybind *keybind, t_entity *selected)
@@ -94,11 +94,11 @@ void update_pos(t_keybind *keybind, t_entity *selected)
 void    object_rotate(t_object *object, t_vec3 axis, double angle)
 {
     if (object->type == CYLINDER)
-        rotate_dev(&object->cylinder.orientation, axis, angle);
+        rotate_dev(&object->orientation, axis, angle);
     else if (object->type == PLANE)
-        rotate_dev(&object->plane.normal, axis, angle);
+        rotate_dev(&object->orientation, axis, angle);
     else if (object->type == CONE)
-        rotate_dev(&object->cone.orientation, axis, angle);
+        rotate_dev(&object->orientation, axis, angle);
 }
 
 void update_rot(t_keybind *keybind, t_entity *selected)

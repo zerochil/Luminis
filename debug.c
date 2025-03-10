@@ -39,22 +39,22 @@ void	print_scene(t_scene *scene)
 		{
 			case SPHERE:
 				printf("\ttype: SPHERE\n");
-				printf("\tradius: %.2f\n", object->sphere.radius);
+				printf("\tradius: %.2f\n", object->radius);
 				break;
 			case PLANE:
 				printf("\ttype: PLANE\n");
-				print_vec3(object->plane.normal, "orientation");
+				print_vec3(object->orientation, "orientation");
 				break;
 			case CYLINDER:
 				printf("\ttype: CYLINDER\n");
-				print_vec3(object->cylinder.orientation, "orientation");
-				printf("\tradius: %.2f\n", object->cylinder.radius);
-				printf("\theight: %.2f\n", object->cylinder.height);
+				print_vec3(object->orientation, "orientation");
+				printf("\tradius: %.2f\n", object->radius);
+				printf("\theight: %.2f\n", object->height);
 				break;
 			case CONE:
 				printf("\ttype: CONE\n");
-				print_vec3(object->cone.orientation, "orientation");
-				printf("\thalf-angle: %.2f\n", object->cone.angle);
+				print_vec3(object->orientation, "orientation");
+				printf("\thalf-angle: %.2f\n", object->angle);
 				break;
 		}
 		print_color(object->color);

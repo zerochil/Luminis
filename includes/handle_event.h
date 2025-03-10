@@ -8,8 +8,6 @@
 # include <camera.h>
 # include <keybind.h>
 
-# define ANGLE 2
-
 enum
 {
 	ON_KEY_PRESS = 2,
