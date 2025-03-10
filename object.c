@@ -1,4 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   object.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/10 15:27:08 by inajah            #+#    #+#             */
+/*   Updated: 2025/03/10 15:57:54 by inajah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "object.h"
+
+t_vec3	flip_normal(bool condition, t_vec3 normal)
+{
+	if (condition)
+		return (vec3_negate(normal));
+	return (normal);
+}
 
 bool		intersect_plane(t_object *object, t_ray *ray, t_hit *hit)
 {
@@ -13,15 +32,13 @@ bool		intersect_plane(t_object *object, t_ray *ray, t_hit *hit)
 		return (false);
 	position = vec3_sub(object->origin, ray->origin);
 	t = vec3_dot(position, normal) / denominator;
-	if (t > 0) // should be t >= 0
-	{
-		hit->distance = t;
-		hit->normal = (denominator > 0) ? vec3_negate(normal): normal;
-		hit->object = object;
-		hit->point = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, t));
-		return (true);
-	}
-	return (false);
+	if (t <= 0)
+		return (false);
+	hit->distance = t;
+	hit->normal = flip_normal((denominator > 0), normal);
+	hit->object = object;
+	hit->point = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, t));
+	return (true);
 }
 
 bool	test(t_object *object, t_vec3 hit_point)
@@ -74,82 +91,77 @@ bool intersect_cylinder(t_object *object, t_ray *ray, t_hit *hit)
     return true;
 }
 
+double sphere_solution(t_quadratic_terms qterms)
+{
+	if (qterms.t1 < 0)
+		return (qterms.t2);
+	else if (qterms.t2 < 0)
+		return (qterms.t1);
+	else
+		return (fmin(qterms.t1, qterms.t2));
+}
 
 bool		intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
 {
-	double b;
-	double c;
-	double delta;
-	double t1;
-	double t2;
+	t_quadratic_terms qterms;
 	t_vec3 position;
 	t_vec3 direction;
 
 	direction = vec3_sub(ray->origin, object->origin);
-	b = 2 * vec3_dot(ray->direction, direction);
-	c = vec3_dot(direction, direction) - object->radius * object->radius;
-	delta = b * b - 4 * c;
-	if (delta < 0)
+	qterms.a = 1;
+	qterms.b = 2 * vec3_dot(ray->direction, direction);
+	qterms.c = vec3_dot(direction, direction) - object->radius * object->radius;
+	if (quadratic_delta(&qterms) < 0)
 		return (false);
-	t1 = (-b - sqrt(delta)) / 2.0;
-	t2 = (-b + sqrt(delta)) / 2.0;
-	if (t1 < 0 && t2 < 0)
+	if (quadratic_roots(&qterms) < 0)
 		return (false);
-	if (t1 < 0 && t2 < 0)
-		return (false);
-	if (t1 < 0)
-		hit->distance = t2;
-	else if (t2 < 0)
-		hit->distance = t1;
-	else
-		hit->distance = fmin(t1, t2);
-	if (hit->distance < 0)
-		return (false);
+	hit->distance = sphere_solution(qterms);
 	position = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, hit->distance));
 	hit->normal = vec3_normalize(vec3_sub(position, object->origin));
-	hit->normal = vec3_length(direction) > object->radius ? hit->normal: vec3_negate(hit->normal);
+	hit->normal = flip_normal(vec3_length(direction) <= object->radius, hit->normal);
 	hit->object = object;
 	hit->point = position;
 	return (true);
 }
 
-bool		intersect_cone(t_object *object, t_ray *ray, t_hit *hit)
+t_quadratic_terms	cone_quadratic_terms(t_object *obj, t_ray *ray, double k2)
 {
 	//(x−xc​)^2+(y−yc​)^2+(z−zc​)^2 − (1+k2)((x−xc​) * vx​+ (y−yc​) * vy​ + (z−zc​) * vz​)^2=0
-	double angle = object->angle * (M_PI / 180);
-	double k = tan(angle);
-	double k2 = k * k;
-	t_vec3 d = ray->direction;
-	double dv = vec3_dot(d, object->orientation);
-	t_vec3 o = vec3_sub(ray->origin, object->origin);
-	double ov = vec3_dot(o, object->orientation);
+	t_quadratic_terms qterms;
+	t_vec3 o;
+	double dv;
+	double ov;
 
-    double A = vec3_dot(d, d) - (1 + k2) * (dv * dv);
-    double B = 2 * (vec3_dot(o, d) - (1 + k2) * (ov * dv));
-    double C = vec3_dot(o, o) - (1 + k2) * (ov * ov);
+	dv = vec3_dot(ray->direction, obj->orientation);
+	o = vec3_sub(ray->origin, obj->origin);
+	ov = vec3_dot(o, obj->orientation);
+    qterms.a = vec3_dot(ray->direction, ray->direction) - (1 + k2) * (dv * dv);
+    qterms.b = 2 * (vec3_dot(o, ray->direction) - (1 + k2) * (ov * dv));
+    qterms.c = vec3_dot(o, o) - (1 + k2) * (ov * ov);
+	return (qterms);
+}
 
-	double delta = B * B - 4 * A * C;
-	if (delta < 0)
+bool		intersect_cone(t_object *obj, t_ray *ray, t_hit *hit)
+{
+	t_quadratic_terms qterms;
+	t_vec3 local_point;
+	t_vec3 axis_comp;
+	double k2;
+
+	k2 = pow2(tan(obj->angle * (M_PI / 180)));
+	qterms = cone_quadratic_terms(obj, ray, k2);
+	if (quadratic_delta(&qterms) < 0)
 		return (false);
-	double t1 = (-B - sqrt(delta)) / (2 * A);
-	double t2 = (-B + sqrt(delta)) / (2 * A);
-
-	if (t1 < 0 && t2 < 0)
-    return false;
-	double t;
-	if (t1 < 0) t = t2;
-	else if (t2 < 0) t = t1;
-	else t = fmin(t1, t2);
-	t_vec3 position = vec3_add(ray->origin, vec3_mul_scalar(d, t));
-	t_vec3 PC = vec3_sub(position, object->origin);
-	t_vec3 cone_axis_component = vec3_mul_scalar(object->orientation, 
-		(1 + k2) * vec3_dot(object->orientation, PC));
-	hit->normal = vec3_normalize(vec3_sub(PC, cone_axis_component));	
-	if (vec3_dot(hit->normal, d) > 0)
-		hit->normal = vec3_negate(hit->normal);
-	hit->distance = t;
-	hit->point = position;
-	hit->object = object;
+	if (quadratic_roots(&qterms) < 0)
+		return (false);
+	hit->distance = sphere_solution(qterms);
+	hit->point = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, hit->distance));
+	local_point = vec3_sub(hit->point, obj->origin);
+	axis_comp = vec3_mul_scalar(obj->orientation, 
+		(1 + k2) * vec3_dot(obj->orientation, local_point));
+	hit->normal = vec3_normalize(vec3_sub(local_point, axis_comp));	
+	hit->normal = flip_normal(vec3_dot(hit->normal, ray->direction) > 0, hit->normal);
+	hit->object = obj;
 	return (true);
 }
 

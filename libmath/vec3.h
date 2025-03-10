@@ -33,4 +33,9 @@ void create_orthonormal_basis(t_vec3 fixed, t_vec3 *b1, t_vec3 *b2);
 
 bool vec3_compare(t_vec3 a, t_vec3 b);
 
+static inline double pow2(double x)
+{
+	return (x * x);
+}
+
 #endif

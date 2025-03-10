@@ -1,27 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libmath.h                                          :+:      :+:    :+:   */
+/*   quadratic_eq.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/10 15:33:51 by inajah            #+#    #+#             */
-/*   Updated: 2025/03/10 15:57:35 by inajah           ###   ########.fr       */
+/*   Created: 2025/03/10 15:29:29 by inajah            #+#    #+#             */
+/*   Updated: 2025/03/10 15:31:53 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBMATH_H
-#define LIBMATH_H
+#ifndef QUADRATIC_EQ_H
+# define QUADRATIC_EQ_H
 
 # include <math.h>
-# include <quadratic_eq.h>
-# include <vec3.h>
-# include <matrix.h>
 
-# define EPSILON 1e-6
+typedef struct s_quadratic_terms
+{
+	double a;
+	double b;
+	double c;
+	double delta;
+	double t1;
+	double t2;
+	double denominator;
+}	t_quadratic_terms;
 
-double	min(double a, double b);
-double	max(double a, double b);
-bool	float_eq(double a, double b);
+double quadratic_delta(t_quadratic_terms *qterms);
+int quadratic_roots(t_quadratic_terms *qterms);
 
 #endif
