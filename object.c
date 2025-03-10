@@ -173,5 +173,6 @@ t_object	*object_create(enum e_object type)
 	object = track_malloc(sizeof(t_object));
 	object->type = type;
 	object->intersect = object_intersection(type);
+	object->material = (t_material){0};
 	return (object);
 }

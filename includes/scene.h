@@ -18,7 +18,7 @@ enum
 
 typedef struct s_light
 {
-	t_vec3		origin;
+	t_vec3		origin; // this is so confusing, should be position as most other definition (like ray, sphere, etc) have a position field instead of origin
 	double		intensity;
 	t_color		color;
 } t_light;

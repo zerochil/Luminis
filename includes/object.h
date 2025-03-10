@@ -4,6 +4,7 @@
 # include <libmath.h>
 # include <color.h>
 # include <libft.h>
+# include <material.h>
 
 enum e_object
 {
@@ -37,6 +38,7 @@ struct s_object
 	enum e_object	type;
 	t_vec3		origin;
 	t_intersect intersect;
+	t_material  material;
 	union {
 		struct {
 			double		radius;

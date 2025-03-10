@@ -3,6 +3,7 @@
 
 #include <libmath.h>
 #include <material.h>
+#include <scene.h>
 
 struct s_dot_products
 {
@@ -19,5 +20,6 @@ struct s_brdf_terms
 	double f;
 };
 
+t_color brdfs(t_vec3 N, t_vec3 V, t_vec3 L, t_material mat);
 
 #endif

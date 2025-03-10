@@ -95,10 +95,16 @@ t_vec3	vec3_div_scalar(t_vec3 a, double b)
 	return (result);
 }
 
-double	vec3_length(t_vec3 a)
+double vec3_length(t_vec3 a)
 {
-	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
+    double dot = a.x * a.x + a.y * a.y + a.z * a.z;
+    return sqrt(dot);
 }
+
+/*double	vec3_length(t_vec3 a)*/
+/*{*/
+/*	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));*/
+/*}*/
 
 t_vec3	vec3_normalize(t_vec3 a)
 {

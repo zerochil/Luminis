@@ -29,12 +29,14 @@ double cook_torrance_brdf(struct s_dot_products dp, struct s_brdf_terms bt)
 	return bt.d * bt.g * bt.f / (4.0 * dp.NdotV * dp.NdotL);
 }
 
-double lambertian_brdf(struct s_brdf_terms bt, struct s_dot_products dp, t_material mat)
+double lambertian_brdf(struct s_dot_products dp, struct s_brdf_terms bt, t_material mat)
 {
 	return (1.0 - bt.f) * (1.0 - mat.metallic) * dp.NdotL / M_PI;
 }
 
-t_color brdf(t_vec3 N, t_vec3 V, t_vec3 L, t_material mat)
+
+// TODO: precalculate f0, f0=0.04 for most dielectrics 
+t_color brdfs(t_vec3 N, t_vec3 V, t_vec3 L, t_material mat)
 {
 	t_vec3 H;
 	struct s_dot_products dp;
@@ -51,7 +53,7 @@ t_color brdf(t_vec3 N, t_vec3 V, t_vec3 L, t_material mat)
 	bt.f = fresnel_schlick(dp.VdotH, mat.f0);
 	
 	double specular_intensity = cook_torrance_brdf(dp, bt);
-	double diffuse_intensity = lambertian_brdf(bt, dp, mat);
+	double diffuse_intensity = lambertian_brdf(dp, bt, mat);
 
 	t_color color = mat.albedo;
 	color_mul_scalar(&color, diffuse_intensity);
@@ -65,6 +67,3 @@ t_color brdf(t_vec3 N, t_vec3 V, t_vec3 L, t_material mat)
 
 	return color;
 }
-
-
-// TODO: MULTIPLE LIGHTS
