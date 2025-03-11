@@ -6,32 +6,26 @@
 # include <matrix.h>
 # include <mlx.h>
 # include <camera.h>
-
-# define STEP 1
-# define ANGLE 5
-
-# define KEY_ESC 65307
-# define KEY_UP 65362
-# define KEY_DOWN 65364
-# define KEY_LEFT 65363
-# define KEY_RIGHT 65361
-
-# define KEY_SCROLL_UP 4
-# define KEY_SCROLL_DOWN 5
+# include <keybind.h>
 
 enum
 {
-	ON_KEYDOWN = 2,
-	ON_KEYUP = 3,
-	ON_MOUSEDOWN = 4,
-	ON_MOUSEUP = 5,
-	ON_MOUSEMOVE = 6,
+	ON_KEY_PRESS = 2,
+	ON_KEY_RELEASE = 3,
+	ON_MOUSE_DOWN = 4,
+	ON_MOUSE_UP = 5,
+	ON_MOUSE_MOVE = 6,
 	ON_EXPOSE = 12,
 	ON_DESTROY = 17
 };
 
-int	on_key_event(int keycode, t_mlx *mlx);
+
+int	on_key_press(int keycode, t_mlx *mlx);
+int	on_key_release(int keycode, t_mlx *mlx);
+//int	on_key_event(int keycode, t_mlx *mlx);
 int	on_mouse_event(int keycode, int x, int y, t_mlx *mlx);
 int	close_win(t_mlx *mlx);
+
+t_hit find_intersection(t_scene *scene, t_ray *ray);
 
 #endif

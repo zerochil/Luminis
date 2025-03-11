@@ -16,20 +16,6 @@ bool	parse_line_ambient(t_scene *scene, char **infos)
 	return (true);
 }
 
-
-void basis_from_forward(t_vec3 *forward, t_vec3 *right, t_vec3 *up)
-{
-	if (float_eq(fabs(forward->y), 1.0))
-		*up = (t_vec3){0, 0, -1};
-	else
-		*up = (t_vec3){0, 1, 0};
-
-	*right = vec3_cross(*forward, *up);
-	*right = vec3_normalize(*right);
-	*up = vec3_cross(*right, *forward);
-	*up = vec3_normalize(*up);
-}
-
 bool	parse_line_camera(t_scene *scene, char **infos)
 {
 	if (ft_strarr_len(infos) != 4)
@@ -49,7 +35,9 @@ bool	parse_line_camera(t_scene *scene, char **infos)
 		return (parser_error("Camera direction must be normalized"));
 	if (vec3_compare(scene->camera.forward, (t_vec3){0, 0, 0}))
 		scene->camera.forward = (t_vec3){0, 0, -1};
-	create_orthonormal_basis(scene->camera.forward, &scene->camera.right, &scene->camera.up);
+	scene->camera.right = vec3_cross(scene->camera.forward, (t_vec3){0,1,0});
+	scene->camera.up = vec3_cross(scene->camera.right, scene->camera.forward);
+	// create_orthonormal_basis(scene->camera.forward, &scene->camera.right, &scene->camera.up);
 	scene->camera.is_declared = true;
 	return (true);
 }
@@ -82,13 +70,13 @@ bool	parse_line_sphere(t_scene *scene, char **infos)
 	object = object_create(SPHERE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Sphere origin must be a vec3"));
-	if (parse_float(&object->sphere.radius, infos[2]) == false)
+	if (parse_float(&object->radius, infos[2]) == false)
 		return (parser_error("Sphere radius must be a float"));
 	if (parse_color(&object->color, infos[3]) == false)
 		return (parser_error("Sphere color must be a color"));
-	if (in_interval(object->sphere.radius, 0, INFINITY) == false)
+	if (in_interval(object->radius, 0, INFINITY) == false)
 		return (parser_error("Sphere radius must be positive"));
-	object->sphere.radius /= 2;
+	object->radius /= 2;
 	array_push(scene->objects, object);
 	return (true);
 }
@@ -102,12 +90,12 @@ bool	parse_line_plane(t_scene *scene, char **infos)
 	object = object_create(PLANE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Plane origin must be a vec3"));
-	if (parse_vec3(&object->plane.normal, infos[2]) == false)
+	if (parse_vec3(&object->orientation, infos[2]) == false)
 		return (parser_error("Plane normal must be a vec3"));
 	if (parse_color(&object->color, infos[3]) == false)
 		return (parser_error("Plane color must be a color"));
-	object->plane.normal = vec3_normalize(object->plane.normal);
-	//if (is_normalized(object->plane.normal) == false)
+	object->orientation = vec3_normalize(object->orientation);
+	//if (is_normalized(object->orientation) == false)
 		//return (parser_error("Plane normal must be normalized"));
 	array_push(scene->objects, object);
 	return (true);
@@ -122,22 +110,22 @@ bool	parse_line_cylinder(t_scene *scene, char **infos)
 	object = object_create(CYLINDER);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Cylinder origin must be a vec3"));
-	if (parse_vec3(&object->cylinder.orientation, infos[2]) == false)
+	if (parse_vec3(&object->orientation, infos[2]) == false)
 		return (parser_error("Cylinder orientation must be a vec3"));
-	if (parse_float(&object->cylinder.radius, infos[3]) == false)
+	if (parse_float(&object->radius, infos[3]) == false)
 		return (parser_error("Cylinder radius must be a float"));
-	if (parse_float(&object->cylinder.height, infos[4]) == false)
+	if (parse_float(&object->height, infos[4]) == false)
 		return (parser_error("Cylinder height must be a float"));
 	if (parse_color(&object->color, infos[5]) == false)
 		return (parser_error("Cylinder color must be a color"));
-	if (in_interval(object->cylinder.radius, 0, INFINITY) == false)
+	if (in_interval(object->radius, 0, INFINITY) == false)
 		return (parser_error("Cylinder radius must be positive"));
-	if (in_interval(object->cylinder.height, 0, INFINITY) == false)
+	if (in_interval(object->height, 0, INFINITY) == false)
 		return (parser_error("Cylinder height must be positive"));
-	object->cylinder.orientation = vec3_normalize(object->cylinder.orientation);
-	if (is_normalized(object->cylinder.orientation) == false)
+	object->orientation = vec3_normalize(object->orientation);
+	if (is_normalized(object->orientation) == false)
 		return (parser_error("Cylinder orientation must be normalized"));
-	object->cylinder.radius /= 2;
+	object->radius /= 2;
 	array_push(scene->objects, object);
 	return (true);
 }
@@ -151,18 +139,18 @@ bool	parse_line_cone(t_scene *scene, char **infos)
 	object = object_create(CONE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Cone origin must be a vec3"));
-	if (parse_vec3(&object->cone.orientation, infos[2]) == false)
+	if (parse_vec3(&object->orientation, infos[2]) == false)
 		return (parser_error("Cone orientation must be a vec3"));
-	if (parse_float(&object->cone.angle, infos[3]) == false)
+	if (parse_float(&object->angle, infos[3]) == false)
 		return (parser_error("Cone opening angle must be a float"));
 	if (parse_color(&object->color, infos[4]) == false)
 		return (parser_error("Cone color must be a color"));
-	if (in_interval(object->cone.angle, 0, 90) == false)
+	if (in_interval(object->angle, 0, 90) == false)
 		return (parser_error("Cone opening angle must be in range [0, 90]"));
-	object->cone.orientation = vec3_normalize(object->cone.orientation);
-	if (is_normalized(object->cone.orientation) == false)
+	object->orientation = vec3_normalize(object->orientation);
+	if (is_normalized(object->orientation) == false)
 		return (parser_error("Cone orientation must be normalized"));
-	object->cone.angle /= 2;
+	object->angle /= 2;
 	array_push(scene->objects, object);
 	return (true);
 }

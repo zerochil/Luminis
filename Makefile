@@ -8,12 +8,15 @@ SRCS = minirt.c \
 	   parser/parser_utils.c\
 	   parser/parser_predicates.c\
 	   parser/parser_error.c\
-	   debug.c\
-	   object.c\
+	   object/plane.c\
+	   object/sphere.c\
+	   object/cylinder.c\
+	   object/cone.c\
+	   object/object.c\
 	   render.c\
 	   handle_event.c\
+	   keybind.c\
 	   camera.c\
-	   color.c\
 	   mlx_image.c\
 	   texture.c
 
@@ -22,9 +25,9 @@ OBJS = $(SRCS:%.c=$(OBJS_DIR)%.o)
 HEADER_FILES = minirt.h         \
 			   parser.h			\
 			   scene.h			\
-			   debug.h			\
 			   camera.h         \
 			   handle_event.h   \
+			   keybind.h        \
 			   object.h			\
 			   mlx_image.h		\
 			   texture.h		\
