@@ -3,7 +3,6 @@
 
 # include <libft.h>
 # include <libmath.h>
-# include <color.h>
 # include <object.h>
 # include <mlx_image.h>
 # include <texture.h>
@@ -20,13 +19,13 @@ typedef struct s_light
 {
 	t_vec3		origin; // this is so confusing, should be position as most other definition (like ray, sphere, etc) have a position field instead of origin
 	double		intensity;
-	t_color		color;
+	t_vec3		color;
 } t_light;
 
 typedef struct s_ambient
 {
 	double		intensity;
-	t_color		color;
+	t_vec3		color;
 	bool		is_declared;
 } t_ambient;
 

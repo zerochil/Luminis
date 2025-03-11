@@ -6,6 +6,6 @@
 #include "lighting.h"
 #include "camera.h"
 
-t_color raytrace(const t_scene *scene, const t_ray *ray, int depth);
+t_vec3 raytrace(const t_scene *scene, const t_ray *ray, int depth);
 
 #endif

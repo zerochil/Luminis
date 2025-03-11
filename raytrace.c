@@ -25,50 +25,53 @@ t_hit find_intersection(t_scene *scene, t_ray *ray)
 	return (hit);
 }
 
-bool is_shadowed(t_scene *scene, t_ray ray, double light_distance)
+bool is_shadowed(t_scene *scene, t_light *light, t_hit *hit)
 {
-	t_hit hit = find_intersection(scene, &ray);
-	return (hit.object && hit.distance < light_distance);
+	t_ray shadow_ray;
+	double light_distance;
+	t_hit light_hit;
+
+	shadow_ray = (t_ray){
+		.origin = hit->point,
+		.direction = vec3_sub(light->origin, hit->point),
+	};
+	light_distance = vec3_length(shadow_ray.direction);
+	light_hit = find_intersection(scene, &shadow_ray);
+	return (light_hit.object && light_hit.distance < light_distance);
 }
 
-t_color shade(t_scene *scene, t_ray *ray, t_hit *hit);
+t_vec3 shade(t_scene *scene, t_ray *ray, t_hit *hit);
 
-t_color calculate_lighting(t_scene *scene, t_ray *ray, t_hit *hit)
+t_vec3 calculate_lighting(t_scene *scene, t_ray *ray, t_hit *hit)
 {
 	size_t i;
 	t_light *light;
 	t_ray shadow_ray;
-	double light_distance;
 
 	i = 0;
 	while (i < scene->lights->size)
 	{
 		light = array_get(scene->lights, i); // can this ever segfault if lights is empty?
-		shadow_ray = (t_ray){
-			.origin = hit->point,
-			.direction = vec3_sub(light->origin, hit->point),
-		};
-		light_distance = vec3_length(shadow_ray.direction);
-		if (is_shadowed(scene, shadow_ray, light_distance) == false)
+		if (is_shadowed(scene, light, hit) == false)
 		{
-			t_color color = brdfs(hit->normal, vec3_negate(ray->direction), vec3_normalize(shadow_ray.direction), hit->object->material);
-			t_color light_color = light->color;
-			color_mul(&color, &light_color);
+			t_vec3 color = brdfs(hit->normal, vec3_negate(ray->direction), vec3_normalize(shadow_ray.direction), hit->object->material);
+			t_vec3 light_color = light->color;
+			color = vec3_mul(color, light_color);
 			// this here is whack; for tommorrow....
 		}
 		i++;
 	}
 }
 
-t_color trace_ray(t_scene *scene, t_ray *ray, int depth)
+t_vec3 trace_ray(t_scene *scene, t_ray *ray, int depth)
 {
 	t_hit hit;
-	t_color color;
+	t_vec3 color;
 	t_ray reflected_ray;
-	t_color reflected_color;
+	t_vec3 reflected_color;
 
 	if (depth == 0)
-		return ((t_color){0, 0, 0});
+		return ((t_vec3){0, 0, 0});
 	hit = find_intersection(scene, ray);
 	if (hit.object)
 	{
@@ -78,7 +81,7 @@ t_color trace_ray(t_scene *scene, t_ray *ray, int depth)
 			.direction = vec3_reflect(vec3_negate(ray->direction), hit.normal),
 		};
 		reflected_color = trace_ray(scene, &reflected_ray, depth - 1);
-		color_add(&color, &reflected_color);
+		color = vec3_add(color, reflected_color);
 		return (color);
 	}
 }

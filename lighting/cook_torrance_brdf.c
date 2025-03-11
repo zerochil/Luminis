@@ -19,10 +19,17 @@ static inline double geometry(double NdotV, double roughness)
 	return NdotV / denom;
 }
 
-double fresnel_schlick(double VdotH, double f0)
-{
-	return f0 + (1.0 - f0) * pow(1.0 - VdotH, 5);
+t_vec3 fresnel_schlick(double VdotH, t_vec3 f0) {
+    double factor;
+
+	factor = pow(1.0 - VdotH, 5);
+    return (t_vec3){
+        f0.x + (1.0 - f0.x) * factor,
+        f0.y + (1.0 - f0.y) * factor,
+        f0.z + (1.0 - f0.z) * factor
+    };
 }
+
 
 double cook_torrance_brdf(struct s_dot_products dp, struct s_brdf_terms bt)
 {
@@ -36,7 +43,7 @@ double lambertian_brdf(struct s_dot_products dp, struct s_brdf_terms bt, t_mater
 
 
 // TODO: precalculate f0, f0=0.04 for most dielectrics 
-t_color brdfs(t_vec3 N, t_vec3 V, t_vec3 L, t_material mat)
+t_vec3 brdfs(t_vec3 N, t_vec3 V, t_vec3 L, t_material mat)
 {
 	t_vec3 H;
 	struct s_dot_products dp;
@@ -50,20 +57,21 @@ t_color brdfs(t_vec3 N, t_vec3 V, t_vec3 L, t_material mat)
 	
 	bt.d = distribution(dp.NdotH, mat.roughness);
 	bt.g = geometry(dp.NdotV, mat.roughness) * geometry(dp.NdotL, mat.roughness);
-	bt.f = fresnel_schlick(dp.VdotH, mat.f0);
+	/*bt.f = fresnel_schlick(dp.VdotH, mat.f0);*/
 	
 	double specular_intensity = cook_torrance_brdf(dp, bt);
 	double diffuse_intensity = lambertian_brdf(dp, bt, mat);
 
-	t_color color = mat.albedo;
-	color_mul_scalar(&color, diffuse_intensity);
-	t_color specular;
-	if (mat.metallic > 0)
-		specular = mat.albedo;
-	else if (mat.metallic == 0)
-		specular = (t_color){1, 1, 1};
-	color_mul_scalar(&specular, specular_intensity);
-	color_add(&color, &specular);
+	// this would require a refactoring
+	/*t_vec3 color = mat.albedo;*/
+	/*color_mul_scalar(&color, diffuse_intensity);*/
+	/*t_vec3 specular;*/
+	/*if (mat.metallic > 0)*/
+	/*	specular = mat.albedo;*/
+	/*else if (mat.metallic == 0)*/
+	/*	specular = (t_vec3){1, 1, 1};*/
+	/*color_mul_scalar(&specular, specular_intensity);*/
+	/*color_add(&color, &specular);*/
 
-	return color;
+	/*return color;*/
 }

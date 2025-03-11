@@ -95,7 +95,7 @@ static bool parse_color_channel(double *value, char *str)
 
 }
 
-bool parse_color(t_color *color, char *str)
+bool parse_color(t_vec3 *color, char *str)
 {
 	char **channels;
 
@@ -103,11 +103,11 @@ bool parse_color(t_color *color, char *str)
 	resource_track(channels, free_strings);
 	if (!channels || ft_strarr_len(channels) != 3)
 		return (false);
-	if (parse_color_channel(&color->r, channels[0]) == false)
+	if (parse_color_channel(&color->x, channels[0]) == false)
 		return (false);
-	if (parse_color_channel(&color->g, channels[1]) == false)
+	if (parse_color_channel(&color->y, channels[1]) == false)
 		return (false);
-	if (parse_color_channel(&color->b, channels[2]) == false)
+	if (parse_color_channel(&color->z, channels[2]) == false)
 		return (false);
 	return (true);
 }

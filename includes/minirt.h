@@ -4,7 +4,6 @@
 # include <libft.h>
 # include <scene.h>
 # include <parser.h>
-# include <debug.h>
 # include <mlx.h>
 # include <render.h>
 

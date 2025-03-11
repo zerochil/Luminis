@@ -2,7 +2,6 @@
 # define OBJECT_H
 	
 # include <libmath.h>
-# include <color.h>
 # include <libft.h>
 # include <material.h>
 
@@ -34,7 +33,7 @@ typedef bool (*t_intersect)(t_object*, t_ray*, t_hit*);
 
 struct s_object
 {
-	t_color		color;
+	t_vec3		color;
 	enum e_object	type;
 	t_vec3		origin;
 	t_intersect intersect;

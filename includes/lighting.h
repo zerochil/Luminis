@@ -20,6 +20,6 @@ struct s_brdf_terms
 	double f;
 };
 
-t_color brdfs(t_vec3 N, t_vec3 V, t_vec3 L, t_material mat);
+t_vec3 brdfs(t_vec3 N, t_vec3 V, t_vec3 L, t_material mat);
 
 #endif

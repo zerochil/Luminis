@@ -1,13 +1,13 @@
 #include <mlx_image.h>
 
-void	put_pixel(t_image *image, int x, int y, t_color color)
+void	put_pixel(t_image *image, int x, int y, t_vec3 color)
 {
 	int i;
 
 	i = (y * image->line_len) + (x * (image->bpp / 8));
-	image->addr[i] = color.b;
-	image->addr[i + 1] = color.g;
-	image->addr[i + 2] = color.r;
+	image->addr[i] = color.x;
+	image->addr[i + 1] = color.y;
+	image->addr[i + 2] = color.z;
 	image->addr[i + 3] = 0x00;
 }
 
