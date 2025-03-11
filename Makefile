@@ -8,8 +8,12 @@ SRCS = minirt.c \
 	   parser/parser_utils.c\
 	   parser/parser_predicates.c\
 	   parser/parser_error.c\
+	   object/plane.c\
+	   object/sphere.c\
+	   object/cylinder.c\
+	   object/cone.c\
+	   object/object.c\
 	   debug.c\
-	   object.c\
 	   render.c\
 	   handle_event.c\
 	   keybind.c\

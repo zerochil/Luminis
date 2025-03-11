@@ -24,6 +24,7 @@ t_vec3	vec3_cross(t_vec3 a, t_vec3 b);
 double	vec3_length(t_vec3 a);
 t_vec3	vec3_normalize(t_vec3 a);
 t_vec3  vec3_negate(t_vec3 a);
+t_vec3	vec3_negate_conditionally(bool condition, t_vec3 vec);
 void	vec3_rotateX(t_vec3 *vec, double angle);
 void	vec3_rotateY(t_vec3 *vec, double angle);
 void	rotate_dev(t_vec3 *vec, t_vec3 axis, double angle);

@@ -118,6 +118,13 @@ t_vec3  vec3_negate(t_vec3 a)
 	return (result);
 }
 
+t_vec3	vec3_negate_conditionally(bool condition, t_vec3 vec)
+{
+	if (condition)
+		return (vec3_negate(vec));
+	return (vec);
+}
+
 bool vec3_compare(t_vec3 a, t_vec3 b)
 {
 	return (float_eq(a.x, b.x) && float_eq(a.y, b.y) && float_eq(a.z, b.z));
