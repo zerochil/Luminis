@@ -29,7 +29,15 @@ typedef struct s_ray
 	t_vec3	direction;
 } t_ray;
 
+
+typedef struct s_uv
+{
+	double u;
+	double v;
+}	t_uv;
+
 typedef bool (*t_intersect)(t_object*, t_ray*, t_hit*);
+typedef t_uv (*t_object_uv)(t_hit *hit);
 
 struct s_object
 {
@@ -40,8 +48,9 @@ struct s_object
 	double 		radius;
 	double		height;
 	double		angle;
-	t_intersect intersect;
 	t_material  material;
+	t_intersect intersect;
+	t_object_uv get_uv;
 };
 
 t_object	*object_create(enum e_object type);

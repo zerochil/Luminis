@@ -1,5 +1,23 @@
 #include "_object.h"
 
+t_uv get_cylinder_uv(t_hit *hit)
+{
+	t_vec3 p;
+	t_vec3 p_local = vec3_sub(hit->point, hit->object->origin);
+	t_vec3 cx;
+	t_vec3 cy;
+	t_vec3 cz = hit->object->orientation;
+	create_orthonormal_basis(cz, &cx, &cy);
+
+	p.x = vec3_dot(p_local, cx);
+	p.y = vec3_dot(p_local, cy);
+	p.z = vec3_dot(p_local, cz);
+
+	double v = p.z / hit->object->height;
+	double u = (atan2(p.y, p.x) + M_PI) / (2 * M_PI);
+	return (t_uv){u, v};
+}
+
 static bool	is_point_within_cylinder_height(t_object *object, t_ray *ray, double t)
 {
 	t_vec3 hit_point;

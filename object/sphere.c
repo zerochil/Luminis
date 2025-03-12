@@ -1,5 +1,14 @@
 #include "_object.h"
 
+t_uv get_sphere_uv(t_hit *hit)
+{
+	t_vec3 p = vec3_sub(hit->point, hit->object->origin);
+	double phi = atan2(p.z, p.x);
+	double theta = asin(p.y/hit->object->radius);
+	t_uv uv = {1 - (phi + M_PI) / (2 * M_PI), (theta + M_PI / 2) / M_PI};
+	return (uv);
+}
+
 static double sphere_solution(t_quadratic_terms qterms)
 {
 	if (qterms.t1 < 0)

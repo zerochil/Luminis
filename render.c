@@ -13,68 +13,7 @@ void color_clamp(t_vec3 *color)
 	color->z = fmin(fmax(color->z, 0.0), 1.0);
 }
 
-typedef struct s_uv
-{
-	double u;
-	double v;
-}	t_uv;
 
-t_uv _get_sphere_uv(t_hit hit)
-{
-	t_vec3 p = vec3_sub(hit.point, hit.object->origin);
-	double r = hit.object->radius;
-	double phi = asin(p.z);
-	double theta = acos(p.x / (r * cos(phi)));
-	
-	// double phi = atan2(p.y, p.x);
-	// double theta = asin(p.z);
-	// t_uv uv = {1 - (phi + M_PI) / (2 * M_PI), (theta + M_PI / 2) / M_PI};
-
-	t_uv uv = {theta/(2 * M_PI), 0.5 + phi/M_PI};
-
-	return (uv);
-}
-
-t_uv get_sphere_uv(t_hit hit)
-{
-	//t_vec3 p = vec3_normalize(vec3_sub(hit.point, hit.object->origin));
-	t_vec3 p = vec3_sub(hit.point, hit.object->origin);
-	double phi = atan2(p.z, p.x);
-	double theta = asin(p.y/hit.object->radius);
-	t_uv uv = {1 - (phi + M_PI) / (2 * M_PI), (theta + M_PI / 2) / M_PI};
-	return (uv);
-}
-
-t_uv get_cylinder_uv(t_hit hit)
-{
-	t_vec3 p;
-	t_vec3 p_local = vec3_sub(hit.point, hit.object->origin);
-	t_vec3 cx;
-	t_vec3 cy;
-	t_vec3 cz = hit.object->orientation;
-	create_orthonormal_basis(cz, &cx, &cy);
-
-	p.x = vec3_dot(p_local, cx);
-	p.y = vec3_dot(p_local, cy);
-	p.z = vec3_dot(p_local, cz);
-
-	double v = p.z / hit.object->height;
-	double u = (atan2(p.y, p.x) + M_PI) / (2 * M_PI);
-	return (t_uv){u, v};
-}
-
-/*t_vec3 get_sphere_position_from_uv(t_uv uv, double radius)*/
-/*{*/
-/*    double theta = 2 * M_PI * uv.u;  // Longitude*/
-/*    double phi = M_PI * uv.v;        // Latitude*/
-/**/
-/*    t_vec3 position;*/
-/*    position.x = radius * sin(phi) * cos(theta);*/
-/*    position.y = radius * sin(phi) * sin(theta);*/
-/*    position.z = radius * cos(phi);*/
-/**/
-/*    return position;*/
-/*}*/
 
 t_vec3 calculate_lighting(t_scene *scene, t_hit hit)
 {
@@ -83,50 +22,50 @@ t_vec3 calculate_lighting(t_scene *scene, t_hit hit)
 	t_light *light;
 
 	t_vec3 color = hit.object->color;
-	if (false && hit.object->type == SPHERE)
-	{
+	/*if (false && hit.object->type == SPHERE)*/
+	/*{*/
 		//t_uv uv = get_sphere_uv(hit);
 		//color = color_new(get_texture_uv(&scene->texture, uv.u, uv.v));
-	}
+	/*}*/
 
-	if (false && hit.object->type == SPHERE)
-	{
-		t_vec3 p = vec3_sub(hit.point, hit.object->origin);
-		double phi = acos(p.y/hit.object->radius);
-		double theta = atan2(p.z, p.x);
-		double scale = 20;
+	/*if (false && hit.object->type == SPHERE)*/
+	/*{*/
+	/*	t_vec3 p = vec3_sub(hit.point, hit.object->origin);*/
+	/*	double phi = acos(p.y/hit.object->radius);*/
+	/*	double theta = atan2(p.z, p.x);*/
+	/*	double scale = 20;*/
+	/**/
+	/*	double i = floor(phi / (M_PI / scale));*/
+	/*	double j = floor(theta / ( 2 * M_PI / scale));*/
+	/**/
+	/*	if ((int)floor(i + j) % 2 == 0)*/
+	/*		color = (t_vec3){255, 255, 255};*/
+	/*	else*/
+	/*		color = (t_vec3){0, 0, 0};*/
+	/*}*/
+	/**/
+	/*if (false && hit.object->type == PLANE)*/
+	/*{*/
+	/*	double scale = 5;*/
+	/**/
+	/*	t_vec3 u;*/
+	/*	t_vec3 v;*/
+	/**/
+	/*	create_orthonormal_basis(hit.normal, &u, &v);*/
+	/*	double x = vec3_dot(hit.point, u);*/
+	/*	double y = vec3_dot(hit.point, v);*/
+	/**/
+	/*	int s = (int)floor(x / scale);*/
+	/*	int t = (int)floor(y / scale);*/
+	/**/
+	/*	if ((s + t) % 2 == 0)*/
+	/*		color = (t_vec3){255, 255, 255};*/
+	/*	else*/
+	/*		color = (t_vec3){0, 0, 0};*/
+	/*}*/
 
-		double i = floor(phi / (M_PI / scale));
-		double j = floor(theta / ( 2 * M_PI / scale));
-
-		if ((int)floor(i + j) % 2 == 0)
-			color = (t_vec3){255, 255, 255};
-		else
-			color = (t_vec3){0, 0, 0};
-	}
-
-	if (false && hit.object->type == PLANE)
-	{
-		double scale = 5;
-
-		t_vec3 u;
-		t_vec3 v;
-
-		create_orthonormal_basis(hit.normal, &u, &v);
-		double x = vec3_dot(hit.point, u);
-		double y = vec3_dot(hit.point, v);
-
-		int s = (int)floor(x / scale);
-		int t = (int)floor(y / scale);
-
-		if ((s + t) % 2 == 0)
-			color = (t_vec3){255, 255, 255};
-		else
-			color = (t_vec3){0, 0, 0};
-	}
-
-	if (false && hit.object->type == CYLINDER)
-	{
+	/*if (false && hit.object->type == CYLINDER)*/
+	/*{*/
 		//t_uv uv = get_cylinder_uv(hit);
 		
 		//color = color_new(get_texture_uv(&scene->texture, uv.u, uv.v));
@@ -137,26 +76,26 @@ t_vec3 calculate_lighting(t_scene *scene, t_hit hit)
 		// 	color = (t_vec3){255, 255, 255};
 		// else
 		// 	color = (t_vec3){0, 0, 0};
-	}
+	/*}*/
 
 
-	if (false && hit.object->type == SPHERE)
-	{
-		t_uv uv = get_sphere_uv(hit);
-
-		double coeff = .55;
-
-		t_vec3 tangent;
-		t_vec3 bitangent;
-
-		create_orthonormal_basis(hit.normal, &tangent, &bitangent);
-		
-		double tex_val = get_texture_uv(&scene->texture, uv.u, uv.v);
-		t_vec3 perturbed_normal = vec3_add(hit.normal, vec3_mul_scalar(bitangent, (fabs(tex_val)) * coeff));
-		/*t_vec3 perturbed_normal = vec3_add(hit.normal, vec3_mul_scalar(vec3_add(tangent, bitangent), tex_val * coeff));*/
-		hit.normal = vec3_add(hit.normal, perturbed_normal);
-		hit.normal = vec3_normalize(hit.normal);
-	}
+	/*if (false && hit.object->type == SPHERE)*/
+	/*{*/
+	/*	t_uv uv = get_sphere_uv(hit);*/
+	/**/
+	/*	double coeff = .55;*/
+	/**/
+	/*	t_vec3 tangent;*/
+	/*	t_vec3 bitangent;*/
+	/**/
+	/*	create_orthonormal_basis(hit.normal, &tangent, &bitangent);*/
+	/**/
+	/*	double tex_val = get_texture_uv(&scene->texture, uv.u, uv.v);*/
+	/*	t_vec3 perturbed_normal = vec3_add(hit.normal, vec3_mul_scalar(bitangent, (fabs(tex_val)) * coeff));*/
+	/*	//t_vec3 perturbed_normal = vec3_add(hit.normal, vec3_mul_scalar(vec3_add(tangent, bitangent), tex_val * coeff));*/
+	/*	hit.normal = vec3_add(hit.normal, perturbed_normal);*/
+	/*	hit.normal = vec3_normalize(hit.normal);*/
+	/*}*/
 	
 	color = vec3_mul_scalar(color, 1.0/255.0);
 	t_vec3 ambient = scene->ambient.color;
@@ -244,27 +183,26 @@ void	apply_transformation(t_control control)
 	}
 }
 
-int	render_image(t_mlx *mlx)
+int	render_image(t_scene *scene)
 {
 	static int frame;
 
-	apply_transformation(mlx->control);
+	apply_transformation(scene->mlx.control);
 	if (frame++ % 10 == 0)
-		raytrace(&mlx->scene, &mlx->image);
+		raytrace(scene, &scene->mlx.image);
 	frame++;
-	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->image.ptr, 0, 0);
+	mlx_put_image_to_window(scene->mlx.ptr, scene->mlx.win, scene->mlx.image.ptr, 0, 0);
 	return (1);
 }
 
-void	render_scene(t_mlx *mlx)
+void	render_scene(t_scene	*scene)
 {
-	new_image(mlx->ptr, &mlx->image, WIDTH, HEIGHT);
-
-	mlx_hook(mlx->win, ON_DESTROY, 0, close_win, mlx);
-	mlx_hook(mlx->win, ON_KEY_PRESS, 1L << 0, on_key_press, mlx);
-	mlx_hook(mlx->win, ON_KEY_RELEASE, 1L << 1, on_key_release, mlx);
-	mlx_mouse_hook(mlx->win, on_mouse_event, mlx);
-	mlx_loop_hook(mlx->ptr, render_image, mlx);
-	mlx_loop(mlx->ptr);
-	close_win(mlx);
+	new_image(scene->mlx.ptr, &scene->mlx.image, WIDTH, HEIGHT);
+	mlx_hook(scene->mlx.win, ON_DESTROY, 0, close_win, scene);
+	mlx_hook(scene->mlx.win, ON_KEY_PRESS, 1L << 0, on_key_press, scene);
+	mlx_hook(scene->mlx.win, ON_KEY_RELEASE, 1L << 1, on_key_release, scene);
+	mlx_mouse_hook(scene->mlx.win, on_mouse_event, scene);
+	mlx_loop_hook(scene->mlx.ptr, render_image, scene);
+	mlx_loop(scene->mlx.ptr);
+	close_win(&scene->mlx);
 }

@@ -13,12 +13,15 @@ SRCS = minirt.c \
 	   object/cylinder.c\
 	   object/cone.c\
 	   object/object.c\
+	   texture/texture.c\
+	   texture/texture_bumpmap.c\
+	   texture/texture_checkerboard.c\
+	   texture/texture_solid.c\
 	   render.c\
 	   handle_event.c\
 	   keybind.c\
 	   camera.c\
-	   mlx_image.c\
-	   texture.c
+	   mlx_image.c
 
 OBJS_DIR = .objects/
 OBJS = $(SRCS:%.c=$(OBJS_DIR)%.o)

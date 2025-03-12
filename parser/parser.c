@@ -1,4 +1,4 @@
-#include "parser.h"
+#include <parser.h>
 
 bool	parse_line_ambient(t_scene *scene, char **infos)
 {
@@ -155,6 +155,21 @@ bool	parse_line_cone(t_scene *scene, char **infos)
 	return (true);
 }
 
+bool parse_texture(t_scene *scene, char **infos)
+{
+	t_texture *texture;
+
+	if (ft_strarr_len(infos) != 3)
+		return (parser_error("Texture must have 2 arguments"));
+	texture = track_malloc(sizeof(t_texture));
+	if (parse_string(&texture->name, infos[1]) == false)
+		return (parser_error("Texture name must be composed of only characters"));
+	if (parse_string(&texture->filename, infos[2]) == false)
+		return (parser_error("Texture filename must be a string"));
+	array_push(scene->textures, texture);
+	return (true);
+}
+
 bool parse_material(t_scene *scene, char **infos)
 {
 	t_material *material;
@@ -238,6 +253,7 @@ bool	parse_scene(t_scene *scene, char *filename)
 	scene->lights = array_create();
 	scene->objects = array_create();
 	scene->materials = array_create();
+	scene->textures = array_create();
 	while (true)
 	{
 		line = get_next_line(fd);

@@ -66,48 +66,52 @@ t_entity select_entity(t_scene *scene, int type, int mousex, int mousey)
 	return (entity);
 }
 
-int	on_key_press(int keycode, t_mlx *mlx)
+int	on_key_press(int keycode, t_scene *scene)
 {
 	t_keybind	*keybind;
 
 	if (keycode == KEY_ESC)
-		close_win(mlx);
+		close_win(&scene->mlx);
 	if (keycode == ' ')
-		mlx->control.selected = select_entity(&mlx->scene, CAMERA, 0, 0);
+		scene->mlx.control.selected = select_entity(scene, CAMERA, 0, 0);
 	if (keycode == 'l')
-		mlx->control.selected = select_entity(&mlx->scene, LIGHT, 0, 0);
+		scene->mlx.control.selected = select_entity(scene, LIGHT, 0, 0);
 	else
 	{
-		keybind = array_find(mlx->control.keybinds, &keycode, keybind_cmp);
+		keybind = array_find(scene->mlx.control.keybinds, &keycode, keybind_cmp);
 		if (keybind != NULL)
 			keybind_set_dir_flag(keybind, keycode);
 	}
 	return (0);
 }
 
-int	on_key_release(int keycode, t_mlx *mlx)
+int	on_key_release(int keycode, t_scene *scene)
 {
 	t_keybind	*keybind;
+	t_mlx		*mlx;
 
+	mlx = &scene->mlx;
 	keybind = array_find(mlx->control.keybinds, &keycode, keybind_cmp);
 	if (keybind != NULL)
 		keybind_reset_dir_flag(keybind, keycode);
 	return (0);
 }
 
-int	on_mouse_event(int keycode, int x, int y, t_mlx *mlx)
+int	on_mouse_event(int keycode, int x, int y, t_scene *scene)
 {
 	t_camera	*camera;
 	t_entity	entity;
+	t_mlx		*mlx;
 
-	camera = &mlx->scene.camera;
+	mlx = &scene->mlx;
+	camera = &scene->camera;
 	if (keycode == KEY_SCROLL_UP)
 		camera->fov = (camera->fov - 1 > 0) ? camera->fov - 1 : 0;
 	if (keycode == KEY_SCROLL_DOWN)
 		camera->fov = (camera->fov + 1 < 180) ? camera->fov + 1 : 180;
 	if (keycode == KEY_LEFT_CLICK)
 	{
-		entity = select_entity(&mlx->scene, OBJECT, x, y);
+		entity = select_entity(scene, OBJECT, x, y);
 		if (entity.object == NULL)
 			entity.type = NONE;
 		mlx->control.selected = entity;

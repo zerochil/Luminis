@@ -1,5 +1,24 @@
 #include "_object.h"
 
+t_uv get_plane_uv(t_hit *hit)
+{
+	/*t_vec3 p;*/
+	/*t_vec3 p_local = vec3_sub(hit.point, hit.object->origin);*/
+	/*t_vec3 cx;*/
+	/*t_vec3 cy;*/
+	/*t_vec3 cz = hit.object->orientation;*/
+	/*create_orthonormal_basis(cz, &cx, &cy);*/
+	/**/
+	/*p.x = vec3_dot(p_local, cx);*/
+	/*p.y = vec3_dot(p_local, cy);*/
+	/*p.z = vec3_dot(p_local, cz);*/
+	/**/
+	/*return (t_uv){p.x, p.y};*/
+	// TODO: Implement UV mapping for planes
+	(void)hit;
+	return ((t_uv){0, 0});
+}
+
 bool		intersect_plane(t_object *object, t_ray *ray, t_hit *hit)
 {
 	double t;

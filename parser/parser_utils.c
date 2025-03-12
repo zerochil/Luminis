@@ -1,4 +1,4 @@
-#include "parser.h"
+#include <parser.h>
 
 static bool parse_float_decimal(double *value, char **str)
 {
