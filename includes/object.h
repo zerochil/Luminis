@@ -29,11 +29,7 @@ struct s_bumpmaptexture{
     double *ptr;
     int width;
 	int height;
-	int channels;
 };
-
-
-
 
 enum e_object
 {

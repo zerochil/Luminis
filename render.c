@@ -127,13 +127,13 @@ bool	apply_transformation(t_control control)
 
 int	render_image(t_scene *scene)
 {
-	static bool first = true;
+	/*static bool first = true;*/
 
-	if (apply_transformation(scene->mlx.control) || first)
-	{
+	/*if (apply_transformation(scene->mlx.control) || first)*/
+	/*{*/
 		raytrace(scene, &scene->mlx.image);
-		first = false;
-	}
+		/*first = false;*/
+	/*}*/
 	mlx_put_image_to_window(scene->mlx.ptr, scene->mlx.win, scene->mlx.image.ptr, 0, 0);
 	return (1);
 }

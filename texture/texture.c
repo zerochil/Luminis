@@ -53,6 +53,11 @@ bool texture_set_type(t_texture *texture, char *type)
 		texture->type = TEXTURE_BUMP_MAP;
 		texture->evaluate = evaluate_bump_map_texture;
 	}
+	else if (ft_strcmp(type, "colored_map") == 0)
+	{
+		texture->type = TEXTURE_COLORED_MAP;
+		texture->evaluate = evaluate_colored_texture;
+	}
 	else
 		return (false);
 	return (true);

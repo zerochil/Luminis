@@ -157,22 +157,39 @@ bool	parse_line_cone(t_scene *scene, char **infos)
 	return (true);
 }
 
+bool parse_texture_checker(t_texture *texture, char **infos)
+{
+	t_vec3 color1;
+	t_vec3 color2;
+
+	if (ft_strarr_len(infos) != 6)
+		return (parser_error("Checker texture must have 4 arguments"));
+	if (parse_float(&texture->checker.scale, infos[3]) == false)
+		return (parser_error("Checker scale must be a float"));
+	if (parse_color(&color1, infos[4]) == false)
+		return (parser_error("Checker color1 must be a color"));
+	if (parse_color(&color2, infos[5]) == false)
+		return (parser_error("Checker color2 must be a color"));
+	texture->checker.color1 = color1;
+	texture->checker.color2 = color2;
+	return (true);
+}
+
 bool parse_texture(t_scene *scene, char **infos)
 {
 	t_texture *texture;
-	/*char *filename;*/
-	/*char *typename;*/
 
 	if (ft_strarr_len(infos) != 4)
-		return (parser_error("Texture must have 3 arguments"));
+		return (parser_error("Texture must have at least 3 arguments"));
 	texture = track_malloc(sizeof(t_texture));
 	if (parse_string(&texture->name, infos[1]) == false)
 		return (parser_error("Texture name must be composed of only characters"));
 	if (texture_set_type(texture, infos[2]) == false)
 		return (parser_error("Unknown texture type (bump_map, checker)"));
-	// if type checker throw error if infos length is 4
-	if (texture_load(scene->mlx.ptr, texture, infos[3]) == false)
-		return (parser_error("Failed to load texture"));
+	if (texture->type == TEXTURE_BUMP_MAP || texture->type == TEXTURE_COLORED_MAP)
+		texture_load(scene->mlx.ptr, texture, infos[3]);
+	else if (texture->type == TEXTURE_CHECKER && parse_texture_checker(texture, infos) == false)
+			return (false);
 	array_push(scene->textures, texture);
 	return (true);
 }
