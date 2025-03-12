@@ -65,7 +65,7 @@ bool	parse_line_sphere(t_scene *scene, char **infos)
 {
 	t_object	*object;
 
-	if (ft_strarr_len(infos) != 4)
+	if (ft_strarr_len(infos) < 4)
 		return (parser_error("Sphere must have 4 arguments"));
 	object = object_create(SPHERE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
@@ -185,7 +185,7 @@ bool parse_texture(t_scene *scene, char **infos)
 	if (parse_string(&texture->name, infos[1]) == false)
 		return (parser_error("Texture name must be composed of only characters"));
 	if (texture_set_type(texture, infos[2]) == false)
-		return (parser_error("Unknown texture type (bump_map, checker)"));
+		return (parser_error("Unknown texture type (bump_map, colored, checker)"));
 	if (texture->type == TEXTURE_BUMP_MAP || texture->type == TEXTURE_COLORED_MAP)
 		texture_load(scene->mlx.ptr, texture, infos[3]);
 	else if (texture->type == TEXTURE_CHECKER && parse_texture_checker(texture, infos) == false)
