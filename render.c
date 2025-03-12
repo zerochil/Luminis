@@ -213,7 +213,7 @@ int	render_image(t_scene *scene)
 void	render_scene(t_scene	*scene)
 {
 	new_image(scene->mlx.ptr, &scene->mlx.image, WIDTH, HEIGHT);
-	mlx_hook(scene->mlx.win, ON_DESTROY, 0, close_win, scene);
+	mlx_hook(scene->mlx.win, ON_DESTROY, 0, close_win, &scene->mlx);
 	mlx_hook(scene->mlx.win, ON_KEY_PRESS, 1L << 0, on_key_press, scene);
 	mlx_hook(scene->mlx.win, ON_KEY_RELEASE, 1L << 1, on_key_release, scene);
 	mlx_mouse_hook(scene->mlx.win, on_mouse_event, scene);
