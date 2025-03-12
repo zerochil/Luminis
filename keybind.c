@@ -1,5 +1,6 @@
 #include <keybind.h>
 #include <camera.h>
+
 static t_keybind *keybind_create(int property, int pos_key, int neg_key, void (*update)(t_keybind*, t_entity *))
 {
     t_keybind   *keybind;
@@ -27,14 +28,6 @@ void    keybind_reset_dir_flag(t_keybind *keybind, int keycode)
     keybind->dir_flag = 0;
 }
 
-void    keybind_print(void *ptr)
-{
-    t_keybind *keybind;
-
-    keybind = ptr;
-    printf("keybind {%d, dir= %d}\n", keybind->property, keybind->dir_flag);
-}
-
 void update_radius(t_keybind *keybind, t_entity *selected)
 {
     t_object *object;
@@ -44,10 +37,7 @@ void update_radius(t_keybind *keybind, t_entity *selected)
     if (selected->type != OBJECT)
         return ;
     object = selected->object;
-    if (object->type == SPHERE)
-        object->radius += keybind->dir_flag * RADIUS_STEP;
-    else if (object->type == CYLINDER)
-        object->radius += keybind->dir_flag * RADIUS_STEP;
+    object->radius += keybind->dir_flag * RADIUS_STEP;
 }
 
 void update_height(t_keybind *keybind, t_entity *selected)
@@ -101,6 +91,16 @@ void    object_rotate(t_object *object, t_vec3 axis, double angle)
         rotate_dev(&object->orientation, axis, angle);
 }
 
+t_vec3  get_rot_axis(int axis, t_vec3 a1, t_vec3 a2, t_vec3 a3)
+{
+    if (axis == X_ROT)
+        return (a1);
+    else if (axis == Y_ROT)
+        return (a2);
+    else
+        return (a3);
+}
+
 void update_rot(t_keybind *keybind, t_entity *selected)
 {
     t_camera *camera;
@@ -114,23 +114,19 @@ void update_rot(t_keybind *keybind, t_entity *selected)
     if (selected->type == CAMERA)
     {
         camera = selected->camera;
-        if (keybind->property == X_ROT)
-            axis = camera->right;
-        else if (keybind->property == Y_ROT)
-            axis = camera->up;
-        else
-            axis = camera->forward;
+        axis = get_rot_axis(keybind->property, camera->right, camera->up, camera->forward);
         camera_rotate(selected->camera, axis, angle);
     }
-    if (keybind->property == X_ROT)
-        axis = (t_vec3){1,0,0};
-    else if (keybind->property == Y_ROT)
-        axis = (t_vec3){0,1,0};
     else
-        axis = (t_vec3){0,0,1};
-    //TODO: flatten object definition so that we apply rotation directly on the normal.
-    object = selected->object;
-    object_rotate(object, axis, keybind->dir_flag * ANGLE_STEP);
+    {
+        axis = get_rot_axis(
+            keybind->property, 
+            (t_vec3){1, 0, 0}, 
+            (t_vec3){0, 1, 0}, 
+            (t_vec3){0, 0, 1});
+        object = selected->object;
+        object_rotate(object, axis, keybind->dir_flag * ANGLE_STEP);
+    }
 }
 
 t_array *keybinds_init(void)

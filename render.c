@@ -234,32 +234,38 @@ void raytrace(t_scene *scene, t_image *image)
 	}
 }
 
-
-
-void	apply_transformation(t_control control)
+bool	apply_transformation(t_control control)
 {
 	t_keybind	*keybind;
+	bool		state_changed;
 	size_t i;
 
 	if (control.selected.type == NONE)
-		return ;
+		return (false);
 	i = 0;
+	state_changed = false;
 	while (i < control.keybinds->size)
 	{
 		keybind = array_get(control.keybinds, i);
-		keybind->update(keybind, &control.selected);
+		if (keybind->dir_flag != 0)
+		{
+			keybind->update(keybind, &control.selected);
+			state_changed = true;
+		} 
 		i++;
 	}
+	return (state_changed);
 }
 
 int	render_image(t_mlx *mlx)
 {
-	static int frame;
+	static bool first = true;
 
-	apply_transformation(mlx->control);
-	if (frame++ % 10 == 0)
+	if (apply_transformation(mlx->control) || first)
+	{
 		raytrace(&mlx->scene, &mlx->image);
-	frame++;
+		first = false;
+	}
 	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->image.ptr, 0, 0);
 	return (1);
 }
