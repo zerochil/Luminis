@@ -101,5 +101,6 @@ t_texture *create_texture(char *name, enum e_texturetype type, uv_map evaluate);
 t_vec3 evaluate_solid_texture(t_texture *texture, t_hit *hit);
 t_vec3 evaluate_bump_map_texture(t_texture *texture, struct s_hit *hit);
 t_vec3 evaluate_checkerboard_texture(t_texture *texture, struct s_hit *hit);
+t_vec3 evaluate_colored_texture(t_texture *texture, struct s_hit *hit);
 
 #endif

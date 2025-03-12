@@ -14,11 +14,22 @@ static double texel_value(t_texture *texture, t_uv uv)
 	return (texture->bump_map.ptr[y * texture->bump_map.width + x]);
 }
 
+t_vec3 int_to_vec3(int color)
+{
+	t_vec3 vec;
+
+	vec.x = (color >> 16) & 0xFF;
+	vec.y = (color >> 8) & 0xFF;
+	vec.z = color & 0xFF;
+	return (vec);
+}
+
 t_vec3 evaluate_colored_texture(t_texture *texture, struct s_hit *hit)
 {
 	t_uv uv;
 	double texel;
 
 	uv = hit->object->get_uv(hit);
-	return (texel_value(texture, uv));
+	texel = texel_value(texture, uv);
+	return (int_to_vec3(texel));
 }

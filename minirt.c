@@ -71,19 +71,7 @@ int main(int argc, char **argv)
 	if (post_parse(&scene) == false)
 		return (ft_putstr_fd("Error: Failed to post parse scene\n", 2), 1);
 
-
-
 	scene.mlx.control = control_init(&scene);
-
-	//TODO: check if the scene has all the neccessary entities: light, camera
-	// This is a temporary solution
-	// The texture has to be inside the object
-	// It should be loaded in object creation while parsing the scene
-
-	/*t_vec3 color = color_new(mlx.scene.texture.ptr[0]);*/
-	/*printf("brick_wall.ptr[0]: %f\n", mlx.scene.texture.ptr[0]);*/
-	/*printf("brick_wall.ptr[1]: %f\n", mlx.scene.texture.ptr[1]);*/
-	/*exit(0);*/
 
 	render_scene(&scene);
 }

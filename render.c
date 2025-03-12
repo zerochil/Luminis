@@ -32,9 +32,7 @@ t_vec3 calculate_lighting(t_scene *scene, t_hit hit)
 
 	t_vec3 color = hit.object->texture->evaluate(hit.object->texture, &hit);
 	
-	color = vec3_mul_scalar(color, 1.0/255.0);
 	t_vec3 ambient = scene->ambient.color;
-	ambient = vec3_mul_scalar(ambient, 1.0/255.0);
 	ambient = vec3_mul_scalar(ambient, scene->ambient.intensity);
 	ambient = vec3_mul(ambient, color);
 	total_light = ambient;
@@ -49,7 +47,6 @@ t_vec3 calculate_lighting(t_scene *scene, t_hit hit)
 		if (diffuse_intensity > 0.0)
 		{
 			t_vec3 light_color = light->color;
-			light_color = vec3_mul_scalar(light_color, 1.0/255.0);
 			light_color = vec3_mul(light_color, color);
 			double attenuation = 1.0 / (1.0 + 0.0001 * light_dist * light_dist);
 			/*attenuation = 1;*/
@@ -127,13 +124,13 @@ bool	apply_transformation(t_control control)
 
 int	render_image(t_scene *scene)
 {
-	/*static bool first = true;*/
+	static bool first = true;
 
-	/*if (apply_transformation(scene->mlx.control) || first)*/
-	/*{*/
+	if (apply_transformation(scene->mlx.control) || first)
+	{
 		raytrace(scene, &scene->mlx.image);
-		/*first = false;*/
-	/*}*/
+		first = false;
+	}
 	mlx_put_image_to_window(scene->mlx.ptr, scene->mlx.win, scene->mlx.image.ptr, 0, 0);
 	return (1);
 }

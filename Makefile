@@ -16,6 +16,7 @@ SRCS = minirt.c \
 	   texture/texture.c\
 	   texture/texture_bumpmap.c\
 	   texture/texture_checkerboard.c\
+	   texture/texture_colored.c\
 	   texture/texture_solid.c\
 	   render.c\
 	   handle_event.c\

@@ -109,6 +109,9 @@ bool parse_color(t_vec3 *color, char *str)
 		return (false);
 	if (parse_color_channel(&color->z, channels[2]) == false)
 		return (false);
+	color->x /= 255;
+	color->y /= 255;
+	color->z /= 255;
 	return (true);
 }
 

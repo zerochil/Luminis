@@ -65,8 +65,8 @@ bool	parse_line_sphere(t_scene *scene, char **infos)
 {
 	t_object	*object;
 
-	if (ft_strarr_len(infos) != 5)
-		return (parser_error("Sphere must have 3 arguments"));
+	if (ft_strarr_len(infos) != 4)
+		return (parser_error("Sphere must have 4 arguments"));
 	object = object_create(SPHERE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Sphere origin must be a vec3"));
