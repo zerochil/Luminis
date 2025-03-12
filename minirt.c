@@ -33,6 +33,7 @@ int main(int argc, char **argv)
 	if(parse_scene(&mlx.scene, argv[1]) == false)
 		return (ft_putstr_fd("Error: Failed to parse scene\n", 2), 1);
 
+	//TODO: check if the scene has all the neccessary entities: light, camera
 	window_init(&mlx);
 	// This is a temporary solution
 	// The texture has to be inside the object
