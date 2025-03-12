@@ -24,6 +24,8 @@ static bool	is_point_within_cylinder_height(t_object *object, t_ray *ray, double
     double height;
 	double h;
 
+	if (t < 0)
+		return (false);
 	h = object->height / 2;
 	hit_point = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, t));
 	height = vec3_dot(vec3_sub(hit_point, object->origin), object->orientation);
@@ -64,6 +66,7 @@ bool intersect_cylinder(t_object *obj, t_ray *ray, t_hit *hit)
 {
     t_quadratic_terms	qterms;
 	double				height_proj;
+	bool				is_ray_inside;
 	
 	qterms = cylinder_quadratic_terms(obj, ray);
     if (quadratic_delta(&qterms) < 0)
@@ -80,7 +83,8 @@ bool intersect_cylinder(t_object *obj, t_ray *ray, t_hit *hit)
 		vec3_sub(hit->point, 
 			vec3_add(obj->origin, 
 				vec3_mul_scalar(obj->orientation, height_proj))));
-	//hit->normal = vec3_negate_conditionally(vec3_dot(hit->normal, ray->direction) > 0, hit->normal);
+	is_ray_inside = vec3_dot(vec3_sub(ray->origin, obj->origin), hit->normal) < obj->radius;
+	hit->normal = vec3_negate_conditionally( is_ray_inside || hit->distance == qterms.t2, hit->normal);
 	hit->object = obj;
     return true;
 }

@@ -7,8 +7,8 @@
 
 # define RADIUS_STEP 0.1
 # define HEIGHT_STEP 1.0
-# define ANGLE_STEP 0.5
-# define POS_STEP 0.5
+# define ANGLE_STEP 1.0
+# define POS_STEP 1.0
 
 # define KEY_ESC 65307
 # define KEY_UP 65362

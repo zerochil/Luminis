@@ -33,10 +33,8 @@ int main(int argc, char **argv)
 	if (parse_scene(&scene, argv[1]) == false)
 		return (ft_putstr_fd("Error: Failed to parse scene\n", 2), 1);
 
-	/*window_init(&scene);*/
-	scene.mlx.ptr = mlx_init();
-	scene.mlx.win = mlx_new_window(scene.mlx.ptr, WIDTH, HEIGHT, "Luminis");
-	scene.mlx.control = control_init(&scene);
+	//TODO: check if the scene has all the neccessary entities: light, camera
+	window_init(&scene);
 	// This is a temporary solution
 	// The texture has to be inside the object
 	// It should be loaded in object creation while parsing the scene

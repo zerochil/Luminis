@@ -1,9 +1,19 @@
 #include <render.h>
 
-bool is_shadowed(t_scene *scene, t_ray ray, double light_distance)
+bool is_shadowed(t_scene *scene, t_light *light, t_hit *hit)
 {
-	t_hit hit = find_intersection(scene, &ray);
-	return (hit.object && hit.distance < light_distance);
+	t_ray shadow_ray;
+	double light_distance;
+	t_hit light_hit;
+
+	shadow_ray = (t_ray){
+		.origin = vec3_add(hit->point, vec3_mul_scalar(hit->normal, EPSILON * 10000)),
+		.direction = vec3_sub(light->origin, hit->point),
+	};
+	light_distance = vec3_length(shadow_ray.direction);
+	shadow_ray.direction = vec3_mul_scalar(shadow_ray.direction, 1 / light_distance);
+	light_hit = find_intersection(scene, &shadow_ray);
+	return (light_hit.object && light_hit.distance < light_distance);
 }
 
 void color_clamp(t_vec3 *color)
@@ -108,9 +118,8 @@ t_vec3 calculate_lighting(t_scene *scene, t_hit hit)
 		light = array_get(lights, i);
 		t_vec3 light_dir = vec3_normalize(vec3_sub(light->origin, hit.point));
 		double light_dist = vec3_length(vec3_sub(light->origin, hit.point));
-		if (is_shadowed(scene, (t_ray){vec3_add(hit.point, vec3_mul_scalar(hit.normal, EPSILON * 1000)), light_dir}, light_dist))
+		if (is_shadowed(scene, light, &hit))
 			continue;
-
 		double diffuse_intensity = fmax(vec3_dot(hit.normal, light_dir), 0.0);
 		if (diffuse_intensity > 0.0)
 		{
@@ -165,32 +174,38 @@ void raytrace(t_scene *scene, t_image *image)
 	}
 }
 
-
-
-void	apply_transformation(t_control control)
+bool	apply_transformation(t_control control)
 {
 	t_keybind	*keybind;
+	bool		state_changed;
 	size_t i;
 
 	if (control.selected.type == NONE)
-		return ;
+		return (false);
 	i = 0;
+	state_changed = false;
 	while (i < control.keybinds->size)
 	{
 		keybind = array_get(control.keybinds, i);
-		keybind->update(keybind, &control.selected);
+		if (keybind->dir_flag != 0)
+		{
+			keybind->update(keybind, &control.selected);
+			state_changed = true;
+		} 
 		i++;
 	}
+	return (state_changed);
 }
 
 int	render_image(t_scene *scene)
 {
-	static int frame;
+	static bool first = true;
 
-	apply_transformation(scene->mlx.control);
-	if (frame++ % 10 == 0)
+	if (apply_transformation(scene->mlx.control) || first)
+	{
 		raytrace(scene, &scene->mlx.image);
-	frame++;
+		first = false;
+	}
 	mlx_put_image_to_window(scene->mlx.ptr, scene->mlx.win, scene->mlx.image.ptr, 0, 0);
 	return (1);
 }
