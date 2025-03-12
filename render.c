@@ -24,88 +24,13 @@ void color_clamp(t_vec3 *color)
 }
 
 
-
 t_vec3 calculate_lighting(t_scene *scene, t_hit hit)
 {
 	t_vec3 total_light = {0.0, 0.0, 0.0};
 	t_array *lights = scene->lights;
 	t_light *light;
 
-	t_vec3 color = hit.object->color;
-	/*if (false && hit.object->type == SPHERE)*/
-	/*{*/
-		//t_uv uv = get_sphere_uv(hit);
-		//color = color_new(get_texture_uv(&scene->texture, uv.u, uv.v));
-	/*}*/
-
-	/*if (false && hit.object->type == SPHERE)*/
-	/*{*/
-	/*	t_vec3 p = vec3_sub(hit.point, hit.object->origin);*/
-	/*	double phi = acos(p.y/hit.object->radius);*/
-	/*	double theta = atan2(p.z, p.x);*/
-	/*	double scale = 20;*/
-	/**/
-	/*	double i = floor(phi / (M_PI / scale));*/
-	/*	double j = floor(theta / ( 2 * M_PI / scale));*/
-	/**/
-	/*	if ((int)floor(i + j) % 2 == 0)*/
-	/*		color = (t_vec3){255, 255, 255};*/
-	/*	else*/
-	/*		color = (t_vec3){0, 0, 0};*/
-	/*}*/
-	/**/
-	/*if (false && hit.object->type == PLANE)*/
-	/*{*/
-	/*	double scale = 5;*/
-	/**/
-	/*	t_vec3 u;*/
-	/*	t_vec3 v;*/
-	/**/
-	/*	create_orthonormal_basis(hit.normal, &u, &v);*/
-	/*	double x = vec3_dot(hit.point, u);*/
-	/*	double y = vec3_dot(hit.point, v);*/
-	/**/
-	/*	int s = (int)floor(x / scale);*/
-	/*	int t = (int)floor(y / scale);*/
-	/**/
-	/*	if ((s + t) % 2 == 0)*/
-	/*		color = (t_vec3){255, 255, 255};*/
-	/*	else*/
-	/*		color = (t_vec3){0, 0, 0};*/
-	/*}*/
-
-	/*if (false && hit.object->type == CYLINDER)*/
-	/*{*/
-		//t_uv uv = get_cylinder_uv(hit);
-		
-		//color = color_new(get_texture_uv(&scene->texture, uv.u, uv.v));
-		// double scale = 10;
-		// int s = floor(uv.u * scale);
-		// int t = floor(uv.v * scale);
-		// if ((s + t) % 2 == 0)
-		// 	color = (t_vec3){255, 255, 255};
-		// else
-		// 	color = (t_vec3){0, 0, 0};
-	/*}*/
-
-
-	/*if (false && hit.object->type == SPHERE)*/
-	/*{*/
-	/*	t_uv uv = get_sphere_uv(hit);*/
-	/**/
-	/*	double coeff = .55;*/
-	/**/
-	/*	t_vec3 tangent;*/
-	/*	t_vec3 bitangent;*/
-	/**/
-	/*	create_orthonormal_basis(hit.normal, &tangent, &bitangent);*/
-	/**/
-	/*	double tex_val = get_texture_uv(&scene->texture, uv.u, uv.v);*/
-	/*	t_vec3 perturbed_normal = vec3_add(hit.normal, vec3_mul_scalar(bitangent, (fabs(tex_val)) * coeff));*/
-	/*	//t_vec3 perturbed_normal = vec3_add(hit.normal, vec3_mul_scalar(vec3_add(tangent, bitangent), tex_val * coeff));*/
-	/*	hit.normal = vec3_add(hit.normal, perturbed_normal);*/
-	/*	hit.normal = vec3_normalize(hit.normal);*/
-	/*}*/
+	t_vec3 color = hit.object->texture->evaluate(hit.object->texture, &hit);
 	
 	color = vec3_mul_scalar(color, 1.0/255.0);
 	t_vec3 ambient = scene->ambient.color;
@@ -166,6 +91,9 @@ void raytrace(t_scene *scene, t_image *image)
 			t_vec3 camera_ray = vec3_mul_matrix((t_vec3){x_screen, y_screen, -1}, view_matrix);
 			t_ray ray = {scene->camera.origin, vec3_normalize(camera_ray)};
 			t_hit hit = find_intersection(scene, &ray);
+			/*(void)hit;*/
+			(void)scene;
+			(void)image;
 			if (hit.object)
 				put_pixel(image, x, y, calculate_lighting(scene, hit));
 			else

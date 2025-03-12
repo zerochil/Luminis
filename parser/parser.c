@@ -65,7 +65,7 @@ bool	parse_line_sphere(t_scene *scene, char **infos)
 {
 	t_object	*object;
 
-	if (ft_strarr_len(infos) != 4)
+	if (ft_strarr_len(infos) != 5)
 		return (parser_error("Sphere must have 3 arguments"));
 	object = object_create(SPHERE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
@@ -76,6 +76,8 @@ bool	parse_line_sphere(t_scene *scene, char **infos)
 		return (parser_error("Sphere color must be a color"));
 	if (in_interval(object->radius, 0, INFINITY) == false)
 		return (parser_error("Sphere radius must be positive"));
+	if (infos[4] && parse_string(&object->texture_name, infos[4]) == false)
+		return (parser_error("Texture name must be composed of only characters"));
 	object->radius /= 2;
 	array_push(scene->objects, object);
 	return (true);
@@ -158,42 +160,20 @@ bool	parse_line_cone(t_scene *scene, char **infos)
 bool parse_texture(t_scene *scene, char **infos)
 {
 	t_texture *texture;
+	/*char *filename;*/
+	/*char *typename;*/
 
-	if (ft_strarr_len(infos) != 3)
-		return (parser_error("Texture must have 2 arguments"));
+	if (ft_strarr_len(infos) != 4)
+		return (parser_error("Texture must have 3 arguments"));
 	texture = track_malloc(sizeof(t_texture));
 	if (parse_string(&texture->name, infos[1]) == false)
 		return (parser_error("Texture name must be composed of only characters"));
-	if (parse_string(&texture->filename, infos[2]) == false)
-		return (parser_error("Texture filename must be a string"));
+	if (texture_set_type(texture, infos[2]) == false)
+		return (parser_error("Unknown texture type (bump_map, checker)"));
+	// if type checker throw error if infos length is 4
+	if (texture_load(scene->mlx.ptr, texture, infos[3]) == false)
+		return (parser_error("Failed to load texture"));
 	array_push(scene->textures, texture);
-	return (true);
-}
-
-bool parse_material(t_scene *scene, char **infos)
-{
-	t_material *material;
-
-	if (ft_strarr_len(infos) != 6)
-		return (parser_error("Material must have 5 arguments"));
-	material = track_malloc(sizeof(t_material));
-	if (parse_string(&material->name, infos[1]) == false)
-		return (parser_error("Material name must be composed of only characters"));
-	if (parse_color(&material->albedo, infos[2]) == false)
-		return (parser_error("Material albedo must be a color"));
-	if (parse_float(&material->roughness, infos[3]) == false)
-		return (parser_error("Material roughness must be a float"));
-	if (parse_float(&material->ior, infos[4]) == false)
-		return (parser_error("Material ior must be a float"));
-	if (parse_float(&material->metallic, infos[5]) == false)
-		return (parser_error("Material metallic must be a float"));
-	if (in_interval(material->roughness, 0, 1) == false)
-		return (parser_error("Material roughness must be between 0 and 1"));
-	if (in_interval(material->ior, 0, INFINITY) == false)
-		return (parser_error("Material ior must be positive"));
-	if (in_interval(material->metallic, 0, 1) == false)
-		return (parser_error("Material metallic must be between 0 and 1"));
-	array_push(scene->materials, material);
 	return (true);
 }
 
@@ -219,8 +199,8 @@ bool	parse_line(t_scene *scene, char *line)
 		return (parse_line_cylinder(scene, infos));
 	if (ft_strcmp(infos[0], "co") == 0)
 		return (parse_line_cone(scene, infos));
-	if (ft_strcmp(infos[0], "m") == 0)
-		return (parse_material(scene, infos));
+	if (ft_strcmp(infos[0], "t") == 0)
+		return (parse_texture(scene, infos));
 	return (parser_error("Unknown identifier"));
 }
 
@@ -252,7 +232,6 @@ bool	parse_scene(t_scene *scene, char *filename)
 		return (parser_error("Failed to open file"));
 	scene->lights = array_create();
 	scene->objects = array_create();
-	scene->materials = array_create();
 	scene->textures = array_create();
 	while (true)
 	{

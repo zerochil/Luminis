@@ -1,4 +1,4 @@
-#include <texture.h>
+#include <object.h>
 
 double	rgba_to_normalized_double(int rgba)
 {
@@ -11,17 +11,17 @@ double	rgba_to_normalized_double(int rgba)
 	green = (rgba >> 16) & 0xFF;
 	blue = (rgba >> 8) & 0xFF;
 	color = (red + green + blue) / 255.0 / 3.0;
-	return (color);
+	return (fabs(color));
 }
 
-bool	load_texture(void *mlx, char *filename, t_texture *txure, bool is_bump_texture)
+bool	texture_load(void *mlx_ptr, t_texture *txure, char *filename)
 {
 	t_image	img;
 	size_t	i;
 	size_t	img_size;
 	int		*addr;
 
-	if (get_image(mlx, &img, filename) == false)
+	if (get_image(mlx_ptr, &img, filename) == false)
 		return (false);
 	txure->bump_map.width = img.width;
 	txure->bump_map.height = img.height;
@@ -31,13 +31,30 @@ bool	load_texture(void *mlx, char *filename, t_texture *txure, bool is_bump_text
 	addr = (int *)img.addr;
 	while (i < img_size)
 	{
-		if (is_bump_texture)
+		if (txure->type == TEXTURE_BUMP_MAP)
 			txure->bump_map.ptr[i] = rgba_to_normalized_double(addr[i]);
 		else
 			txure->bump_map.ptr[i] = (double)addr[i];
 		i++;
 	}
-	destroy_image(mlx, &img);
+	destroy_image(mlx_ptr, &img);
+	return (true);
+}
+
+bool texture_set_type(t_texture *texture, char *type)
+{
+	if (ft_strcmp(type, "checker") == 0)
+	{
+		texture->type = TEXTURE_CHECKER;
+		texture->evaluate = evaluate_checkerboard_texture;
+	}
+	else if (ft_strcmp(type, "bump_map") == 0)
+	{
+		texture->type = TEXTURE_BUMP_MAP;
+		texture->evaluate = evaluate_bump_map_texture;
+	}
+	else
+		return (false);
 	return (true);
 }
 

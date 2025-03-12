@@ -3,7 +3,37 @@
 	
 # include <libmath.h>
 # include <libft.h>
-# include <material.h>
+# include <mlx_image.h>
+
+#define IS_BUMP_TEXTURE true
+#define IS_COLOR_TEXTURE false
+
+enum e_texturetype{
+    TEXTURE_SOLID,
+    TEXTURE_CHECKER,
+    TEXTURE_BUMP_MAP,
+	TEXTURE_COLORED_MAP
+};
+
+struct s_solidtexture{
+    t_vec3 color;
+};
+
+struct s_checkertexture{
+    t_vec3 color1;
+	t_vec3 color2;
+    double scale;
+};
+
+struct s_bumpmaptexture{
+    double *ptr;
+    int width;
+	int height;
+	int channels;
+};
+
+
+
 
 enum e_object
 {
@@ -38,6 +68,19 @@ typedef struct s_uv
 
 typedef bool (*t_intersect)(t_object*, t_ray*, t_hit*);
 typedef t_uv (*t_object_uv)(t_hit *hit);
+typedef struct s_texture t_texture;
+typedef t_vec3 (*uv_map)(struct s_texture *self, t_hit *hit);
+
+struct s_texture {
+	char *name;
+    enum e_texturetype type;
+    union {
+        struct s_solidtexture solid;
+        struct s_checkertexture checker;
+        struct s_bumpmaptexture bump_map;
+    };
+    uv_map evaluate;
+};
 
 struct s_object
 {
@@ -48,11 +91,19 @@ struct s_object
 	double 		radius;
 	double		height;
 	double		angle;
-	t_material  material;
+	t_texture   *texture;
+	char 		*texture_name;
 	t_intersect intersect;
 	t_object_uv get_uv;
 };
 
 t_object	*object_create(enum e_object type);
+bool texture_load(void *mlx, t_texture *texture, char *filename);
+bool texture_set_type(t_texture *texture, char *type);
+t_texture *create_texture(char *name, enum e_texturetype type, uv_map evaluate);
+
+t_vec3 evaluate_solid_texture(t_texture *texture, t_hit *hit);
+t_vec3 evaluate_bump_map_texture(t_texture *texture, struct s_hit *hit);
+t_vec3 evaluate_checkerboard_texture(t_texture *texture, struct s_hit *hit);
 
 #endif

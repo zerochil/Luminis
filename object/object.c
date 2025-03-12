@@ -48,5 +48,6 @@ t_object	*object_create(enum e_object type)
 	object->type = type;
 	object->intersect = object_intersection(type);
 	object->get_uv = object_uv(type);
+	object->texture_name = NULL;
 	return (object);
 }
