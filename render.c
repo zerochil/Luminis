@@ -1,5 +1,17 @@
 #include <render.h>
 
+#include <time.h>
+double ft_rand()
+{
+	static bool first = true;
+	if (first)
+	{
+		srand(time(NULL));
+		first = false;
+	}
+	return ((double)rand() / RAND_MAX);
+}
+
 bool is_shadowed(t_scene *scene, t_light *light, t_hit *hit)
 {
 	t_ray shadow_ray;
@@ -24,11 +36,20 @@ void color_clamp(t_vec3 *color)
 }
 
 
+t_vec3 sample_sphere(double r, t_vec3 center) {
+	t_vec3 p;
+	double theta = 2 * M_PI * ft_rand();
+	double phi = acos(1 - 2 * ft_rand());
+	p.x = r * sin(phi) * cos(theta) + center.x;
+	p.y = r * sin(phi) * sin(theta) + center.y;
+	p.z = r * cos(phi) + center.z;
+	return (p);
+}
+
 t_vec3 calculate_lighting(t_scene *scene, t_hit hit)
 {
 	t_vec3 total_light = {0.0, 0.0, 0.0};
 	t_array *lights = scene->lights;
-	t_light *light;
 
 	t_vec3 color = hit.object->texture->evaluate(hit.object->texture, &hit);
 	
@@ -36,35 +57,45 @@ t_vec3 calculate_lighting(t_scene *scene, t_hit hit)
 	ambient = vec3_mul_scalar(ambient, scene->ambient.intensity);
 	ambient = vec3_mul(ambient, color);
 	total_light = ambient;
+	int sample_count = 25;
 	for (size_t i = 0; i < lights->size; i++)
 	{
-		light = array_get(lights, i);
-		hit.point = vec3_add(hit.point, vec3_mul_scalar(hit.normal, EPSILON * 10000));
-		t_vec3 light_dir = vec3_normalize(vec3_sub(light->origin, hit.point));
-		double light_dist = vec3_length(vec3_sub(light->origin, hit.point));
-		if (is_shadowed(scene, light, &hit))
-			continue;
-		double diffuse_intensity = fmax(vec3_dot(hit.normal, light_dir), 0.0);
-		if (diffuse_intensity > 0.0)
+		t_light *light_center = array_get(lights, i);
+		t_vec3 total_sample = {0.0, 0.0, 0.0};
+		for (int j = 0; j < sample_count; j++)
 		{
-			t_vec3 light_color = light->color;
-			light_color = vec3_mul(light_color, color);
-			double attenuation = 1.0 / (1.0 + 0.0001 * light_dist * light_dist);
-			/*attenuation = 1;*/
-			light_color = vec3_mul_scalar(light_color, light->intensity * attenuation);
-			light_color = vec3_mul_scalar(light_color, diffuse_intensity * 1);
-			total_light = vec3_add(total_light, light_color);
+			t_light light;
+			light.origin = sample_sphere(5, light_center->origin);
+			light.color = light_center->color;
+			light.intensity = light_center->intensity;
+			hit.point = vec3_add(hit.point, vec3_mul_scalar(hit.normal, EPSILON * 10000));
+			t_vec3 light_dir = vec3_normalize(vec3_sub(light.origin, hit.point));
+			double light_dist = vec3_length(vec3_sub(light.origin, hit.point));
+			if (is_shadowed(scene, &light, &hit))
+				continue;
+			double diffuse_intensity = fmax(vec3_dot(hit.normal, light_dir), 0.0);
+			if (diffuse_intensity > 0.0)
+			{
+				t_vec3 light_color = light.color;
+				light_color = vec3_mul(light_color, color);
+				double attenuation = 1.0 / (1.0 + 0.0001 * light_dist * light_dist);
+				/*attenuation = 1;*/
+				light_color = vec3_mul_scalar(light_color, light.intensity * attenuation);
+				light_color = vec3_mul_scalar(light_color, diffuse_intensity * 1);
+				total_sample = vec3_add(total_sample, light_color);
 
-			
-			t_vec3 reflect_dir = vec3_reflect(vec3_negate(light_dir), hit.normal);
-			t_vec3 view_dir = vec3_normalize(vec3_sub(scene->camera.origin, hit.point));
-			t_vec3 specular_color = {1.0, 1.0, 1.0}; // white because we don't have a specular color, only metallic objects have specular color
-			specular_color = vec3_mul_scalar(specular_color, light->intensity * attenuation);
-			specular_color = vec3_mul_scalar(specular_color, pow(fmax(vec3_dot(view_dir, reflect_dir), 0.0), 50.0));
-			specular_color = vec3_mul_scalar(specular_color, 0.9);
-			total_light = vec3_add(total_light, specular_color);
-
+				
+				t_vec3 reflect_dir = vec3_reflect(vec3_negate(light_dir), hit.normal);
+				t_vec3 view_dir = vec3_normalize(vec3_sub(scene->camera.origin, hit.point));
+				t_vec3 specular_color = {1.0, 1.0, 1.0}; // white because we don't have a specular color, only metallic objects have specular color
+				specular_color = vec3_mul_scalar(specular_color, light.intensity * attenuation);
+				specular_color = vec3_mul_scalar(specular_color, pow(fmax(vec3_dot(view_dir, reflect_dir), 0.0), 50.0));
+				specular_color = vec3_mul_scalar(specular_color, 0.9);
+				total_sample = vec3_add(total_sample, specular_color);
+			}
 		}
+		total_sample = vec3_mul_scalar(total_sample, 1.0 / sample_count);
+		total_light = vec3_add(total_light, total_sample);
 	}
 	/*color_mul(&color, &total_light);*/
 	color = total_light;
@@ -86,13 +117,20 @@ typedef struct s_data
     int     end_y;
 } t_data;
 
+void jitter_ray(double *x, double *y)
+{
+	*x += (ft_rand()) * 0.001;
+	*y += (ft_rand()) * 0.001;
+}
+
 void raytrace_thread(t_data *data)
 {
 	t_scene *scene = data->scene;
-    double aspect_ratio = (double)WIDTH / HEIGHT;
+	double aspect_ratio = (double)WIDTH / HEIGHT;
 	double scale = tan((scene->camera.fov * M_PI / 180.0) / 2.0);
 	t_matrix view_matrix = camera_matrix(scene->camera);
 
+	int sample_count = 25;
 	for (int y = data->start_y; y < data->end_y; y++)
 	{
 		for (int x = data->start_x; x < data->end_x; x++)
@@ -101,13 +139,23 @@ void raytrace_thread(t_data *data)
 			double y_ndc = (y + 0.5) / HEIGHT;
 			double x_screen = (2 * x_ndc - 1) * aspect_ratio * scale;
 			double y_screen = (1 - 2 * y_ndc) * scale;
-			t_vec3 camera_ray = vec3_mul_matrix((t_vec3){x_screen, y_screen, -1}, view_matrix);
-			t_ray ray = {scene->camera.origin, vec3_normalize(camera_ray)};
-			t_hit hit = find_intersection(scene, &ray);
-			if (hit.object)
-				put_pixel(&scene->mlx.image, x, y, calculate_lighting(scene, hit));
-			else
-				put_pixel(&scene->mlx.image, x, y, (t_vec3){0, 0, 0});
+			t_vec3 samples = {0, 0, 0};
+			t_vec3 tmp;
+			for (size_t i = 0; i < sample_count; i++)
+			{
+				t_vec3 camera_ray = vec3_mul_matrix((t_vec3){x_screen, y_screen, -1}, view_matrix);
+				jitter_ray(&camera_ray.x, &camera_ray.y);
+				t_ray ray = {scene->camera.origin, vec3_normalize(camera_ray)};
+				t_hit hit = find_intersection(scene, &ray);
+				if (hit.object)
+					tmp = calculate_lighting(scene, hit);
+				else
+					tmp = (t_vec3){18, 18, 18};
+				samples = vec3_add(samples, tmp);
+			}
+			t_vec3 pixel = vec3_mul_scalar(samples, 1.0 / sample_count);
+			put_pixel(&scene->mlx.image, x, y, pixel);
+
 		}
 	}
 }
@@ -177,7 +225,7 @@ void raytrace(t_scene *scene)
 			t_hit hit = find_intersection(scene, &ray);
 			/*(void)hit;*/
 			(void)scene;
-			(void)image;
+			/*(void)image;*/
 			if (hit.object)
 				put_pixel(&scene->mlx.image, x, y, calculate_lighting(scene, hit));
 			else
