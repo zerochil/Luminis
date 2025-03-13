@@ -87,7 +87,7 @@ bool	parse_line_plane(t_scene *scene, char **infos)
 {
 	t_object	*object;
 
-	if (ft_strarr_len(infos) != 4)
+	if (ft_strarr_len(infos) < 4)
 		return (parser_error("Plane must have 3 arguments"));
 	object = object_create(PLANE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
@@ -99,6 +99,8 @@ bool	parse_line_plane(t_scene *scene, char **infos)
 	object->orientation = vec3_normalize(object->orientation);
 	//if (is_normalized(object->orientation) == false)
 		//return (parser_error("Plane normal must be normalized"));
+	if (infos[4] && parse_string(&object->texture_name, infos[4]) == false)
+		return (parser_error("Texture name must be composed of only characters"));
 	array_push(scene->objects, object);
 	return (true);
 }
@@ -107,7 +109,7 @@ bool	parse_line_cylinder(t_scene *scene, char **infos)
 {
 	t_object	*object;
 
-	if (ft_strarr_len(infos) != 6)
+	if (ft_strarr_len(infos) < 6)
 		return (parser_error("Cylinder must have 5 arguments"));
 	object = object_create(CYLINDER);
 	if (parse_vec3(&object->origin, infos[1]) == false)
@@ -120,6 +122,8 @@ bool	parse_line_cylinder(t_scene *scene, char **infos)
 		return (parser_error("Cylinder height must be a float"));
 	if (parse_color(&object->color, infos[5]) == false)
 		return (parser_error("Cylinder color must be a color"));
+	if (infos[6] && parse_string(&object->texture_name, infos[6]) == false)
+		return (parser_error("Texture name must be composed of only characters"));
 	if (in_interval(object->radius, 0, INFINITY) == false)
 		return (parser_error("Cylinder radius must be positive"));
 	if (in_interval(object->height, 0, INFINITY) == false)
@@ -136,7 +140,7 @@ bool	parse_line_cone(t_scene *scene, char **infos)
 {
 	t_object	*object;
 
-	if (ft_strarr_len(infos) != 5)
+	if (ft_strarr_len(infos) < 5)
 		return (parser_error("Cone must have 4 arguments"));
 	object = object_create(CONE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
@@ -149,6 +153,8 @@ bool	parse_line_cone(t_scene *scene, char **infos)
 		return (parser_error("Cone color must be a color"));
 	if (in_interval(object->angle, 0, 90) == false)
 		return (parser_error("Cone opening angle must be in range [0, 90]"));
+	if (infos[5] && parse_string(&object->texture_name, infos[5]) == false)
+		return (parser_error("Texture name must be composed of only characters"));
 	object->orientation = vec3_normalize(object->orientation);
 	if (is_normalized(object->orientation) == false)
 		return (parser_error("Cone orientation must be normalized"));
@@ -163,7 +169,7 @@ bool parse_texture_checker(t_texture *texture, char **infos)
 	t_vec3 color2;
 
 	if (ft_strarr_len(infos) != 6)
-		return (parser_error("Checker texture must have 4 arguments"));
+		return (parser_error("Checker texture must have 5 arguments"));
 	if (parse_float(&texture->checker.scale, infos[3]) == false)
 		return (parser_error("Checker scale must be a float"));
 	if (parse_color(&color1, infos[4]) == false)
@@ -179,7 +185,7 @@ bool parse_texture(t_scene *scene, char **infos)
 {
 	t_texture *texture;
 
-	if (ft_strarr_len(infos) != 4)
+	if (ft_strarr_len(infos) < 4)
 		return (parser_error("Texture must have at least 3 arguments"));
 	texture = track_malloc(sizeof(t_texture));
 	if (parse_string(&texture->name, infos[1]) == false)

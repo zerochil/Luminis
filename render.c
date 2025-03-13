@@ -39,6 +39,7 @@ t_vec3 calculate_lighting(t_scene *scene, t_hit hit)
 	for (size_t i = 0; i < lights->size; i++)
 	{
 		light = array_get(lights, i);
+		hit.point = vec3_add(hit.point, vec3_mul_scalar(hit.normal, EPSILON * 10000));
 		t_vec3 light_dir = vec3_normalize(vec3_sub(light->origin, hit.point));
 		double light_dist = vec3_length(vec3_sub(light->origin, hit.point));
 		if (is_shadowed(scene, light, &hit))

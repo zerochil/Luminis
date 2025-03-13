@@ -64,12 +64,20 @@ int main(int argc, char **argv)
 	/*if (texture_load(scene.mlx.ptr, &texture, path) == false)*/
 	/*	return (ft_putstr_fd("Error: Failed to load texture\n", 2), 1);*/
 
+
+	// TODO: COLORED BUMP MAP
+	// you should flatten texture struct
+	// in said struct, you should have an entry image;
+	// and if you were to handle colored_bump, you'll need another image entry (image2)
+	//
+	// TODO: checkerboard: cone UV calculations fails when the axis is aligned with world axis
+
 	if (argc != 2)
-		return (ft_putstr_fd("Error: Invalid number of arguments\n", 2), 1);
+		return (ft_putstr_fd("Error\nInvalid number of arguments\n", 2), 1);
 	if (parse_scene(&scene, argv[1]) == false)
-		return (ft_putstr_fd("Error: Failed to parse scene\n", 2), 1);
+		return (1);
 	if (post_parse(&scene) == false)
-		return (ft_putstr_fd("Error: Failed to post parse scene\n", 2), 1);
+		return (1);
 
 	scene.mlx.control = control_init(&scene);
 

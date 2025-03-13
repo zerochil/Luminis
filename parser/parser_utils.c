@@ -117,13 +117,16 @@ bool parse_color(t_vec3 *color, char *str)
 
 bool parse_string(char **dest, char *str)
 {
+	int i;
 	if (!str)
 		return (false);
-	while (*str)
+
+	i = 0;
+	while (str[i])
 	{
-		if (ft_isalpha(*str) == false)
+		if (ft_isalpha(str[i]) == false)
 			return (false);
-		str++;
+		i++;
 	}
 	*dest = str;
 	return (true);

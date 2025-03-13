@@ -2,16 +2,8 @@
 
 static double bump_value(t_texture *texture, t_uv uv)
 {
-	int x = (int)(uv.u * texture->bump_map.width) % texture->bump_map.width;
-	int y = (int)((uv.v) * texture->bump_map.height) % texture->bump_map.height;
-	if (x < 0)
-		x = 0;
-	if (x >= texture->bump_map.width)
-		x = texture->bump_map.width - 1;
-	if (y < 0)
-		y = 0;
-	if (y >= texture->bump_map.height)
-		y = texture->bump_map.height - 1;
+	int x = (int)fabs((uv.u * texture->bump_map.width)) % texture->bump_map.width;
+	int y = (int)fabs(((1 - uv.v) * texture->bump_map.height)) % texture->bump_map.height;
 	return (texture->bump_map.ptr[y * texture->bump_map.width + x]);
 }
 

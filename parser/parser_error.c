@@ -2,6 +2,7 @@
 
 bool parser_error(char *error)
 {
+	ft_putstr_fd("Error\n", 2);
 	if (!error)
 		return (false);
 	ft_putstr_fd(error, 2);
