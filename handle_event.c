@@ -62,7 +62,11 @@ t_entity select_entity(t_scene *scene, int type, int mousex, int mousey)
 	if (type == LIGHT)
 		entity.light = scene->lights->data[0];
 	if (type == OBJECT)
+	{
 		entity.object = get_selected_object(scene, mousex, mousey);
+		if (entity.object == NULL)
+			entity.type = NONE;
+	}
 	return (entity);
 }
 
@@ -99,23 +103,18 @@ int	on_key_release(int keycode, t_scene *scene)
 
 int	on_mouse_event(int keycode, int x, int y, t_scene *scene)
 {
-	t_camera	*camera;
-	t_entity	entity;
+	t_keybind	*keybind;
 	t_mlx		*mlx;
 
 	mlx = &scene->mlx;
-	camera = &scene->camera;
-	if (keycode == KEY_SCROLL_UP)
-		camera->fov = (camera->fov - 1 > 0) ? camera->fov - 1 : 0;
-	if (keycode == KEY_SCROLL_DOWN)
-		camera->fov = (camera->fov + 1 < 180) ? camera->fov + 1 : 180;
 	if (keycode == KEY_LEFT_CLICK)
 	{
-		entity = select_entity(scene, OBJECT, x, y);
-		if (entity.object == NULL)
-			entity.type = NONE;
-		mlx->control.selected = entity;
+		mlx->control.selected = select_entity(scene, OBJECT, x, y);
+		return (1);
 	}
+	keybind = array_find(mlx->control.keybinds, &keycode, keybind_cmp);
+	if (keybind != NULL)
+		keybind_set_dir_flag(keybind, keycode);
 	return (1);
 }
 

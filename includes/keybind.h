@@ -9,6 +9,7 @@
 # define HEIGHT_STEP 1.0
 # define ANGLE_STEP 1.0
 # define POS_STEP 1.0
+# define FOV_STEP 1.0
 
 # define KEY_ESC 65307
 # define KEY_UP 65362
@@ -23,6 +24,7 @@
 
 enum
 {
+	FOV,
 	RADIUS,
 	OBJ_HEIGHT,
 	ANGLE,
@@ -67,7 +69,5 @@ struct s_keybind
 void    keybind_set_dir_flag(t_keybind *keybind, int keycode);
 void    keybind_reset_dir_flag(t_keybind *keybind, int keycode);
 t_array *keybinds_init(void);
-
-void    keybind_print(void *ptr);
 
 #endif
