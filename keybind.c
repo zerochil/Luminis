@@ -109,7 +109,7 @@ void update_rot(t_keybind *keybind, t_entity *selected)
     double angle;
 
     angle = keybind->dir_flag * ANGLE_STEP;
-    if (selected->type == LIGHT)
+    if (selected->type == LIGHT || selected->type == SPHERE)
         return ;
     if (selected->type == CAMERA)
     {
@@ -129,11 +129,20 @@ void update_rot(t_keybind *keybind, t_entity *selected)
     }
 }
 
+void    update_fov(t_keybind *keybind, t_entity *selected)
+{
+    if (selected->type != CAMERA)
+        return ;
+    selected->camera->fov += keybind->dir_flag * FOV_STEP;
+    keybind->dir_flag = 0;
+}
+
 t_array *keybinds_init(void)
 {
     t_array *keybinds;
 
     keybinds = array_create();
+    array_push(keybinds, keybind_create(FOV, KEY_SCROLL_DOWN, KEY_SCROLL_UP, update_fov));
     array_push(keybinds, keybind_create(RADIUS, 'r', 't', update_radius));
     array_push(keybinds, keybind_create(OBJ_HEIGHT, 'h', 'j', update_height));
     array_push(keybinds, keybind_create(ANGLE, 'x', 'z', update_angle));
