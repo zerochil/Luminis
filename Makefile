@@ -1,7 +1,7 @@
 NAME = minirt
 CC = cc
 INCLUDE = ./includes
-CFLAGS = -Werror -Wextra -Wall -DTHREADS -pthread -Llibmath -Ilibmath -Ilibft -Llibft -I$(INCLUDE) #-fsanitize=threads
+CFLAGS = -Wall -Wextra -Wall -DTHREADS -pthread -Ilibmath -Ilibft -I$(INCLUDE) #-fsanitize=threads
 #CFLAGS = -Werror -Wextra -Wall -Llibmath -Ilibmath -Ilibft -Llibft -I$(INCLUDE) #-fsanitize=address
 
 SRCS = minirt.c \
@@ -44,7 +44,7 @@ LIBRARIES = libft/libft.a libmath/libmath.a
 all: $(NAME)
 
 $(NAME): $(LIBRARIES) $(OBJS)
-	$(CC)  $(CFLAGS) $(LIBRARIES) $(OBJS) -o $(NAME) -lmath -lft -lm -lmlx -L/usr/lib -lmlx -lXext -lX11 -lz
+	$(CC)  $(CFLAGS) $(LIBRARIES) $(OBJS) -o $(NAME) -Llibmath -Llibft -lmath -lft -lm -lmlx -L/usr/lib -lmlx -lXext -lX11 -lz
 
 $(OBJS_DIR):
 	mkdir -p $(OBJS_DIR)

@@ -107,7 +107,7 @@ void raytrace_thread(t_data *data)
 			if (hit.object)
 				put_pixel(&scene->mlx.image, x, y, calculate_lighting(scene, hit));
 			else
-				put_pixel(&scene->mlx.image, x, y, (t_vec3){18, 18, 18});
+				put_pixel(&scene->mlx.image, x, y, (t_vec3){0, 0, 0});
 		}
 	}
 }
@@ -136,7 +136,7 @@ void raytrace(t_scene *scene)
 {
     static t_array *threads;
 	t_data	*data;
-	int		nb_threads = 40;
+	int		nb_threads = 24;
 	int		i = 0;
 
 	if (threads == NULL)

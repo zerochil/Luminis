@@ -70,6 +70,29 @@ t_entity select_entity(t_scene *scene, int type, int mousex, int mousey)
 	return (entity);
 }
 
+void	print_object(t_object *obj)
+{
+	char *type;
+	switch (obj->type)
+	{
+	case SPHERE:
+		type = "sp";
+		break;
+	case PLANE:
+		type = "pl";
+		break;
+	case CYLINDER:
+		type = "cy";
+		break;
+	case CONE:
+		type = "co";
+		break;
+	default:
+		type = "";
+	}
+	printf("%s %.2f,%.2f,%.2f %.2f 200,200,200 %s\n",
+	type, obj->origin.x, obj->origin.y, obj->origin.z, obj->radius * 2, obj->texture_name);
+}
 int	on_key_press(int keycode, t_scene *scene)
 {
 	t_keybind	*keybind;
@@ -80,6 +103,8 @@ int	on_key_press(int keycode, t_scene *scene)
 		scene->mlx.control.selected = select_entity(scene, CAMERA, 0, 0);
 	if (keycode == 'l')
 		scene->mlx.control.selected = select_entity(scene, LIGHT, 0, 0);
+	if (keycode == 'p')
+		array_do(scene->objects, (void *)print_object);
 	else
 	{
 		keybind = array_find(scene->mlx.control.keybinds, &keycode, keybind_cmp);

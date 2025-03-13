@@ -1,0 +1,40 @@
+t Mercury colored textures/solar_system/mercury.xpm
+t Venus colored textures/solar_system/venus.xpm
+t Earth colored textures/solar_system/earth.xpm
+t Mars colored textures/solar_system/mars.xpm
+t Jupiter colored textures/solar_system/jupiter.xpm
+t Saturn colored textures/solar_system/saturn.xpm
+t Uranus colored textures/solar_system/uranus.xpm
+t Neptune colored textures/solar_system/neptune.xpm
+
+t moon colored textures/solar_system/moon.xpm
+t stars colored textures/solar_system/milky_way.xpm
+
+A 0.2 255,255,255
+
+C   50,70,50                   -0.2,-0.2,-1.0     70
+# C   0,20,60                   0,0.0,-1.0     40
+
+L   0,0,0                1.0         255,255,255
+L   0.1,0,0              1.0         255,255,255
+L   -0.1,0.1,0           1.0         255,255,255
+L   0,-0.1,0             1.0         255,255,255
+L   0.1,0.1,0.1          1.0         255,255,255
+L   0,0,0.1              1.0         255,255,255
+L   0.1,0,0.1            1.0         255,255,255
+L   0.1,-0.1,0           1.0         255,255,255
+L   0,-0.1,0             1.0         255,255,255
+L   0.1,0.1,0.1          1.0         255,255,255
+
+sp -38.00,0.00,-100.00         10.5         200,200,200 Mercury
+sp 64.00,0.00,-278.00   26.0         200,200,200 Venus
+sp 174.00,0.00,-500.00       27.3         200,200,200 Earth
+sp 298.00,0.00,-716.00      14.6         200,200,200 Mars
+sp 692.00,0.00,-1592.00     300          200,200,200 Jupiter
+sp 492.00,0.00,-3412.00      249          200,200,200 Saturn
+sp -14.00,0.00,-4430.00       108.9        200,200,200 Uranus
+sp -480.00,0.00,-4440.00   105.6        200,200,200 Neptune
+sp 204.00,0.00,-464.00      8            200,200,200 moon
+
+#starts
+sp  0,0,0        20000      200,200,200 stars
