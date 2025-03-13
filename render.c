@@ -149,7 +149,93 @@ t_vec3 calculate_lighting(t_scene *scene, t_hit hit)
 	return (vec3_mul_scalar(color, 255.0));
 }
 
-void raytrace(t_scene *scene, t_image *image)
+#ifdef THREADS
+
+#include <pthread.h>
+
+typedef struct s_data
+{
+    pthread_t   tid;
+    t_scene *scene;
+    int     start_x;
+    int     start_y;
+    int     end_x;
+    int     end_y;
+} t_data;
+
+void raytrace_thread(t_data *data)
+{
+	t_scene *scene = data->scene;
+    double aspect_ratio = (double)WIDTH / HEIGHT;
+	double scale = tan((scene->camera.fov * M_PI / 180.0) / 2.0);
+	t_matrix view_matrix = camera_matrix(scene->camera);
+
+	for (int y = data->start_y; y < data->end_y; y++)
+	{
+		for (int x = data->start_x; x < data->end_x; x++)
+		{
+			double x_ndc = (x + 0.5) / WIDTH;
+			double y_ndc = (y + 0.5) / HEIGHT;
+			double x_screen = (2 * x_ndc - 1) * aspect_ratio * scale;
+			double y_screen = (1 - 2 * y_ndc) * scale;
+			t_vec3 camera_ray = vec3_mul_matrix((t_vec3){x_screen, y_screen, -1}, view_matrix);
+			t_ray ray = {scene->camera.origin, vec3_normalize(camera_ray)};
+			t_hit hit = find_intersection(scene, &ray);
+			if (hit.object)
+				put_pixel(&scene->mlx.image, x, y, calculate_lighting(scene, hit));
+			else
+				put_pixel(&scene->mlx.image, x, y, (t_vec3){18, 18, 18});
+		}
+	}
+}
+
+t_array *create_threads_data(int width, int height, int nb_threads)
+{
+    t_array *threads;
+    t_data  *data;
+	int i = 0;
+
+    threads = array_create();
+    while (i < nb_threads)
+    {
+        data = track_malloc(sizeof(t_data));
+        data->start_x = 0;
+        data->end_x = width;
+        data->start_y = i * (height / nb_threads);
+        data->end_y = (i + 1) * (height / nb_threads);
+        array_push(threads, data);
+        i++; 
+    }
+    return (threads);
+}
+
+void raytrace(t_scene *scene)
+{
+    static t_array *threads;
+	t_data	*data;
+	int		nb_threads = 40;
+	int		i = 0;
+
+	if (threads == NULL)
+    	threads = create_threads_data(WIDTH, HEIGHT, nb_threads);
+	while (i < nb_threads)
+	{
+		data = array_get(threads, i);
+		data->scene = scene;
+		pthread_create(&data->tid, NULL, (void*)raytrace_thread, data);
+		i++;
+	}
+	i = 0;
+	while (i < nb_threads)
+	{
+		data = array_get(threads, i);
+		pthread_join(data->tid, NULL);
+		i++;
+	}
+}
+#else
+
+void raytrace(t_scene *scene)
 {
 	double aspect_ratio = (double)WIDTH / HEIGHT;
 	double scale = tan((scene->camera.fov * M_PI / 180.0) / 2.0);
@@ -167,12 +253,14 @@ void raytrace(t_scene *scene, t_image *image)
 			t_ray ray = {scene->camera.origin, vec3_normalize(camera_ray)};
 			t_hit hit = find_intersection(scene, &ray);
 			if (hit.object)
-				put_pixel(image, x, y, calculate_lighting(scene, hit));
+				put_pixel(&scene->mlx.image, x, y, calculate_lighting(scene, hit));
 			else
-				put_pixel(image, x, y, (t_vec3){18, 18, 18});
+				put_pixel(&scene->mlx.image, x, y, (t_vec3){18, 18, 18});
 		}
 	}
 }
+
+#endif
 
 bool	apply_transformation(t_control control)
 {
@@ -203,7 +291,7 @@ int	render_image(t_scene *scene)
 
 	if (apply_transformation(scene->mlx.control) || first)
 	{
-		raytrace(scene, &scene->mlx.image);
+		raytrace(scene);
 		first = false;
 	}
 	mlx_put_image_to_window(scene->mlx.ptr, scene->mlx.win, scene->mlx.image.ptr, 0, 0);

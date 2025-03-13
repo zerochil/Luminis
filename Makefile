@@ -1,7 +1,8 @@
 NAME = minirt
 CC = cc
 INCLUDE = ./includes
-CFLAGS = -Werror -Wextra -Wall -Llibmath -Ilibmath -Ilibft -Llibft -I$(INCLUDE) #-fsanitize=address
+CFLAGS = -Werror -Wextra -Wall -DTHREADS -pthread -Llibmath -Ilibmath -Ilibft -Llibft -I$(INCLUDE) #-fsanitize=threads
+#CFLAGS = -Werror -Wextra -Wall -Llibmath -Ilibmath -Ilibft -Llibft -I$(INCLUDE) #-fsanitize=address
 
 SRCS = minirt.c \
        parser/parser.c\
