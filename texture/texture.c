@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   texture.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/14 17:46:20 by rrochd            #+#    #+#             */
+/*   Updated: 2025/04/14 17:46:23 by rrochd           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <object.h>
 
 double	rgba_to_normalized_double(int rgba)
@@ -41,7 +53,7 @@ bool	texture_load(void *mlx_ptr, t_texture *txure, char *filename)
 	return (true);
 }
 
-bool texture_set_type(t_texture *texture, char *type)
+bool	texture_set_type(t_texture *texture, char *type)
 {
 	if (ft_strcmp(type, "checker") == 0)
 	{
@@ -63,7 +75,8 @@ bool texture_set_type(t_texture *texture, char *type)
 	return (true);
 }
 
-t_texture *create_texture(char *name, enum e_texturetype type, t_uv_map evaluate)
+t_texture	*create_texture(char *name, enum e_texturetype type,
+		t_uv_map evaluate)
 {
 	t_texture	*texture;
 
