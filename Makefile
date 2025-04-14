@@ -1,7 +1,7 @@
 NAME = minirt
 CC = cc
 INCLUDE = ./includes
-CFLAGS = -Wall -Wextra -Werror -DTHREADS -pthread -Ilibmath -Ilibft -I$(INCLUDE) #-fsanitize=threads
+CFLAGS = -Wall -Wextra -Werror -Ilibmath -Ilibft -I$(INCLUDE) #-fsanitize=threads
 # CFLAGS = -Wall -Wextra -Werror -DTHREADS -pthread -Ilibmath -Ilibft -I$(INCLUDE) #-fsanitize=threads
 # CFLAGS = -Werror -Wextra -Wall -Llibmath -Ilibmath -Ilibft -Llibft -I$(INCLUDE) #-fsanitize=address
 
@@ -10,6 +10,9 @@ SRCS = minirt.c \
 	   parser/parser_utils.c\
 	   parser/parser_predicates.c\
 	   parser/parser_error.c\
+	   parser/parse_float.c\
+	   parser/parse_line_object.c\
+	   parser/parse_line_meta.c\
 	   object/plane.c\
 	   object/sphere.c\
 	   object/cylinder.c\
@@ -67,10 +70,12 @@ FORCE:
 clean:
 	rm -rf $(OBJS_DIR)
 	@make -C libft clean --no-print-directory
+	@make -C libmath clean --no-print-directory
 
 fclean: clean
 	rm -rf $(NAME)
 	@make -C libft fclean --no-print-directory
+	@make -C libmath fclean --no-print-directory
 
 re: fclean all
 

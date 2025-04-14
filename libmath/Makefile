@@ -6,7 +6,14 @@ INCLUDE = .
 
 OBJECTS_DIR = .objects/
 
-SRCS = libmath.c vec3.c matrix.c quadratic_eq.c
+SRCS = libmath.c\
+		vec3.c\
+		vec3_arithmetic.c \
+		vec3_ops.c \
+		vec3_scalar.c \
+		vec3_utils.c \
+		matrix.c\
+		quadratic_eq.c
 
 OBJS = $(addprefix $(OBJECTS_DIR), $(SRCS:.c=.o))
 
