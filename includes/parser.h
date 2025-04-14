@@ -4,6 +4,7 @@
 #include "scene.h"
 #include "libft.h"
 #include <stdbool.h>
+#include <float.h>
 
 bool parser_error(char *error);
 
