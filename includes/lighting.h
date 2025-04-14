@@ -1,25 +1,28 @@
 #ifndef LIGHTING_H
-#define LIGHTING_H
+# define LIGHTING_H
 
-#include <libmath.h>
-#include <material.h>
-#include <scene.h>
+# include <mlx.h>
+# include <scene.h>
+# include <utils.h>
 
-struct s_dot_products
+typedef struct s_light_data
 {
-	double NdotH;
-	double NdotV;
-	double NdotL;
-	double VdotH;
-};
+	t_light	*light;
+	t_vec3	obj_color;
+	double	intensity;
 
-struct s_brdf_terms
-{
-	double d;
-	double g;
-	double f;
-};
+	t_vec3	light_dir;
+	double	light_dist;
+	t_vec3	light_color;
 
-t_vec3 brdfs(t_vec3 N, t_vec3 V, t_vec3 L, t_material mat);
+	t_vec3	specular;
+	t_vec3	reflect_dir;
+	t_vec3	view_dir;
+
+	double	attenuation;
+	double	diffuse_intensity;
+}			t_light_data;
+
+t_vec3		calculate_lighting(t_scene *scene, t_hit *hit);
 
 #endif

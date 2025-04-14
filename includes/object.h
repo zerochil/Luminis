@@ -103,4 +103,10 @@ t_vec3 evaluate_bump_map_texture(t_texture *texture, struct s_hit *hit);
 t_vec3 evaluate_checkerboard_texture(t_texture *texture, struct s_hit *hit);
 t_vec3 evaluate_colored_texture(t_texture *texture, struct s_hit *hit);
 
+
+typedef struct s_scene t_scene ;
+typedef struct s_ray t_ray ;
+typedef struct s_hit t_hit ;
+t_hit find_intersection(t_scene *scene, t_ray *ray);
+
 #endif

@@ -4,6 +4,7 @@
 #include <scene.h>
 #include <camera.h>
 #include <handle_event.h>
+#include <lighting.h>
 #include <mlx.h>
 
 void	render_scene(t_scene *scene);

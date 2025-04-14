@@ -2,7 +2,8 @@ NAME = minirt
 CC = cc
 INCLUDE = ./includes
 CFLAGS = -Wall -Wextra -Werror -DTHREADS -pthread -Ilibmath -Ilibft -I$(INCLUDE) #-fsanitize=threads
-#CFLAGS = -Werror -Wextra -Wall -Llibmath -Ilibmath -Ilibft -Llibft -I$(INCLUDE) #-fsanitize=address
+# CFLAGS = -Wall -Wextra -Werror -DTHREADS -pthread -Ilibmath -Ilibft -I$(INCLUDE) #-fsanitize=threads
+# CFLAGS = -Werror -Wextra -Wall -Llibmath -Ilibmath -Ilibft -Llibft -I$(INCLUDE) #-fsanitize=address
 
 SRCS = minirt.c \
        parser/parser.c\
@@ -19,6 +20,8 @@ SRCS = minirt.c \
 	   texture/texture_checkerboard.c\
 	   texture/texture_colored.c\
 	   texture/texture_solid.c\
+	   object/find_intersection.c\
+	   lighting.c\
 	   render.c\
 	   handle_event.c\
 	   keybind.c\

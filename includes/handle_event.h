@@ -7,6 +7,7 @@
 # include <mlx.h>
 # include <camera.h>
 # include <keybind.h>
+# include <utils.h>
 
 enum
 {
@@ -24,7 +25,5 @@ int	on_key_press(int keycode, t_scene *scene);
 int	on_key_release(int keycode, t_scene *scene);
 int	on_mouse_event(int keycode, int x, int y, t_scene *scene);
 int	close_win(t_mlx *mlx);
-
-t_hit find_intersection(t_scene *scene, t_ray *ray);
 
 #endif
