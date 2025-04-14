@@ -1,9 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lighting.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
+/*   Updated: 2025/04/14 15:53:20 by rrochd           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef LIGHTING_H
 # define LIGHTING_H
 
 # include <mlx.h>
 # include <scene.h>
-# include <utils.h>
 
 typedef struct s_light_data
 {

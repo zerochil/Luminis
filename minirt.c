@@ -1,5 +1,4 @@
 #include <minirt.h>
-#include <texture.h>
 
 
 t_control	control_init(t_scene *scene)

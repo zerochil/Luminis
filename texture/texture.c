@@ -63,7 +63,7 @@ bool texture_set_type(t_texture *texture, char *type)
 	return (true);
 }
 
-t_texture *create_texture(char *name, enum e_texturetype type, uv_map evaluate)
+t_texture *create_texture(char *name, enum e_texturetype type, t_uv_map evaluate)
 {
 	t_texture	*texture;
 

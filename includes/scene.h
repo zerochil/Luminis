@@ -1,12 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   scene.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
+/*   Updated: 2025/04/14 15:53:21 by rrochd           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SCENE_H
 # define SCENE_H
 
+# include <entity.h>
+# include <keybind.h>
 # include <libft.h>
 # include <libmath.h>
-# include <entity.h>
 # include <mlx_image.h>
-# include <texture.h>
-# include <keybind.h>
 
 enum
 {
@@ -19,15 +30,15 @@ typedef struct s_control
 {
 	t_entity	selected;
 	t_array		*keybinds;
-} t_control;
+}				t_control;
 
 typedef struct s_mlx
 {
-	void	*ptr;
-	void	*win;
-	t_image	image;
-	t_control control;
-}	t_mlx;
+	void		*ptr;
+	void		*win;
+	t_image		image;
+	t_control	control;
+}				t_mlx;
 
 typedef struct s_scene
 {
@@ -38,6 +49,6 @@ typedef struct s_scene
 	t_array		*materials;
 	t_array		*textures;
 	t_mlx		mlx;
-}	t_scene;
+}				t_scene;
 
 #endif

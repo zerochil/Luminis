@@ -1,8 +1,20 @@
-#ifndef KEYBINDS_H
-# define KEYBINDS_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   keybind.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
+/*   Updated: 2025/04/14 15:53:20 by rrochd           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-# include <libft.h>
+#ifndef KEYBIND_H
+# define KEYBIND_H
+
 # include <entity.h>
+# include <libft.h>
 # include <vec3.h>
 
 # define RADIUS_STEP 0.1
@@ -46,28 +58,30 @@ enum
 
 typedef struct s_entity
 {
-	int		type;
+	int						type;
 	union
 	{
-		t_light *light;
-		t_camera *camera;
-		t_object *object;
+		t_light				*light;
+		t_camera			*camera;
+		t_object			*object;
 	};
-}	t_entity;
+}							t_entity;
 
-typedef struct s_keybind t_keybind;
+typedef struct s_keybind	t_keybind;
 
-struct s_keybind
+struct						s_keybind
 {
-    int	property;
-	int pos_key;
-	int neg_key;
-	int dir_flag;
-    void (*update)(t_keybind *, t_entity *);
+	int						property;
+	int						pos_key;
+	int						neg_key;
+	int						dir_flag;
+	void					(*update)(t_keybind *, t_entity *);
 };
 
-void    keybind_set_dir_flag(t_keybind *keybind, int keycode);
-void    keybind_reset_dir_flag(t_keybind *keybind, int keycode);
-t_array *keybinds_init(void);
+void						keybind_set_dir_flag(t_keybind *keybind,
+								int keycode);
+void						keybind_reset_dir_flag(t_keybind *keybind,
+								int keycode);
+t_array						*keybinds_init(void);
 
 #endif
