@@ -1,7 +1,7 @@
 NAME = minirt
 CC = cc
 INCLUDE = ./includes
-CFLAGS = -Wall -Wextra -Werror -Ilibmath -Ilibft -I$(INCLUDE) #-fsanitize=threads
+CFLAGS = -Wall -Wextra -Werror -Ilibmath -Ilibft -I$(INCLUDE) -O3 #-fsanitize=threads
 # CFLAGS = -Wall -Wextra -Werror -DTHREADS -pthread -Ilibmath -Ilibft -I$(INCLUDE) #-fsanitize=threads
 # CFLAGS = -Werror -Wextra -Wall -Llibmath -Ilibmath -Ilibft -Llibft -I$(INCLUDE) #-fsanitize=address
 

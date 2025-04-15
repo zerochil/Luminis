@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   keybind.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/14 15:53:20 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/15 09:23:49 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef struct s_entity
 		t_light				*light;
 		t_camera			*camera;
 		t_object			*object;
+		void				*ptr;
 	};
 }							t_entity;
 

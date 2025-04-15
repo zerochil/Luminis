@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 17:51:17 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/14 17:51:18 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/15 09:32:28 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,7 @@ t_control	control_init(t_scene *scene)
 {
 	t_control	control;
 
-	control.selected.type = OBJECT;
-	control.selected.camera = NULL;
-	control.selected.light = NULL;
-	control.selected.object = scene->objects->data[0];
+	control.selected = select_entity(scene, CAMERA, 0, 0);
 	control.keybinds = keybinds_init();
 	return (control);
 }
