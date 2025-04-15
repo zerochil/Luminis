@@ -1,15 +1,20 @@
 #include "_object.h"
 
-t_uv get_sphere_uv(t_hit *hit)
+t_uv	get_sphere_uv(t_hit *hit)
 {
-	t_vec3 p = vec3_sub(hit->point, hit->object->origin);
-	double phi = atan2(p.z, p.x);
-	double theta = asin(p.y/hit->object->radius);
-	t_uv uv = {1 - (phi + M_PI) / (2 * M_PI), (theta + M_PI / 2) / M_PI};
+	t_vec3	p;
+	double	phi;
+	double	theta;
+	t_uv	uv;
+
+	p = vec3_sub(hit->point, hit->object->origin);
+	phi = atan2(p.z, p.x);
+	theta = asin(p.y / hit->object->radius);
+	uv = (t_uv){1 - (phi + M_PI) / (2 * M_PI), (theta + M_PI / 2) / M_PI};
 	return (uv);
 }
 
-static double sphere_solution(t_quadratic_terms qterms)
+static double	sphere_solution(t_quadratic_terms qterms)
 {
 	if (qterms.t1 < 0)
 		return (qterms.t2);
@@ -19,11 +24,11 @@ static double sphere_solution(t_quadratic_terms qterms)
 		return (fmin(qterms.t1, qterms.t2));
 }
 
-bool		intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
+bool	intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
 {
-	t_quadratic_terms qterms;
-	t_vec3 pos;
-	t_vec3 direction;
+	t_quadratic_terms	qterms;
+	t_vec3				pos;
+	t_vec3				direction;
 
 	direction = vec3_sub(ray->origin, object->origin);
 	qterms.a = 1;
@@ -36,8 +41,8 @@ bool		intersect_sphere(t_object *object, t_ray *ray, t_hit *hit)
 	hit->distance = sphere_solution(qterms);
 	pos = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, hit->distance));
 	hit->normal = vec3_normalize(vec3_sub(pos, object->origin));
-	hit->normal = vec3_negate_conditionally(
-		vec3_length(direction) <= object->radius, hit->normal);
+	hit->normal = vec3_negate_conditionally(vec3_length(direction) <= object->radius,
+			hit->normal);
 	hit->object = object;
 	hit->point = pos;
 	return (true);

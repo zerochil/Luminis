@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <object.h>
 #include "_object.h"
+#include <object.h>
 
-t_intersect object_intersection(enum e_object type)
+t_intersect	object_intersection(enum e_object type)
 {
 	if (type == SPHERE)
 		return (intersect_sphere);
@@ -26,7 +26,7 @@ t_intersect object_intersection(enum e_object type)
 	return (NULL);
 }
 
-t_object_uv object_uv(enum e_object type)
+t_object_uv	object_uv(enum e_object type)
 {
 	if (type == SPHERE)
 		return (get_sphere_uv);
@@ -38,7 +38,6 @@ t_object_uv object_uv(enum e_object type)
 		return (get_cone_uv);
 	return (NULL);
 }
-
 
 t_object	*object_create(enum e_object type)
 {

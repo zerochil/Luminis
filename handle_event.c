@@ -11,48 +11,47 @@
 /* ************************************************************************** */
 
 #include <handle_event.h>
-#include <render.h>
 #include <ray.h>
+#include <render.h>
 
-int keybind_cmp(void *keybind_ptr, void *keycode_ptr)
+int	keybind_cmp(void *keybind_ptr, void *keycode_ptr)
 {
 	t_keybind	*keybind;
 	int			*keycode;
 
 	keybind = keybind_ptr;
 	keycode = keycode_ptr;
-	return (*keycode == keybind->pos_key
-		|| *keycode == keybind->neg_key);
+	return (*keycode == keybind->pos_key || *keycode == keybind->neg_key);
 }
 
-t_object *select_object(t_scene *scene, int x, int y)
+t_object	*select_object(t_scene *scene, int x, int y)
 {
 	t_ray	ray;
 	t_hit	hit;
-	
+
 	ray = ray_from_screen(&scene->camera, x, y);
 	hit = find_intersection(scene, &ray);
 	return (hit.object);
 }
 
-t_light *select_light(t_scene *scene)
+t_light	*select_light(t_scene *scene)
 {
-	static int light_index = 0;
-	t_light *light;
+	static int	light_index = 0;
+	t_light		*light;
 
 	if (light_index + 1 == (int)scene->lights->size)
 		light_index = 0;
 	else
 		light_index++;
 	light = array_get(scene->lights, light_index);
-	//if (light == NULL)
+	// if (light == NULL)
 	//	error("select_light: light is null");
 	return (light);
 }
 
-t_entity select_entity(t_scene *scene, int type, int mousex, int mousey)
+t_entity	select_entity(t_scene *scene, int type, int mousex, int mousey)
 {
-	t_entity entity;
+	t_entity	entity;
 
 	entity.type = type;
 	if (type == CAMERA)
@@ -68,26 +67,27 @@ t_entity select_entity(t_scene *scene, int type, int mousex, int mousey)
 
 void	print_object(t_object *obj)
 {
-	char *type;
+	char	*type;
+
 	switch (obj->type)
 	{
 	case SPHERE:
 		type = "sp";
-		break;
+		break ;
 	case PLANE:
 		type = "pl";
-		break;
+		break ;
 	case CYLINDER:
 		type = "cy";
-		break;
+		break ;
 	case CONE:
 		type = "co";
-		break;
+		break ;
 	default:
 		type = "";
 	}
-	printf("%s %.2f,%.2f,%.2f %.2f 200,200,200 %s\n",
-	type, obj->origin.x, obj->origin.y, obj->origin.z, obj->radius * 2, obj->texture_name);
+	printf("%s %.2f,%.2f,%.2f %.2f 200,200,200 %s\n", type, obj->origin.x,
+		obj->origin.y, obj->origin.z, obj->radius * 2, obj->texture_name);
 }
 int	on_key_press(int keycode, t_scene *scene)
 {
@@ -103,7 +103,8 @@ int	on_key_press(int keycode, t_scene *scene)
 		array_do(scene->objects, (void *)print_object);
 	else
 	{
-		keybind = array_find(scene->mlx.control.keybinds, &keycode, keybind_cmp);
+		keybind = array_find(scene->mlx.control.keybinds, &keycode,
+				keybind_cmp);
 		if (keybind != NULL)
 			keybind_set_dir_flag(keybind, keycode);
 	}
