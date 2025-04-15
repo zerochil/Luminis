@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:12:05 by inajah            #+#    #+#             */
-/*   Updated: 2025/04/15 15:19:28 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/15 15:44:42 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,6 @@ void	update_rot(t_keybind *keybind, t_entity *selected)
 		axis = get_rot_axis(keybind->property, (t_vec3){1, 0, 0}, (t_vec3){0, 1,
 				0}, (t_vec3){0, 0, 1});
 		object = selected->object;
-		rotate_dev(&object->orientation, axis, angle);
+		rotate(&object->orientation, axis, angle);
 	}
 }

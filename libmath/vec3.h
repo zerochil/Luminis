@@ -6,7 +6,7 @@
 /*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:21:59 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/14 15:42:09 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/15 15:46:36 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ double					vec3_length(t_vec3 a);
 t_vec3					vec3_normalize(t_vec3 a);
 t_vec3					vec3_negate(t_vec3 a);
 t_vec3					vec3_negate_conditionally(bool condition, t_vec3 vec);
-void					rotate_dev(t_vec3 *vec, t_vec3 axis, double angle);
+void					rotate(t_vec3 *vec, t_vec3 axis, double angle);
 t_vec3					vec3_reflect(t_vec3 v, t_vec3 n);
 t_vec3					vec3_lerp(t_vec3 a, t_vec3 b, double t);
 void					create_orthonormal_basis(t_vec3 fixed, t_vec3 *b1,

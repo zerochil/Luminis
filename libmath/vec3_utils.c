@@ -6,13 +6,13 @@
 /*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:38:51 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/14 15:48:00 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/15 15:45:57 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vec3.h"
 
-void	rotate_dev(t_vec3 *vec, t_vec3 axis, double angle)
+void	rotate(t_vec3 *vec, t_vec3 axis, double angle)
 {
 	double	sin_half;
 	double	cos_half;

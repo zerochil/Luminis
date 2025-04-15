@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:14:50 by inajah            #+#    #+#             */
-/*   Updated: 2025/04/15 15:40:49 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/15 16:33:13 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,5 @@ void	update_fov(t_keybind *keybind, t_entity *selected)
 	camera = selected->camera;
 	camera->fov += keybind->dir_flag * FOV_STEP;
 	camera->scale = tan((camera->fov * M_PI / 179.0) / 2.0);
-	keybind->dir_flag = -1;
+	keybind->dir_flag = 0;
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cone.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/15 15:52:09 by inajah            #+#    #+#             */
+/*   Updated: 2025/04/15 16:04:20 by inajah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "_object.h"
 
 t_uv	get_cone_uv(t_hit *hit)
@@ -35,6 +47,7 @@ static double	cone_solution(t_quadratic_terms qterms)
 	else
 		return (fmin(qterms.t1, qterms.t2));
 }
+
 static t_quadratic_terms	cone_quadratic_terms(t_object *obj, t_ray *ray,
 		double k2)
 {

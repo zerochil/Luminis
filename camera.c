@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 09:48:38 by inajah            #+#    #+#             */
-/*   Updated: 2025/04/15 13:58:03 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/15 15:47:09 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ void	camera_init(t_camera *camera)
 
 void	camera_rotate(t_camera *camera, t_vec3 axis, double angle)
 {
-	rotate_dev(&camera->forward, axis, angle);
-	rotate_dev(&camera->up, axis, angle);
+	rotate(&camera->forward, axis, angle);
+	rotate(&camera->up, axis, angle);
 	camera->right = vec3_normalize(vec3_cross(camera->forward, camera->up));
 	camera_update_view(camera);
 }

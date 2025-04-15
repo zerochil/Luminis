@@ -6,7 +6,7 @@
 /*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 13:26:36 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/15 13:31:25 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/15 16:19:14 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,17 @@ typedef struct s_cone_uv_data
 	t_vec3	u;
 	t_vec3	v;
 	double	theta;
-}			t_cone_uv_data;
+}	t_cone_uv_data;
+
+typedef struct s_cylinder_uv_data
+{
+	t_vec3	proj;
+	t_vec3	local_p;
+	t_vec3	cx;
+	t_vec3	cy;
+	t_vec3	cz;
+	t_uv	uv;
+}	t_cylinder_uv_data;
 
 bool		intersect_plane(t_object *obj, t_ray *ray, t_hit *hit);
 bool		intersect_sphere(t_object *obj, t_ray *ray, t_hit *hit);

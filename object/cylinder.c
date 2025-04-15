@@ -1,24 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cylinder.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/15 15:52:44 by inajah            #+#    #+#             */
+/*   Updated: 2025/04/15 17:27:19 by inajah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "_object.h"
 
 t_uv	get_cylinder_uv(t_hit *hit)
 {
-	t_vec3	p;
-	t_vec3	p_local;
-	t_vec3	cx;
-	t_vec3	cy;
-	t_vec3	cz;
-	double	v;
-	double	u;
+	t_cylinder_uv_data	d;
 
-	p_local = vec3_sub(hit->point, hit->object->origin);
-	cz = hit->object->orientation;
-	create_orthonormal_basis(cz, &cx, &cy);
-	p.x = vec3_dot(p_local, cx);
-	p.y = vec3_dot(p_local, cy);
-	p.z = vec3_dot(p_local, cz);
-	v = p.z / hit->object->height;
-	u = (atan2(p.y, p.x) + M_PI) / (2 * M_PI);
-	return ((t_uv){u, v});
+	d.local_p = vec3_sub(hit->point, hit->object->origin);
+	d.cz = hit->object->orientation;
+	create_orthonormal_basis(d.cz, &d.cx, &d.cy);
+	d.proj.x = vec3_dot(d.local_p, d.cx);
+	d.proj.y = vec3_dot(d.local_p, d.cy);
+	d.proj.z = vec3_dot(d.local_p, d.cz);
+	d.uv.v = d.proj.z / hit->object->height + 0.5f;
+	d.uv.u = (atan2(d.proj.y, d.proj.x) + M_PI) / (2 * M_PI) + 0.5f;
+	return (d.uv);
 }
 
 static bool	is_point_within_cylinder_height(t_object *object, t_ray *ray,
@@ -41,21 +47,22 @@ static bool	is_point_within_cylinder_height(t_object *object, t_ray *ray,
 static t_quadratic_terms	cylinder_quadratic_terms(t_object *obj, t_ray *ray)
 {
 	t_quadratic_terms	qterms;
-	t_vec3				V;
-	t_vec3				CO;
-	t_vec3				D_perp;
-	t_vec3				CO_perp;
+	t_vec3				v;
+	t_vec3				co;
+	t_vec3				d_perp;
+	t_vec3				co_perp;
 
-	V = obj->orientation;
-	CO = vec3_sub(ray->origin, obj->origin);
-	D_perp = vec3_sub(ray->direction, vec3_mul_scalar(V,
-				vec3_dot(ray->direction, V)));
-	CO_perp = vec3_sub(CO, vec3_mul_scalar(V, vec3_dot(CO, V)));
-	qterms.a = vec3_dot(D_perp, D_perp);
-	qterms.b = 2 * vec3_dot(CO_perp, D_perp);
-	qterms.c = vec3_dot(CO_perp, CO_perp) - (obj->radius * obj->radius);
+	v = obj->orientation;
+	co = vec3_sub(ray->origin, obj->origin);
+	d_perp = vec3_sub(ray->direction, vec3_mul_scalar(v,
+				vec3_dot(ray->direction, v)));
+	co_perp = vec3_sub(co, vec3_mul_scalar(v, vec3_dot(co, v)));
+	qterms.a = vec3_dot(d_perp, d_perp);
+	qterms.b = 2 * vec3_dot(co_perp, d_perp);
+	qterms.c = vec3_dot(co_perp, co_perp) - (obj->radius * obj->radius);
 	return (qterms);
 }
+
 static double	cylinder_solution(t_quadratic_terms qterms, t_object *obj,
 		t_ray *ray)
 {
