@@ -12,8 +12,8 @@ t_uv get_plane_uv(t_hit *hit)
 	p_local = vec3_sub(hit->point, hit->object->origin);
 	create_orthonormal_basis(normal, &tangent, &bitangent);
 
-	uv.u = fmod(fabs(vec3_dot(p_local, tangent) / 100), 1);
-	uv.v = fmod(fabs(vec3_dot(p_local, bitangent) / 100), 1);
+	uv.u = fmod(vec3_dot(p_local, tangent) / 100, 1);
+	uv.v = fmod(vec3_dot(p_local, bitangent) / 100, 1);
 
 	return uv;
 }
