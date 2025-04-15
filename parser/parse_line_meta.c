@@ -68,6 +68,7 @@ bool	parse_line_light(t_scene *scene, char **infos)
 		return (parser_error("Light color must be a color"));
 	if (in_interval(light->intensity, 0, 1) == false)
 		return (parser_error("Light intensity must be between 0 and 1"));
+	light->origin = vec3_add_scalar(light->origin, EPSILON * 10000);
 	array_push(scene->lights, light);
 	return (true);
 }
