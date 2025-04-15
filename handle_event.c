@@ -1,4 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_event.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/15 09:39:44 by inajah            #+#    #+#             */
+/*   Updated: 2025/04/15 14:09:48 by inajah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <handle_event.h>
+#include <render.h>
+#include <ray.h>
 
 int keybind_cmp(void *keybind_ptr, void *keycode_ptr)
 {
@@ -13,16 +27,11 @@ int keybind_cmp(void *keybind_ptr, void *keycode_ptr)
 
 t_object *select_object(t_scene *scene, int x, int y)
 {
-	double aspect_ratio = (double)WIDTH / HEIGHT;
-	double scale = tan((scene->camera.fov * M_PI / 180.0) / 2.0);
-	t_matrix view_matrix = camera_matrix(scene->camera);
-	double x_ndc = (x + 0.5) / WIDTH;
-	double y_ndc = (y + 0.5) / HEIGHT;
-	double x_screen = (2 * x_ndc - 1) * aspect_ratio * scale;
-	double y_screen = (1 - 2 * y_ndc) * scale;
-	t_vec3 camera_ray = vec3_mul_matrix((t_vec3){x_screen, y_screen, -1}, view_matrix);
-	t_ray ray = {scene->camera.origin, vec3_normalize(camera_ray)};
-	t_hit hit = find_intersection(scene, &ray);
+	t_ray	ray;
+	t_hit	hit;
+	
+	ray = ray_from_screen(&scene->camera, x, y);
+	hit = find_intersection(scene, &ray);
 	return (hit.object);
 }
 

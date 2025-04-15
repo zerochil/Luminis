@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   entity.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/14 15:53:20 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/15 13:05:56 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,14 @@ typedef struct s_ambient
 
 typedef struct s_camera
 {
+	t_matrix view;
 	t_vec3	origin;
 	t_vec3	forward;
 	t_vec3	up;
 	t_vec3	right;
 	double	fov;
+	double	scale;
+	double	ratio;
 	bool	is_declared;
 }			t_camera;
 

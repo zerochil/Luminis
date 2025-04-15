@@ -3,38 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:01:12 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/14 18:06:08 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/15 14:08:05 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <render.h>
+#include "ray.h"
 
 void	raytrace(t_scene *scene)
 {
-	t_raytrace_data	d;
+	t_hit			hit;
+	t_ray			ray;
 	size_t			x;
 	size_t			y;
 
-	d.ratio = (double)WIDTH / HEIGHT;
-	d.scale = tan((scene->camera.fov * M_PI / 180.0) / 2.0);
-	d.view = camera_matrix(scene->camera);
 	y = -1;
 	while (++y < HEIGHT)
 	{
 		x = -1;
 		while (++x < WIDTH)
 		{
-			d.x_scr = (2 * ((x + 0.5) / WIDTH) - 1) * d.ratio * d.scale;
-			d.y_scr = (1 - 2 * ((y + 0.5) / HEIGHT)) * d.scale;
-			d.cam_ray = vec3_mul_matrix((t_vec3){d.x_scr, d.y_scr, -1}, d.view);
-			d.ray = (t_ray){scene->camera.origin, vec3_normalize(d.cam_ray)};
-			d.hit = find_intersection(scene, &d.ray);
-			if (d.hit.object)
+			ray = ray_from_screen(&scene->camera, x, y);
+			hit = find_intersection(scene, &ray);
+			if (hit.object)
 				put_pixel(&scene->mlx.image, x, y, calculate_lighting(scene,
-						&d.hit));
+						&hit));
 			else
 				put_pixel(&scene->mlx.image, x, y, (t_vec3){18, 18, 18});
 		}

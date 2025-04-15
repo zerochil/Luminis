@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/14 15:53:22 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/15 13:59:21 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ enum
 	RIGHT,
 };
 
-t_matrix	camera_matrix(t_camera camera);
+void		camera_init(t_camera *camera);
 void		camera_rotate(t_camera *camera, t_vec3 axis, double angle);
 void		camera_translate(t_camera *camera, int direction, double step);
 

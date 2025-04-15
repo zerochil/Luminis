@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   keybind.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/15 09:39:38 by inajah            #+#    #+#             */
+/*   Updated: 2025/04/15 13:58:56 by inajah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <keybind.h>
 #include <camera.h>
 
@@ -135,9 +147,12 @@ void update_rot(t_keybind *keybind, t_entity *selected)
 
 void    update_fov(t_keybind *keybind, t_entity *selected)
 {
+    t_camera *camera;
     if (selected->type != CAMERA)
         return ;
-    selected->camera->fov += keybind->dir_flag * FOV_STEP;
+    camera = selected->camera;
+    camera->fov += keybind->dir_flag * FOV_STEP;
+    camera->scale = tan((camera->fov * M_PI / 180.0) / 2.0);
     keybind->dir_flag = 0;
 }
 

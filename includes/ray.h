@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   raytrace.h                                         :+:      :+:    :+:   */
+/*   ray.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/14 15:53:21 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/15 14:07:44 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RAYTRACE_H
 # define RAYTRACE_H
 
-# include "camera.h"
-# include "lighting.h"
 # include "scene.h"
+# include "camera.h"
+# include "render.h"
 
-t_vec3	raytrace(const t_scene *scene, const t_ray *ray, int depth);
+t_ray ray_from_screen(t_camera *scene, int screen_x, int screen_y);
 
 #endif

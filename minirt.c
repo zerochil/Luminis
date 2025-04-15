@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 17:51:17 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/15 09:32:28 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/15 13:47:01 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ bool	post_parse(t_scene *scene)
 	t_texture	*texture;
 	t_object	*object;
 
+	camera_init(&scene->camera);
 	i = 0;
 	while (i < scene->objects->size)
 	{

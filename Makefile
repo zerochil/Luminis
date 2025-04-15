@@ -26,6 +26,7 @@ SRCS = minirt.c \
 	   object/find_intersection.c\
 	   lighting.c\
 	   render.c\
+	   ray.c\
 	   handle_event.c\
 	   keybind.c\
 	   camera.c\
@@ -40,6 +41,7 @@ HEADER_FILES = minirt.h         \
 			   handle_event.h   \
 			   keybind.h        \
 			   object.h			\
+			   ray.h            \
 			   mlx_image.h
 
 HEADERS = $(HEADER_FILES:%=$(INCLUDE)/%)
