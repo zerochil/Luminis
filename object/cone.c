@@ -21,7 +21,6 @@ t_uv get_cone_uv(t_hit *hit) {
 
     uv.v = fmod(1.0 - (proj / height), 1.0); // Normalize to [0,1]
 
-    /*printf("%f, %f\n", uv.u, uv.v);*/
     return uv;
 }
 
