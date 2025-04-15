@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/15 14:08:14 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/15 17:52:55 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define RENDER_H
 
 # include <camera.h>
-# include <handle_event.h>
+# include <on_event.h>
 # include <lighting.h>
 # include <mlx.h>
 # include <scene.h>

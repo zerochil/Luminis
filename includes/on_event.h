@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_event.h                                     :+:      :+:    :+:   */
+/*   on_event.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/15 17:32:37 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/15 17:52:11 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef HANDLE_EVENT_H
-# define HANDLE_EVENT_H
+#ifndef ON_EVENT_H
+# define ON_EVENT_H
 
 # include <camera.h>
 # include <keybind.h>
@@ -19,6 +19,8 @@
 # include <mlx.h>
 # include <scene.h>
 # include <vec3.h>
+# include <ray.h>
+# include <render.h>
 
 enum
 {

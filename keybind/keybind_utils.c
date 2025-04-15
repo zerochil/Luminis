@@ -6,11 +6,21 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:14:50 by inajah            #+#    #+#             */
-/*   Updated: 2025/04/15 16:33:13 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/15 17:45:41 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <keybind.h>
+
+int	keybind_cmp(void *keybind_ptr, void *keycode_ptr)
+{
+	t_keybind	*keybind;
+	int			*keycode;
+
+	keybind = keybind_ptr;
+	keycode = keycode_ptr;
+	return (*keycode == keybind->pos_key || *keycode == keybind->neg_key);
+}
 
 t_vec3	get_rot_axis(int axis, t_vec3 a1, t_vec3 a2, t_vec3 a3)
 {

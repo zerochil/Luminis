@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/15 17:31:04 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/15 17:50:30 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,10 @@ struct	s_keybind
 void		keybind_set_dir_flag(t_keybind *keybind, int keycode);
 void		keybind_reset_dir_flag(t_keybind *keybind, int keycode);
 t_array		*keybinds_init(void);
+
+int			keybind_cmp(void *keybind_ptr, void *keycode_ptr);
 t_vec3		get_rot_axis(int axis, t_vec3 a1, t_vec3 a2, t_vec3 a3);
+
 void		update_fov(t_keybind *keybind, t_entity *selected);
 void		update_radius(t_keybind *keybind, t_entity *selected);
 void		update_height(t_keybind *keybind, t_entity *selected);

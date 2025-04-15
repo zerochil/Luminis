@@ -33,7 +33,8 @@ SRCS = minirt.c \
 	   lighting.c\
 	   render.c\
 	   ray.c\
-	   handle_event.c\
+	   on_event.c\
+	   on_event_utils.c\
 	   camera.c
 
 OBJS_DIR = .objects/
@@ -42,7 +43,7 @@ HEADER_FILES = minirt.h         \
 			   parser.h			\
 			   scene.h			\
 			   camera.h         \
-			   handle_event.h   \
+			   on_event.h   \
 			   keybind.h        \
 			   object.h			\
 			   ray.h            \
