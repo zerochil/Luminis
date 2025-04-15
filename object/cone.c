@@ -1,27 +1,27 @@
 #include "_object.h"
 
 t_uv get_cone_uv(t_hit *hit) {
-    t_uv uv;
+	t_cone_uv_data d;
     
-    t_vec3 apex = hit->object->origin;
-    t_vec3 axis = hit->object->orientation; // Ensure this is a unit vector
-    double height = 100;
-
-    t_vec3 localP = vec3_sub(hit->point, apex);
-    
-    double proj = vec3_dot(localP, axis);
-    t_vec3 projVec = vec3_mul_scalar(axis, proj);
-
-    t_vec3 radial = vec3_sub(localP, projVec);
-    radial = vec3_normalize(radial);
-
-    double theta = atan2(radial.z, radial.x);
-	printf("theta: %f\n", theta);
-    uv.u = (theta + M_PI) / (2.0 * M_PI); // Normalize to [0,1]
-
-    uv.v = fmod(1.0 - (proj / height), 1.0); // Normalize to [0,1]
-
-    return uv;
+    d.apex = hit->object->origin;
+    d.axis = hit->object->orientation;
+    d.height = 100;
+    d.local_p = vec3_sub(hit->point, d.apex);
+    d.proj = vec3_dot(d.local_p, d.axis);
+    d.proj_vec = vec3_mul_scalar(d.axis, d.proj);
+    d.radial = vec3_sub(d.local_p, d.proj_vec);
+    d.radial_len = vec3_length(d.radial);
+    if (d.radial_len < EPSILON) {
+        d.uv.u = 0.5;
+        d.uv.v = fmod(1.0 - (d.proj / d.height), 1.0);
+        return d.uv;
+    }
+    d.radial = vec3_div_scalar(d.radial, d.radial_len);
+	create_orthonormal_basis(d.axis, &d.u, &d.v);
+    d.theta = atan2(vec3_dot(d.radial, d.v), vec3_dot(d.radial, d.u));
+    d.uv.u = (d.theta + M_PI) / (2.0 * M_PI);
+    d.uv.v = fmod(1.0 - (d.proj / d.height), 1.0);
+    return d.uv;
 }
 
 
