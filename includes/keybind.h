@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/15 15:40:19 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/15 17:31:04 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,6 @@ enum
 	CAMERA,
 	OBJECT,
 };
-
-
 
 typedef struct s_keybind	t_keybind;
 
