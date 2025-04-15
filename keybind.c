@@ -65,22 +65,24 @@ void update_angle(t_keybind *keybind, t_entity *selected)
 
 void update_pos(t_keybind *keybind, t_entity *selected)
 {
-    t_vec3 *pos;
+	t_vec3 *pos;
 
-    if (selected == NULL)
-        return ;
-    if (selected->type == CAMERA)
-    {
-        camera_translate(selected->camera, keybind->property, keybind->dir_flag * POS_STEP);
-        return ;
-    }
-    if (selected->type == LIGHT)
-        pos = &selected->light->origin;
-    if (selected->type == OBJECT)
-        pos = &selected->object->origin;
-    pos->x += keybind->dir_flag * (keybind->property == X_POS) * POS_STEP;
-    pos->y += keybind->dir_flag * (keybind->property == Y_POS) * POS_STEP;
-    pos->z += keybind->dir_flag * (keybind->property == Z_POS) * -POS_STEP;
+	if (selected == NULL)
+		return ;
+	if (selected->type == CAMERA)
+	{
+		camera_translate(selected->camera, keybind->property, keybind->dir_flag * POS_STEP);
+		return ;
+	}
+	if (selected->type == LIGHT)
+		pos = &selected->light->origin;
+	else if (selected->type == OBJECT)
+		pos = &selected->object->origin;
+	else
+		return ;
+	pos->x += keybind->dir_flag * (keybind->property == X_POS) * POS_STEP;
+	pos->y += keybind->dir_flag * (keybind->property == Y_POS) * POS_STEP;
+	pos->z += keybind->dir_flag * (keybind->property == Z_POS) * -POS_STEP;
 }
 
 void    object_rotate(t_object *object, t_vec3 axis, double angle)
