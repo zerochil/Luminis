@@ -11,7 +11,7 @@ int keybind_cmp(void *keybind_ptr, void *keycode_ptr)
 		|| *keycode == keybind->neg_key);
 }
 
-t_object *get_selected_object(t_scene *scene, int x, int y)
+t_object *select_object(t_scene *scene, int x, int y)
 {
 	double aspect_ratio = (double)WIDTH / HEIGHT;
 	double scale = tan((scene->camera.fov * M_PI / 180.0) / 2.0);
@@ -26,6 +26,21 @@ t_object *get_selected_object(t_scene *scene, int x, int y)
 	return (hit.object);
 }
 
+t_light *select_light(t_scene *scene)
+{
+	static int light_index = 0;
+	t_light *light;
+
+	if (light_index + 1 == (int)scene->lights->size)
+		light_index = 0;
+	else
+		light_index++;
+	light = array_get(scene->lights, light_index);
+	//if (light == NULL)
+	//	error("select_light: light is null");
+	return (light);
+}
+
 t_entity select_entity(t_scene *scene, int type, int mousex, int mousey)
 {
 	t_entity entity;
@@ -33,14 +48,12 @@ t_entity select_entity(t_scene *scene, int type, int mousex, int mousey)
 	entity.type = type;
 	if (type == CAMERA)
 		entity.camera = &scene->camera;
-	if (type == LIGHT)
-		entity.light = scene->lights->data[0];
-	if (type == OBJECT)
-	{
-		entity.object = get_selected_object(scene, mousex, mousey);
-		if (entity.object == NULL)
-			entity.type = NONE;
-	}
+	else if (type == LIGHT)
+		entity.light = select_light(scene);
+	else if (type == OBJECT)
+		entity.object = select_object(scene, mousex, mousey);
+	if (entity.ptr == NULL)
+		entity.type = NONE;
 	return (entity);
 }
 

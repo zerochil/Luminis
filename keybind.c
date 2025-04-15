@@ -67,6 +67,8 @@ void update_pos(t_keybind *keybind, t_entity *selected)
 {
     t_vec3 *pos;
 
+    if (selected == NULL)
+        return ;
     if (selected->type == CAMERA)
     {
         camera_translate(selected->camera, keybind->property, keybind->dir_flag * POS_STEP);
