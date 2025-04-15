@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/15 13:05:56 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/15 15:40:10 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,17 @@ typedef struct s_camera
 	double	ratio;
 	bool	is_declared;
 }			t_camera;
+
+typedef struct s_entity
+{
+	int	type;
+	union
+	{
+		t_light		*light;
+		t_camera	*camera;
+		t_object	*object;
+		void		*ptr;
+	};
+}	t_entity;
 
 #endif

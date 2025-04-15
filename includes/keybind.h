@@ -6,14 +6,14 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/15 09:23:49 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/15 15:40:19 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef KEYBIND_H
 # define KEYBIND_H
 
-# include <entity.h>
+# include <camera.h>
 # include <libft.h>
 # include <vec3.h>
 
@@ -56,33 +56,28 @@ enum
 	OBJECT,
 };
 
-typedef struct s_entity
-{
-	int						type;
-	union
-	{
-		t_light				*light;
-		t_camera			*camera;
-		t_object			*object;
-		void				*ptr;
-	};
-}							t_entity;
+
 
 typedef struct s_keybind	t_keybind;
 
-struct						s_keybind
+struct	s_keybind
 {
-	int						property;
-	int						pos_key;
-	int						neg_key;
-	int						dir_flag;
-	void					(*update)(t_keybind *, t_entity *);
+	int		property;
+	int		pos_key;
+	int		neg_key;
+	int		dir_flag;
+	void	(*update)(t_keybind *, t_entity *);
 };
 
-void						keybind_set_dir_flag(t_keybind *keybind,
-								int keycode);
-void						keybind_reset_dir_flag(t_keybind *keybind,
-								int keycode);
-t_array						*keybinds_init(void);
+void		keybind_set_dir_flag(t_keybind *keybind, int keycode);
+void		keybind_reset_dir_flag(t_keybind *keybind, int keycode);
+t_array		*keybinds_init(void);
+t_vec3		get_rot_axis(int axis, t_vec3 a1, t_vec3 a2, t_vec3 a3);
+void		update_fov(t_keybind *keybind, t_entity *selected);
+void		update_radius(t_keybind *keybind, t_entity *selected);
+void		update_height(t_keybind *keybind, t_entity *selected);
+void		update_angle(t_keybind *keybind, t_entity *selected);
+void		update_pos(t_keybind *keybind, t_entity *selected);
+void		update_rot(t_keybind *keybind, t_entity *selected);
 
 #endif

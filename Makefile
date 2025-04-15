@@ -23,12 +23,14 @@ SRCS = minirt.c \
 	   texture/texture_checkerboard.c\
 	   texture/texture_colored.c\
 	   texture/texture_solid.c\
+	   keybind/keybind.c\
+	   keybind/keybind_update.c\
+	   keybind/keybind_utils.c\
 	   object/find_intersection.c\
 	   lighting.c\
 	   render.c\
 	   ray.c\
 	   handle_event.c\
-	   keybind.c\
 	   camera.c\
 	   mlx_image.c
 
