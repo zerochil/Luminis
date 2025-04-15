@@ -6,18 +6,17 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 17:51:17 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/15 13:47:01 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/15 17:37:50 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minirt.h>
 
-void mlx_start(t_scene *scene);
-void window_start(t_scene *scene);
+void	mlx_start(t_scene *scene);
+void	window_start(t_scene *scene);
 
-void init(t_scene *scene)
+void	init(t_scene *scene)
 {
-
 	window_start(scene);
 	scene->mlx.control = control_init(scene);
 	camera_init(&scene->camera);
