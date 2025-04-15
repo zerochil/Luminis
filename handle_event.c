@@ -14,6 +14,16 @@
 #include <ray.h>
 #include <render.h>
 
+t_control	control_init(t_scene *scene)
+{
+	t_control	control;
+
+	control.selected = select_entity(scene, CAMERA, 0, 0);
+	control.keybinds = keybinds_init();
+	return (control);
+}
+
+
 int	keybind_cmp(void *keybind_ptr, void *keycode_ptr)
 {
 	t_keybind	*keybind;
@@ -143,8 +153,6 @@ int	on_mouse_event(int keycode, int x, int y, t_scene *scene)
 int	close_win(t_mlx *mlx)
 {
 	mlx_destroy_image(mlx->ptr, mlx->image.ptr);
-	mlx_destroy_window(mlx->ptr, mlx->win);
-	mlx_destroy_display(mlx->ptr);
-	free(mlx->ptr);
+	manager_free_everything();
 	exit(0);
 }

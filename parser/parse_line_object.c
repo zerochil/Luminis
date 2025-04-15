@@ -16,8 +16,8 @@ bool	parse_line_sphere(t_scene *scene, char **infos)
 {
 	t_object	*object;
 
-	if (ft_strarr_len(infos) < 4)
-		return (parser_error("Sphere must have 4 arguments"));
+	if (ft_strarr_len(infos) < 4 || ft_strarr_len(infos) > 5)
+		return (parser_error("Sphere must have 4 or 3 arguments"));
 	object = object_create(SPHERE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Sphere origin must be a vec3"));
@@ -38,8 +38,8 @@ bool	parse_line_plane(t_scene *scene, char **infos)
 {
 	t_object	*object;
 
-	if (ft_strarr_len(infos) < 4)
-		return (parser_error("Plane must have 3 arguments"));
+	if (ft_strarr_len(infos) < 4 || ft_strarr_len(infos) > 5)
+		return (parser_error("Plane must have 3 or 4 arguments"));
 	object = object_create(PLANE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Plane origin must be a vec3"));
@@ -58,8 +58,8 @@ bool	parse_line_cylinder(t_scene *scene, char **infos)
 {
 	t_object	*object;
 
-	if (ft_strarr_len(infos) < 6)
-		return (parser_error("Cylinder must have 5 arguments"));
+	if (ft_strarr_len(infos) < 6 || ft_strarr_len(infos) > 7)
+		return (parser_error("Cylinder must have 5 or 6 arguments"));
 	object = object_create(CYLINDER);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Cylinder origin must be a vec3"));
@@ -87,8 +87,8 @@ bool	parse_line_cone(t_scene *scene, char **infos)
 {
 	t_object	*object;
 
-	if (ft_strarr_len(infos) < 5)
-		return (parser_error("Cone must have 4 arguments"));
+	if (ft_strarr_len(infos) < 5 || ft_strarr_len(infos) > 6)
+		return (parser_error("Cone must have 4 or 5 arguments"));
 	object = object_create(CONE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Cone origin must be a vec3"));

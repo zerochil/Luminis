@@ -42,8 +42,8 @@ bool	parse_texture(t_scene *scene, char **infos)
 {
 	t_texture	*texture;
 
-	if (ft_strarr_len(infos) < 4)
-		return (parser_error("Texture must have at least 3 arguments"));
+	if (ft_strarr_len(infos) < 4 || ft_strarr_len(infos) > 6)
+		return (parser_error("Texture must have 3 to 5 arguments"));
 	texture = track_malloc(sizeof(t_texture));
 	if (parse_string(&texture->name, infos[1]) == false)
 		return (parser_error("Texture name isn't composed of only characters"));
@@ -52,8 +52,8 @@ bool	parse_texture(t_scene *scene, char **infos)
 	if (texture->type == TEXTURE_BUMP_MAP
 		|| texture->type == TEXTURE_COLORED_MAP)
 		texture_load(scene->mlx.ptr, texture, infos[3]);
-	else if (texture->type == TEXTURE_CHECKER && parse_texture_checker(texture,
-			infos) == false)
+	else if (texture->type == TEXTURE_CHECKER
+		&& parse_texture_checker(texture, infos) == false)
 		return (false);
 	array_push(scene->textures, texture);
 	return (true);
@@ -122,11 +122,11 @@ bool	parse_scene(t_scene *scene, char *filename)
 			break ;
 		trim_newline(line);
 		if (parse_line(scene, line) == false)
-		{
-			free(line);
-			return (false);
-		}
+			return (free(line), false);
 		free(line);
 	}
+	close(fd);
+	if (post_parse(scene) == false)
+		return (false);
 	return (true);
 }

@@ -13,6 +13,7 @@ SRCS = minirt.c \
 	   parser/parse_float.c\
 	   parser/parse_line_object.c\
 	   parser/parse_line_meta.c\
+	   parser/post_parse.c\
 	   object/plane.c\
 	   object/sphere.c\
 	   object/cylinder.c\
@@ -27,12 +28,13 @@ SRCS = minirt.c \
 	   keybind/keybind_update.c\
 	   keybind/keybind_utils.c\
 	   object/find_intersection.c\
+	   mlx/mlx_image.c\
+	   mlx/mlx_init.c\
 	   lighting.c\
 	   render.c\
 	   ray.c\
 	   handle_event.c\
-	   camera.c\
-	   mlx_image.c
+	   camera.c
 
 OBJS_DIR = .objects/
 OBJS = $(SRCS:%.c=$(OBJS_DIR)%.o)

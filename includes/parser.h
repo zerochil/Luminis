@@ -30,4 +30,5 @@ bool	parse_string(char **dest, char *str);
 bool	is_normalized(t_vec3 vec);
 bool	in_interval(double value, double min, double max);
 
+bool	post_parse(t_scene *scene);
 #endif

@@ -32,7 +32,6 @@ static char	*extract_line(t_string *stored, char *newline)
 		line = ft_strdup(stored->data);
 		string_destroy(stored);
 	}
-	resource_track(line, free);
 	return (line);
 }
 
