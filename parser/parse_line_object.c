@@ -6,7 +6,7 @@
 /*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:58:15 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/16 15:30:00 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/16 15:51:03 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,17 @@ bool	parse_line_cylinder(t_scene *scene, char **infos)
 	return (object->radius /= 2, array_push(scene->objects, object), true);
 }
 
+bool	validate_cone(t_object *object)
+{
+	if (in_interval(object->height, 0, INFINITY) == false)
+		return (parser_error("Cone height must be positive"));
+	if (in_interval(object->angle, 0, 90) == false)
+		return (parser_error("Cone opening angle must be in range [0, 90]"));
+	if (vec3_length(object->orientation) == 0)
+		return (parser_error("Plane normal must be a non-zero vector"));
+	return (true);
+}
+
 bool	parse_line_cone(t_scene *scene, char **infos)
 {
 	t_object	*object;
@@ -100,17 +111,13 @@ bool	parse_line_cone(t_scene *scene, char **infos)
 		return (parser_error("Cone opening angle must be a float"));
 	if (parse_float(&object->height, infos[4]) == false)
 		return (parser_error("Cone height must be a float"));
-	if (in_interval(object->height, 0, INFINITY) == false)
-		return (parser_error("Cone height must be positive"));
 	if (parse_color(&object->color, infos[5]) == false)
 		return (parser_error("Cone color must be a color"));
-	if (in_interval(object->angle, 0, 90) == false)
-		return (parser_error("Cone opening angle must be in range [0, 90]"));
 	if (infos[6] && parse_string(&object->texture_name, infos[6]) == false)
 		return (parser_error("Texture name isn't composed of characters"));
 	object->orientation = vec3_normalize(object->orientation);
-	if (vec3_length(object->orientation) == 0)
-		return (parser_error("Plane normal must be a non-zero vector"));
+	if (validate_cone(object) == false)
+		return (false);
 	object->angle /= 2;
 	array_push(scene->objects, object);
 	return (true);

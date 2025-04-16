@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 09:54:06 by inajah            #+#    #+#             */
-/*   Updated: 2025/04/15 17:37:48 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/16 15:52:12 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_ray	ray_from_screen(t_camera *cam, int screen_x, int screen_y)
 
 	x_scr = (2 * ((screen_x + 0.5) / WIDTH) - 1) * cam->ratio * cam->scale;
 	y_scr = (1 - 2 * ((screen_y + 0.5) / HEIGHT)) * cam->scale;
-	cam_ray = vec3_mul_matrix((t_vec3){ x_scr, y_scr, -1 }, cam->view);
+	cam_ray = vec3_mul_matrix((t_vec3){x_scr, y_scr, -1}, cam->view);
 	return ((t_ray)
 		{
 			cam->origin,
