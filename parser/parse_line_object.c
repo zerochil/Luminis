@@ -48,6 +48,8 @@ bool	parse_line_plane(t_scene *scene, char **infos)
 	if (parse_color(&object->color, infos[3]) == false)
 		return (parser_error("Plane color must be a color"));
 	object->orientation = vec3_normalize(object->orientation);
+	if (vec3_length(object->orientation) == 0)
+		return (parser_error("Plane normal must be a non-zero vector"));
 	if (infos[4] && parse_string(&object->texture_name, infos[4]) == false)
 		return (parser_error("Texture name isn't composed of only characters"));
 	array_push(scene->objects, object);
@@ -78,9 +80,9 @@ bool	parse_line_cylinder(t_scene *scene, char **infos)
 	if (in_interval(object->height, 0, INFINITY) == false)
 		return (parser_error("Cylinder height must be positive"));
 	object->orientation = vec3_normalize(object->orientation);
-	object->radius /= 2;
-	array_push(scene->objects, object);
-	return (true);
+	if (vec3_length(object->orientation) == 0)
+		return (parser_error("Plane normal must be a non-zero vector"));
+	return (object->radius /= 2, array_push(scene->objects, object), true);
 }
 
 bool	parse_line_cone(t_scene *scene, char **infos)
@@ -103,6 +105,8 @@ bool	parse_line_cone(t_scene *scene, char **infos)
 	if (infos[5] && parse_string(&object->texture_name, infos[5]) == false)
 		return (parser_error("Texture name isn't composed of characters"));
 	object->orientation = vec3_normalize(object->orientation);
+	if (vec3_length(object->orientation) == 0)
+		return (parser_error("Plane normal must be a non-zero vector"));
 	object->angle /= 2;
 	array_push(scene->objects, object);
 	return (true);

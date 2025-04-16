@@ -1,5 +1,5 @@
-# t Earth bump_map textures/solar_system/earth_normal.xpm
-# t Earth bump_map textures/brick_wall.xpm
+# t Earth bump_map textures/sfjdijfsdifjolar_system/earth_normal.xpm
+t Earth checker 50 255,255,255 255,0,0
 
 A 0.2 255,255,255
 
@@ -8,4 +8,4 @@ C   0,10,0                  0.0,0.0,-1.0     40
 L   70,30,70             0.6         255,255,255
 # # L   -70,30,70             0.6         255,255,255
 
-sp  0,10,-50           30         200,200,200 
+sp  0,10,-50           30         200,200,200 Earth
