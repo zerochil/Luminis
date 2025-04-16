@@ -13,28 +13,61 @@
 #include <render.h>
 #include "ray.h"
 
-void	raytrace(t_scene *scene)
-{
-	t_hit			hit;
-	t_ray			ray;
-	size_t			x;
-	size_t			y;
 
-	y = -1;
-	while (++y < HEIGHT)
+typedef struct s_ray_task
+{
+	t_scene		*scene;
+	size_t		row;
+}				t_ray_task;
+
+void	raytrace_func(t_ray_task *task)
+{
+	t_scene		*scene;
+	t_hit		hit;
+	t_ray		ray;
+	size_t		x;
+
+	scene = task->scene;
+	x = 0;
+	while (x < WIDTH)
 	{
-		x = -1;
-		while (++x < WIDTH)
-		{
-			ray = ray_from_screen(&scene->camera, x, y);
-			hit = find_intersection(scene, &ray);
-			if (hit.object)
-				put_pixel(&scene->mlx.image, x, y, calculate_lighting(scene,
-						&hit));
-			else
-				put_pixel(&scene->mlx.image, x, y, (t_vec3){18, 18, 18});
-		}
+		ray = ray_from_screen(&scene->camera, x, task->row);
+		hit = find_intersection(scene, &ray);
+		if (hit.object)
+			put_pixel(&scene->mlx.image, x, task->row,
+				calculate_lighting(scene, &hit));
+		else
+			put_pixel(&scene->mlx.image, x, task->row,
+				(t_vec3){18, 18, 18});
+		x++;
 	}
+}
+
+void raytrace(t_scene *scene)
+{
+	static bool initialized = false;
+	static t_ray_task		task[HEIGHT];
+	int y;
+
+	if (!initialized)
+	{
+		y = 0;
+		while (y < HEIGHT)
+		{
+			task[y].scene = scene;
+			task[y].row = y;
+			y++;
+		}
+		initialized = true;
+	}
+
+	y = 0;
+	while (y < HEIGHT)
+	{
+		pool_add_task(&scene->pool, (void *)raytrace_func, &task[y]);
+		y++;
+	}
+	pool_wait(&scene->pool);
 }
 
 bool	apply_transformation(t_control control)

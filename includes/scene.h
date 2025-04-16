@@ -48,6 +48,7 @@ typedef struct s_scene
 	t_array		*objects;
 	t_array		*materials;
 	t_array		*textures;
+	t_thread_pool	pool;
 	t_mlx		mlx;
 }				t_scene;
 

@@ -17,10 +17,14 @@ static void	*worker_thread(void *arg)
 			break ;
 		}
 		task = (t_task *)array_remove(&pool->task_queue, 0);
+		if (task == NULL)
+		{
+			pthread_mutex_unlock(&pool->queue_mutex);
+			continue ;
+		}
 		pthread_mutex_unlock(&pool->queue_mutex);
 		pthread_cond_signal(&pool->queue_cond);
 		task->func(task->arg);
-		resource_free(task);
 	}
 	return (NULL);
 }

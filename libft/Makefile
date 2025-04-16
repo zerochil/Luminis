@@ -20,7 +20,7 @@ SRCS = $(addprefix base/, $(BASE_SRCS)) \
 	   $(addprefix memory_management/, $(MEMORY_MANAGEMNT_SRCS)) \
 	   $(addprefix containers/, $(CONTAINERS_SRCS)) \
 	   $(addprefix get_next_line/, $(GET_NEXT_LINE_SRCS)) \
-	   $(addprefich threads/, $(THREADS_SRCS))
+	   $(addprefix thread_pool/, $(THREADS_SRCS))
 
 OBJS = $(addprefix $(OBJECTS_DIR), $(SRCS:.c=.o))
 

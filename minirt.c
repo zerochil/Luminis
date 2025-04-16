@@ -20,6 +20,7 @@ void	init(t_scene *scene)
 	window_start(scene);
 	scene->mlx.control = control_init(scene);
 	camera_init(&scene->camera);
+	pool_init(&scene->pool);
 }
 
 int	main(int argc, char **argv)
