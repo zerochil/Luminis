@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:12:05 by inajah            #+#    #+#             */
-/*   Updated: 2025/04/15 15:44:42 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/16 15:38:12 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ void	update_height(t_keybind *keybind, t_entity *selected)
 
 	if (keybind == NULL || selected == NULL)
 		return ;
-	if (selected->type != OBJECT || selected->object->type != CYLINDER)
+	if (selected->type != OBJECT
+		|| (selected->object->type != CYLINDER
+			&& selected->object->type != CONE))
 		return ;
 	object = selected->object;
 	object->height += keybind->dir_flag * HEIGHT_STEP;
@@ -94,5 +96,6 @@ void	update_rot(t_keybind *keybind, t_entity *selected)
 				0}, (t_vec3){0, 0, 1});
 		object = selected->object;
 		rotate(&object->orientation, axis, angle);
+		object->orientation = vec3_normalize(object->orientation);
 	}
 }

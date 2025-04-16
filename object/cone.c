@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:52:09 by inajah            #+#    #+#             */
-/*   Updated: 2025/04/15 16:04:20 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/16 15:32:03 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,41 @@ t_uv	get_cone_uv(t_hit *hit)
 	return (d.uv);
 }
 
-static double	cone_solution(t_quadratic_terms qterms)
+bool	is_point_within_cone_height(t_object *object, t_ray *ray,
+		double t)
 {
-	if (qterms.t1 < 0)
-		return (qterms.t2);
-	else if (qterms.t2 < 0)
-		return (qterms.t1);
-	else
-		return (fmin(qterms.t1, qterms.t2));
+	t_vec3	hit_point;
+	double	height;
+	double	h;
+
+	if (t < 0)
+		return (false);
+	h = object->height;
+	hit_point = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, t));
+	height = vec3_dot(vec3_sub(hit_point, object->origin), object->orientation);
+	if (height < 0 || height > h)
+		return (false);
+	return (true);
+}
+
+static double	cone_solution(t_quadratic_terms qterms, t_object *obj,
+		t_ray *ray)
+{
+	double	t;
+
+	if (qterms.t1 < 0 || qterms.t2 < 0)
+	{
+		t = fmax(qterms.t1, qterms.t2);
+		if (is_point_within_cone_height(obj, ray, t))
+			return (t);
+	}
+	t = fmin(qterms.t1, qterms.t2);
+	if (is_point_within_cone_height(obj, ray, t))
+		return (t);
+	t = fmax(qterms.t1, qterms.t2);
+	if (is_point_within_cone_height(obj, ray, t))
+		return (t);
+	return (-1);
 }
 
 static t_quadratic_terms	cone_quadratic_terms(t_object *obj, t_ray *ray,
@@ -78,7 +105,9 @@ bool	intersect_cone(t_object *obj, t_ray *ray, t_hit *hit)
 		return (false);
 	if (quadratic_roots(&qterms) < 0)
 		return (false);
-	hit->distance = cone_solution(qterms);
+	hit->distance = cone_solution(qterms, obj, ray);
+	if (hit->distance < 0)
+		return (false);
 	hit->point = vec3_add(ray->origin, vec3_mul_scalar(ray->direction,
 				hit->distance));
 	local_point = vec3_sub(hit->point, obj->origin);
