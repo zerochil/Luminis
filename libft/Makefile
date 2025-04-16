@@ -10,6 +10,8 @@ CONTAINERS_SRCS = array/array_access.c array/array_helper_functions.c array/arra
 				  string/string_functions.c string/string_manipulation.c string/string_segment_manipulation.c string/string_access.c string/string_peek.c\
 				  containers_functions.c
 
+THREADS_SRCS = thread_pool.c
+
 GET_NEXT_LINE_SRCS = get_next_line.c 
 
 OBJECTS_DIR = .objects/
@@ -18,6 +20,7 @@ SRCS = $(addprefix base/, $(BASE_SRCS)) \
 	   $(addprefix memory_management/, $(MEMORY_MANAGEMNT_SRCS)) \
 	   $(addprefix containers/, $(CONTAINERS_SRCS)) \
 	   $(addprefix get_next_line/, $(GET_NEXT_LINE_SRCS)) \
+	   $(addprefich threads/, $(THREADS_SRCS))
 
 OBJS = $(addprefix $(OBJECTS_DIR), $(SRCS:.c=.o))
 
@@ -27,6 +30,7 @@ HEADERS = libft.h \
 		  containers/containers.h \
 		  	containers/array/array.h \
 		  	containers/string/string.h \
+		  thread_pool/thread_pool.h \
 		  base/base.h
 
 NAME = libft.a

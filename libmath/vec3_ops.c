@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "vec3.h"
+#include <stdio.h>
 
 double	vec3_dot(t_vec3 a, t_vec3 b)
 {
@@ -40,5 +41,10 @@ t_vec3	vec3_normalize(t_vec3 a)
 	double	length;
 
 	length = vec3_length(a);
-	return (vec3_div_scalar(a, length));
+	if (length == 0)
+	{
+		printf("Warning: Normalizing a zero vector\n");
+		return (a);
+	}
+	return (vec3_mul_scalar(a, 1/length));
 }

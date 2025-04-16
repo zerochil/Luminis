@@ -22,5 +22,6 @@
 # include "get_next_line/get_next_line.h"
 # include "memory_management/memory_management.h"
 # include "containers/containers.h"
+# include "thread_pool/thread_pool.h"
 
 #endif
