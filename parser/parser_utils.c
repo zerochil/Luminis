@@ -6,7 +6,7 @@
 /*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:48:30 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/14 15:09:05 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/17 19:48:53 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,17 @@ bool	parse_vec3(t_vec3 *vec, char *str)
 		return (false);
 	if (parse_float(&vec->z, components[2]) == false)
 		return (false);
+	return (true);
+}
+
+bool	parse_vec3_interval(t_vec3 *vec, char *str, double min, double max)
+{
+	if (parse_vec3(vec, str) == false)
+		return (parser_error("Orientation must be a vec3"));
+	if (in_interval(vec->x, min, max) == false
+		|| in_interval(vec->y, min, max) == false
+		|| in_interval(vec->z, min, max) == false)
+		return (parser_error("Orientation (x, y, z) must be in range [-1,1]"));
 	return (true);
 }
 

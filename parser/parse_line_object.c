@@ -6,7 +6,7 @@
 /*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:58:15 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/16 15:51:03 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/17 19:51:13 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ bool	parse_line_plane(t_scene *scene, char **infos)
 	object = object_create(PLANE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Plane origin must be a vec3"));
-	if (parse_vec3(&object->orientation, infos[2]) == false)
-		return (parser_error("Plane normal must be a vec3"));
+	if (parse_vec3_interval(&object->orientation, infos[2], -1, 1) == false)
+		return (false);
 	if (parse_color(&object->color, infos[3]) == false)
 		return (parser_error("Plane color must be a color"));
 	object->orientation = vec3_normalize(object->orientation);
@@ -65,8 +65,8 @@ bool	parse_line_cylinder(t_scene *scene, char **infos)
 	object = object_create(CYLINDER);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Cylinder origin must be a vec3"));
-	if (parse_vec3(&object->orientation, infos[2]) == false)
-		return (parser_error("Cylinder orientation must be a vec3"));
+	if (parse_vec3_interval(&object->orientation, infos[2], -1, 1) == false)
+		return (false);
 	if (parse_float(&object->radius, infos[3]) == false)
 		return (parser_error("Cylinder radius must be a float"));
 	if (parse_float(&object->height, infos[4]) == false)
@@ -105,8 +105,8 @@ bool	parse_line_cone(t_scene *scene, char **infos)
 	object = object_create(CONE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Cone origin must be a vec3"));
-	if (parse_vec3(&object->orientation, infos[2]) == false)
-		return (parser_error("Cone orientation must be a vec3"));
+	if (parse_vec3_interval(&object->orientation, infos[2], -1, 1) == false)
+		return (false);
 	if (parse_float(&object->angle, infos[3]) == false)
 		return (parser_error("Cone opening angle must be a float"));
 	if (parse_float(&object->height, infos[4]) == false)

@@ -6,7 +6,7 @@
 /*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:48:30 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/15 17:10:57 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/17 18:36:52 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ bool	parse_line(t_scene *scene, char *line)
 		return (parse_line_ambient(scene, infos));
 	if (ft_strcmp(infos[0], "C") == 0)
 		return (parse_line_camera(scene, infos));
-	if (ft_strcmp(infos[0], "L") == 0)
+	if (ft_strcmp(infos[0], "l") == 0)
 		return (parse_line_light(scene, infos));
 	if (ft_strcmp(infos[0], "sp") == 0)
 		return (parse_line_sphere(scene, infos));
