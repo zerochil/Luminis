@@ -6,19 +6,12 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:01:12 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/17 11:34:03 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/17 17:19:03 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <render.h>
 #include "ray.h"
-
-
-typedef struct s_ray_task
-{
-	t_scene		*scene;
-	size_t		row;
-}				t_ray_task;
 
 void	raytrace_func(t_ray_task *task)
 {
@@ -43,11 +36,11 @@ void	raytrace_func(t_ray_task *task)
 	}
 }
 
-void raytrace(t_scene *scene)
+void	raytrace(t_scene *scene)
 {
-	static bool initialized = false;
-	static t_ray_task		task[HEIGHT];
-	int y;
+	static bool			initialized = false;
+	static t_ray_task	task[HEIGHT];
+	int					y;
 
 	if (!initialized)
 	{
@@ -60,7 +53,6 @@ void raytrace(t_scene *scene)
 		}
 		initialized = true;
 	}
-
 	y = 0;
 	while (y < HEIGHT)
 	{
