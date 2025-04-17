@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/15 17:52:11 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/17 20:25:14 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,6 @@ t_entity	select_entity(t_scene *scene, int type, int mousex, int mousey);
 int			on_key_press(int keycode, t_scene *scene);
 int			on_key_release(int keycode, t_scene *scene);
 int			on_mouse_event(int keycode, int x, int y, t_scene *scene);
-int			close_win(t_mlx *mlx);
+int			close_win(t_scene *scene);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 09:39:44 by inajah            #+#    #+#             */
-/*   Updated: 2025/04/15 17:52:05 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/17 20:24:21 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,13 @@ t_entity	select_entity(t_scene *scene, int type, int mousex, int mousey)
 	return (entity);
 }
 
-int	close_win(t_mlx *mlx)
+int	close_win(t_scene *scene)
 {
+	t_mlx	*mlx;
+
+	mlx = &scene->mlx;
 	mlx_destroy_image(mlx->ptr, mlx->image.ptr);
+	pool_destroy(&scene->pool);
 	manager_free_everything();
 	exit(0);
 }

@@ -6,7 +6,7 @@
 /*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 11:30:12 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/17 11:30:13 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/17 20:33:12 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ void	pool_destroy(t_thread_pool *pool)
 		if (task != NULL)
 			free(task);
 	}
-	free(pool->workers);
 	atomic_store(&pool->pending_tasks, 0);
 	array_destroy(&pool->task_queue);
 	pthread_mutex_destroy(&pool->queue_mutex);

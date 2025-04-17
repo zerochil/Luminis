@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 17:39:59 by inajah            #+#    #+#             */
-/*   Updated: 2025/04/15 17:56:12 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/17 20:29:10 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	on_key_press(int keycode, t_scene *scene)
 	t_keybind	*keybind;
 
 	if (keycode == KEY_ESC)
-		close_win(&scene->mlx);
+		close_win(scene);
 	if (keycode == ' ')
 		scene->mlx.control.selected = select_entity(scene, CAMERA, 0, 0);
 	if (keycode == 'l')

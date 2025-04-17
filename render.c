@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:01:12 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/17 17:19:03 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/17 20:26:28 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,11 @@ int	render_image(t_scene *scene)
 void	render_scene(t_scene *scene)
 {
 	new_image(scene->mlx.ptr, &scene->mlx.image, WIDTH, HEIGHT);
-	mlx_hook(scene->mlx.win, ON_DESTROY, 0, close_win, &scene->mlx);
+	mlx_hook(scene->mlx.win, ON_DESTROY, 0, close_win, &scene);
 	mlx_hook(scene->mlx.win, ON_KEY_PRESS, 1L << 0, on_key_press, scene);
 	mlx_hook(scene->mlx.win, ON_KEY_RELEASE, 1L << 1, on_key_release, scene);
 	mlx_mouse_hook(scene->mlx.win, on_mouse_event, scene);
 	mlx_loop_hook(scene->mlx.ptr, render_image, scene);
 	mlx_loop(scene->mlx.ptr);
-	close_win(&scene->mlx);
+	close_win(scene);
 }
