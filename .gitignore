@@ -9,7 +9,7 @@ vgcore.*
 .vscode
 
 # executable
-minirt
+miniRT
 
 # Prerequisites
 *.d

@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 17:51:17 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/16 08:18:40 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/17 18:30:42 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ int	main(int argc, char **argv)
 		return (ft_putstr_fd("Error\nInvalid number of arguments\n", 2), 1);
 	scene = (t_scene){0};
 	mlx_start(&scene);
+	if (ends_with(argv[1], ".rt") == false)
+	{
+		ft_putstr_fd("Error\nWrong file extension\n", 2);
+		return (manager_free_everything(), 1);
+	}
 	if (parse_scene(&scene, argv[1]) == false)
 		return (manager_free_everything(), 1);
 	init(&scene);

@@ -1,4 +1,4 @@
-NAME = minirt
+NAME = miniRT
 
 CC = cc
 
