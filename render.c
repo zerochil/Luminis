@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:01:12 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/15 14:08:05 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/17 11:34:03 by rrochd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ int	render_image(t_scene *scene)
 {
 	static bool	first = true;
 
+	if (atomic_load(&scene->pool.pending_tasks) > 0)
+		return (1);
 	if (apply_transformation(scene->mlx.control) || first)
 	{
 		raytrace(scene);

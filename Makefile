@@ -4,7 +4,7 @@ CC = cc
 
 INCLUDE = ./includes/
 
-CFLAGS = -Wall -Wextra -Werror -Ilibmath -Ilibft -I$(INCLUDE) -O3 #-fsanitize=threads
+CFLAGS = -Wall -Wextra -Werror -Ilibmath -Ilibft -I$(INCLUDE) -O3 #-fsanitize=thread
 
 HEADER_FILES = minirt.h    \
 			   parser.h    \
