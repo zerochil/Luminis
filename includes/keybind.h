@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/15 17:50:30 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/17 19:58:51 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # define RADIUS_STEP 0.1
 # define HEIGHT_STEP 1.0
 # define ANGLE_STEP 1.0
-# define POS_STEP 2.0
+# define POS_STEP 1.0
 # define FOV_STEP 1.0
 
 # define KEY_ESC 65307
