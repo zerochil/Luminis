@@ -6,7 +6,7 @@
 /*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:53:13 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/14 15:53:21 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/17 17:18:03 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,14 @@ typedef struct s_mlx
 
 typedef struct s_scene
 {
-	t_ambient	ambient;
-	t_camera	camera;
-	t_array		*lights;
-	t_array		*objects;
-	t_array		*materials;
-	t_array		*textures;
+	t_ambient		ambient;
+	t_camera		camera;
+	t_array			*lights;
+	t_array			*objects;
+	t_array			*materials;
+	t_array			*textures;
 	t_thread_pool	pool;
-	t_mlx		mlx;
+	t_mlx			mlx;
 }				t_scene;
 
 #endif

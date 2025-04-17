@@ -81,7 +81,7 @@ void	update_rot(t_keybind *keybind, t_entity *selected)
 	double		angle;
 
 	angle = keybind->dir_flag * ANGLE_STEP;
-	if (selected->type == LIGHT || selected->type == SPHERE)
+	if (selected->type == LIGHT)
 		return ;
 	if (selected->type == CAMERA)
 	{
@@ -90,7 +90,7 @@ void	update_rot(t_keybind *keybind, t_entity *selected)
 				camera->forward);
 		camera_rotate(selected->camera, axis, angle);
 	}
-	else if (selected->type != SPHERE)
+	else if (selected->object->type != SPHERE)
 	{
 		axis = get_rot_axis(keybind->property, (t_vec3){1, 0, 0}, (t_vec3){0, 1,
 				0}, (t_vec3){0, 0, 1});

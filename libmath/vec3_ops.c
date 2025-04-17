@@ -6,7 +6,7 @@
 /*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:38:29 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/14 15:38:32 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/17 17:19:25 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,5 @@ t_vec3	vec3_normalize(t_vec3 a)
 		printf("Warning: Normalizing a zero vector\n");
 		return (a);
 	}
-	return (vec3_mul_scalar(a, 1/length));
+	return (vec3_mul_scalar(a, 1 / length));
 }
