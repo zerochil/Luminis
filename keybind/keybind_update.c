@@ -6,7 +6,7 @@
 /*   By: inajah <inajah@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:12:05 by inajah            #+#    #+#             */
-/*   Updated: 2025/04/16 15:38:12 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/18 08:01:47 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	update_radius(t_keybind *keybind, t_entity *selected)
 		return ;
 	object = selected->object;
 	object->radius += keybind->dir_flag * RADIUS_STEP;
+	if (object->radius < 0)
+		object->radius = 0;
 }
 
 void	update_height(t_keybind *keybind, t_entity *selected)
@@ -36,6 +38,8 @@ void	update_height(t_keybind *keybind, t_entity *selected)
 		return ;
 	object = selected->object;
 	object->height += keybind->dir_flag * HEIGHT_STEP;
+	if (object->height < 0)
+		object->height = 0;
 }
 
 void	update_angle(t_keybind *keybind, t_entity *selected)
@@ -48,6 +52,10 @@ void	update_angle(t_keybind *keybind, t_entity *selected)
 		return ;
 	object = selected->object;
 	object->angle += keybind->dir_flag * ANGLE_STEP;
+	if (object->angle < 0)
+		object->angle = 0;
+	if (object->angle > 180)
+		object->angle = 180;
 }
 
 void	update_pos(t_keybind *keybind, t_entity *selected)
