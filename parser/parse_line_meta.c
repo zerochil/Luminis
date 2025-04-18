@@ -45,9 +45,12 @@ bool	parse_line_camera(t_scene *scene, char **infos)
 	scene->camera.forward = vec3_normalize(scene->camera.forward);
 	if (is_normalized(scene->camera.forward) == false)
 		return (parser_error("Camera direction must be normalized"));
-	if (vec3_compare(scene->camera.forward, (t_vec3){0, 0, 0}))
-		scene->camera.forward = (t_vec3){0, 0, -1};
-	scene->camera.right = vec3_cross(scene->camera.forward, (t_vec3){0, 1, 0});
+	if (scene->camera.forward.y > 0.9 || scene->camera.forward.y < -0.9)
+		scene->camera.right = vec3_cross(scene->camera.forward, (t_vec3){0, 0,
+				1});
+	else
+		scene->camera.right = vec3_cross(scene->camera.forward, (t_vec3){0, 1,
+				0});
 	scene->camera.up = vec3_cross(scene->camera.right, scene->camera.forward);
 	scene->camera.is_declared = true;
 	return (true);

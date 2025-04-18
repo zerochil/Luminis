@@ -6,7 +6,7 @@
 /*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:48:30 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/18 09:13:02 by inajah           ###   ########.fr       */
+/*   Updated: 2025/04/18 14:52:10 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,6 @@ bool	parse_scene(t_scene *scene, char *filename)
 	scene->lights = array_create();
 	scene->objects = array_create();
 	scene->textures = array_create();
-	int i = 1;
 	while (true)
 	{
 		line = get_next_line(fd);
@@ -126,9 +125,8 @@ bool	parse_scene(t_scene *scene, char *filename)
 			break ;
 		trim_newline(line);
 		if (parse_line(scene, line) == false)
-			return (free(line),printf("%d\n", i), false);
+			return (free(line), false);
 		free(line);
-		i++;
 	}
 	close(fd);
 	if (post_parse(scene) == false)
