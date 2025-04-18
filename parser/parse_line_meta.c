@@ -6,7 +6,7 @@
 /*   By: rrochd <rrochd@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:57:05 by rrochd            #+#    #+#             */
-/*   Updated: 2025/04/14 14:57:59 by rrochd           ###   ########.fr       */
+/*   Updated: 2025/04/18 08:04:05 by inajah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ bool	parse_line_camera(t_scene *scene, char **infos)
 		return (parser_error("Camera already declared"));
 	if (parse_vec3(&scene->camera.origin, infos[1]) == false)
 		return (parser_error("Camera origin must be a vec3"));
-	if (parse_vec3(&scene->camera.forward, infos[2]) == false)
-		return (parser_error("Camera direction must be a vec3"));
+	if (parse_vec3_interval(&scene->camera.forward, infos[2], -1, 1) == false)
+		return (false);
 	if (parse_float(&scene->camera.fov, infos[3]) == false)
 		return (parser_error("Camera fov must be a float"));
 	if (in_interval(scene->camera.fov, 0, 180) == false)
