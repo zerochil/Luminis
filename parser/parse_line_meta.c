@@ -36,8 +36,8 @@ bool	parse_line_camera(t_scene *scene, char **infos)
 		return (parser_error("Camera already declared"));
 	if (parse_vec3(&scene->camera.origin, infos[1]) == false)
 		return (parser_error("Camera origin must be a vec3"));
-	if (parse_vec3(&scene->camera.forward, infos[2]) == false)
-		return (parser_error("Camera direction must be a vec3"));
+	if (parse_vec3_interval(&scene->camera.forward, infos[2], -1, 1) == false)
+		return (false);
 	if (parse_float(&scene->camera.fov, infos[3]) == false)
 		return (parser_error("Camera fov must be a float"));
 	if (in_interval(scene->camera.fov, 0, 180) == false)
