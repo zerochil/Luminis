@@ -68,12 +68,12 @@ void	pool_add_task(t_thread_pool *pool, void (*func)(void *), void *arg)
 {
 	t_task	*task;
 
+	pthread_mutex_lock(&pool->queue_mutex);
 	if (!pool->running)
 		return ;
 	task = safe_malloc(sizeof(t_task));
 	task->func = func;
 	task->arg = arg;
-	pthread_mutex_lock(&pool->queue_mutex);
 	array_push(&pool->task_queue, task);
 	atomic_fetch_add(&pool->pending_tasks, 1);
 	pthread_cond_signal(&pool->queue_cond);
@@ -96,16 +96,16 @@ void	pool_destroy(t_thread_pool *pool)
 	pthread_mutex_lock(&pool->queue_mutex);
 	pool->running = false;
 	pthread_cond_broadcast(&pool->queue_cond);
-	pthread_mutex_unlock(&pool->queue_mutex);
-	i = 0;
-	while (i < pool->num_threads)
-		pthread_join(pool->workers[i++], NULL);
 	while (pool->task_queue.size > 0)
 	{
 		task = (t_task *)array_remove(&pool->task_queue, 0);
 		if (task != NULL)
 			free(task);
 	}
+	pthread_mutex_unlock(&pool->queue_mutex);
+	i = 0;
+	while (i < pool->num_threads)
+		pthread_join(pool->workers[i++], NULL);
 	atomic_store(&pool->pending_tasks, 0);
 	array_destroy(&pool->task_queue);
 	pthread_mutex_destroy(&pool->queue_mutex);

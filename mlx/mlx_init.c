@@ -43,9 +43,8 @@ void	window_start(t_scene *scene)
 	scene->mlx.win = mlx_new_window(scene->mlx.ptr, WIDTH, HEIGHT, "Luminis");
 	if (scene->mlx.win == NULL)
 	{
-		mlx_destroy_display(scene->mlx.ptr);
-		free(scene->mlx.ptr);
 		ft_putstr_fd("Error\nFailed to create window\n", 2);
+		manager_free_everything();
 		exit(1);
 	}
 }
