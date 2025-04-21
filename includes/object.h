@@ -102,6 +102,7 @@ struct							s_object
 	t_vec3						origin;
 	t_vec3						orientation;
 	double						radius;
+	double						width;
 	double						height;
 	double						angle;
 	t_texture					*texture;

@@ -28,6 +28,24 @@ t_uv	get_plane_uv(t_hit *hit)
 	return (uv);
 }
 
+bool	is_point_within_rectangle(t_object *obj, t_ray *ray, double t)
+{
+	t_vec3 point;
+	t_vec3 u;
+	t_vec3 v;
+	t_uv uv;
+
+	if (obj->width < 0 || obj->height < 0) //for infinit plane
+		return (true);
+
+	create_orthonormal_basis(obj->orientation, &u, &v);
+	point = vec3_add(ray->origin, vec3_mul_scalar(ray->direction, t));
+	point = vec3_sub(point, obj->origin);
+	uv.u = vec3_dot(point, u);
+	uv.v = vec3_dot(point, v);
+	return (fabs(uv.u) < obj->width && fabs(uv.v) < obj->height);
+}
+
 bool	intersect_plane(t_object *object, t_ray *ray, t_hit *hit)
 {
 	double	t;
@@ -42,6 +60,8 @@ bool	intersect_plane(t_object *object, t_ray *ray, t_hit *hit)
 	position = vec3_sub(object->origin, ray->origin);
 	t = vec3_dot(position, normal) / denominator;
 	if (t <= 0)
+		return (false);
+	if (!is_point_within_rectangle(object, ray, t))
 		return (false);
 	hit->distance = t;
 	hit->normal = vec3_negate_conditionally((denominator > 0), normal);

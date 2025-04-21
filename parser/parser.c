@@ -17,6 +17,7 @@ bool	parse_line_camera(t_scene *scene, char **infos);
 bool	parse_line_light(t_scene *scene, char **infos);
 bool	parse_line_sphere(t_scene *scene, char **infos);
 bool	parse_line_plane(t_scene *scene, char **infos);
+bool	parse_line_rectangle(t_scene *scene, char **infos);
 bool	parse_line_cylinder(t_scene *scene, char **infos);
 bool	parse_line_cone(t_scene *scene, char **infos);
 
@@ -80,6 +81,8 @@ bool	parse_line(t_scene *scene, char *line)
 		return (parse_line_sphere(scene, infos));
 	if (ft_strcmp(infos[0], "pl") == 0)
 		return (parse_line_plane(scene, infos));
+	if (ft_strcmp(infos[0], "rec") == 0)
+		return (parse_line_rectangle(scene, infos));
 	if (ft_strcmp(infos[0], "cy") == 0)
 		return (parse_line_cylinder(scene, infos));
 	if (ft_strcmp(infos[0], "co") == 0)

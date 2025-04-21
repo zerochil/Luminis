@@ -56,6 +56,35 @@ bool	parse_line_plane(t_scene *scene, char **infos)
 	return (true);
 }
 
+
+bool	parse_line_rectangle(t_scene *scene, char **infos)
+{
+	t_object	*object;
+
+	if (ft_strarr_len(infos) < 6 || ft_strarr_len(infos) > 7)
+		return (parser_error("Rectangle must have 3 or 4 arguments"));
+	object = object_create(PLANE);
+	if (parse_vec3(&object->origin, infos[1]) == false)
+		return (parser_error("Rectangle origin must be a vec3"));
+	if (parse_vec3_interval(&object->orientation, infos[2], -1, 1) == false)
+		return (false);
+	object->orientation = vec3_normalize(object->orientation);
+	if (vec3_length(object->orientation) == 0)
+		return (parser_error("Rectangle normal must be a non-zero vector"));
+	if (parse_float(&object->width, infos[3]) == false)
+		return (parser_error("Rectangle width must be a float"));
+	if (parse_float(&object->height, infos[4]) == false)
+		return (parser_error("Rectangle height must be a float"));
+	if (parse_color(&object->color, infos[5]) == false)
+		return (parser_error("Rectangle color must be a color"));
+	if (infos[6] && parse_string(&object->texture_name, infos[6]) == false)
+		return (parser_error("Texture name isn't composed of only characters"));
+	object->width /= 2;
+	object->height /= 2;
+	array_push(scene->objects, object);
+	return (true);
+}
+
 bool	parse_line_cylinder(t_scene *scene, char **infos)
 {
 	t_object	*object;
