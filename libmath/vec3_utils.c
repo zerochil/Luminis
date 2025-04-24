@@ -51,3 +51,8 @@ void	create_orthonormal_basis(t_vec3 n, t_vec3 *b1, t_vec3 *b2)
 	*b1 = (t_vec3){1.0 - n.x * n.x * a, b, -n.x};
 	*b2 = (t_vec3){b, 1.0 - n.y * n.y * a, -n.y};
 }
+
+void vec3_print(t_vec3 vec)
+{
+	printf("%.2f,%.2f,%.2f", vec.x, vec.y, vec.z);
+}

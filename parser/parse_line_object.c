@@ -63,7 +63,7 @@ bool	parse_line_rectangle(t_scene *scene, char **infos)
 
 	if (ft_strarr_len(infos) < 6 || ft_strarr_len(infos) > 7)
 		return (parser_error("Rectangle must have 3 or 4 arguments"));
-	object = object_create(PLANE);
+	object = object_create(RECTANGLE);
 	if (parse_vec3(&object->origin, infos[1]) == false)
 		return (parser_error("Rectangle origin must be a vec3"));
 	if (parse_vec3_interval(&object->orientation, infos[2], -1, 1) == false)

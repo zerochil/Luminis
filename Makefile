@@ -26,6 +26,7 @@ PARSER = parser.c            \
 		 post_parse.c
 
 OBJECT = plane.c             \
+		 rectangle.c         \
 		 sphere.c            \
 		 cylinder.c          \
 		 cone.c              \

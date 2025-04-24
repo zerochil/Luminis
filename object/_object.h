@@ -42,6 +42,7 @@ typedef struct s_cylinder_uv_data
 }	t_cylinder_uv_data;
 
 bool		intersect_plane(t_object *obj, t_ray *ray, t_hit *hit);
+bool		intersect_rectangle(t_object *object, t_ray *ray, t_hit *hit);
 bool		intersect_sphere(t_object *obj, t_ray *ray, t_hit *hit);
 bool		intersect_cylinder(t_object *obj, t_ray *ray, t_hit *hit);
 bool		intersect_cone(t_object *obj, t_ray *ray, t_hit *hit);

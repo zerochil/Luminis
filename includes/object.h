@@ -53,6 +53,7 @@ enum							e_object
 	PLANE,
 	CYLINDER,
 	CONE,
+	RECTANGLE,
 };
 
 typedef struct s_object			t_object;
@@ -126,5 +127,7 @@ typedef struct s_scene			t_scene;
 typedef struct s_ray			t_ray;
 typedef struct s_hit			t_hit;
 t_hit		find_intersection(t_scene *scene, t_ray *ray);
+
+void	print_object(t_object *obj);
 
 #endif

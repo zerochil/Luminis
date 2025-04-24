@@ -1,0 +1,42 @@
+A 0.2 255,255,255
+
+l   0,50,0             0.9         255,255,255
+
+C   0,10,130                  0.0,0.0,-1.0     40
+# Table surface (rectangle)
+rec 0,0,0      0,1,0     200     100     0,100,0
+
+# Bumpers (surrounding rectangles, slightly raised)
+# Top bumper
+rec 0,2,50      0,1,0     200     4     50,25,0     
+# Bottom bumper
+rec 0,2,-50     0,1,0     200     4     50,25,0
+# Left bumper
+rec -100,2,0    0,1,0     4       100   50,25,0
+# Right bumper
+rec 100,2,0     0,1,0     4       100   50,25,0
+
+# Table legs (cylinders, placed under the surface)
+cy -90,-20,40    0,1,0  5  20    80,40,0
+cy  90,-20,40    0,1,0  5  20    80,40,0
+cy -90,-20,-40   0,1,0  5  20    80,40,0
+cy  90,-20,-40   0,1,0  5  20    80,40,0
+
+# Cue stick (cone pointing along +Z)
+co 0,5,-120     0,0,1     0.5     150     150,75,0
+
+# Balls (spheres with radius 5)
+# White cue ball
+sp 0,5,0        5     255,255,255      
+# Red
+sp 20,5,0       5     255,0,0          
+# Blue
+sp 25,5,5       5     0,0,255          
+# Yellow
+sp 30,5,-5      5     255,255,0        
+# Purple
+sp 35,5,5       5     128,0,128        
+# Green
+sp 40,5,-5      5     0,255,0          
+
+

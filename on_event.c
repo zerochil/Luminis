@@ -22,6 +22,16 @@ int	on_key_press(int keycode, t_scene *scene)
 		scene->mlx.control.selected = select_entity(scene, CAMERA, 0, 0);
 	if (keycode == 'l')
 		scene->mlx.control.selected = select_entity(scene, LIGHT, 0, 0);
+	if (keycode == 'p')
+	{
+		t_camera c = scene->camera;
+		printf("C  ");
+		vec3_print(c.origin);
+		printf("  ");
+		vec3_print(c.forward);
+		printf("  %.2f\n", c.fov);//C   0,10,50                  0.0,0.0,-1.0     70
+		array_do(scene->objects, (void*)print_object);
+	}
 	else
 	{
 		keybind = array_find(scene->mlx.control.keybinds, &keycode,

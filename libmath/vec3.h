@@ -13,6 +13,7 @@
 #ifndef VEC3_H
 # define VEC3_H
 
+# include <stdio.h>
 # include <math.h>
 # include <stdbool.h>
 
@@ -44,6 +45,7 @@ void					create_orthonormal_basis(t_vec3 fixed, t_vec3 *b1,
 							t_vec3 *b2);
 
 bool					vec3_compare(t_vec3 a, t_vec3 b);
+void					vec3_print(t_vec3 vec);
 
 static inline double	pow2(double x)
 {
